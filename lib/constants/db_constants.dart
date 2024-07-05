@@ -41,7 +41,7 @@ const String createItemTable = '''
       $itemColumnDescricao TEXT NOT NULL,
       $itemColumnListaId INTEGER NOT NULL,
       $itemColumnPreco REAL NOT NULL,
-      $itemColumnQuantidade INTEGER NOT NULL,
+      $itemColumnQuantidade REAL NOT NULL,
       $itemColumnComprado INTEGER NOT NULL,
       $itemColumnIndice INTEGER,
       FOREIGN KEY ($itemColumnListaId) REFERENCES $listaTableName($listaColumnId)

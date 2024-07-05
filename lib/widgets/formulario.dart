@@ -108,7 +108,7 @@ class _FormularioState extends State<Formulario> {
               descricaoLista.clear();
               Navigator.of(context).pop();
             },
-          )
+          ),
         ]);
   }
 }

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../repositories/listas_repository.dart';
 import '../widgets/formulario.dart';
 
+import 'itens_page.dart';
+
 class ListasDeComprasPage extends StatefulWidget {
   const ListasDeComprasPage({super.key});
 
@@ -40,27 +42,40 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Formulario(
-                                lista: listasR.listas[index],
-                              );
-                            });
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ItensPage(
+                              lista: listasR.listas[index],
+                            ),
+                          ),
+                        );
                       },
                       onLongPress: () {
                         listasR.excluirLista(listasR.listas[index]);
                       },
                       child: Card.outlined(
-                          color: Theme.of(context).colorScheme.inversePrimary.withAlpha(100),
-                          //elevation: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Center(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withAlpha(100),
+                        //elevation: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Formulario(
+                                            lista: listasR.listas[index],
+                                          );
+                                        });
+                                  },
                                   child: Icon(
                                     Icons.payments_outlined,
                                     size: 50,
@@ -68,17 +83,19 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
                                         Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
-                                Text('NOME: ${listasR.listas[index].nome}'),
-                                Text(
-                                    'DESCRICAO: ${listasR.listas[index].descricao}'),
-                                Text('INDICE: ${listasR.listas[index].indice}'),
-                                Text(
-                                    'CRIACAO: ${listasR.listas[index].criacao.substring(0, 10)}'),
-                                Text('ID: ${listasR.listas[index].id}'),
-                                Text('ICONE: ${listasR.listas[index].icone}'),
-                              ],
-                            ),
-                          )),
+                              ),
+                              Text('NOME: ${listasR.listas[index].nome}'),
+                              Text(
+                                  'DESCRICAO: ${listasR.listas[index].descricao}'),
+                              Text('INDICE: ${listasR.listas[index].indice}'),
+                              Text(
+                                  'CRIACAO: ${listasR.listas[index].criacao.substring(0, 10)}'),
+                              // Text('ID: ${listasR.listas[index].id}'),
+                              // Text('ICONE: ${listasR.listas[index].icone}'),
+                            ],
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),

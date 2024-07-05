@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../repositories/listas_repository.dart';
-import '../repositories/tens_repository.dart';
+import 'repositories/itens_repository.dart';
 
 import 'main_app.dart';
 
