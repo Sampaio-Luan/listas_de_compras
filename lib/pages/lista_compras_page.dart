@@ -41,7 +41,7 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
                   ),
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () {
+                      onTap: ()async {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ItensPage(
@@ -87,7 +87,7 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
                               Text('NOME: ${listasR.listas[index].nome}'),
                               Text(
                                   'DESCRICAO: ${listasR.listas[index].descricao}'),
-                              Text('INDICE: ${listasR.listas[index].indice}'),
+                              Text('ID: ${listasR.listas[index].id}'),
                               Text(
                                   'CRIACAO: ${listasR.listas[index].criacao.substring(0, 10)}'),
                               // Text('ID: ${listasR.listas[index].id}'),

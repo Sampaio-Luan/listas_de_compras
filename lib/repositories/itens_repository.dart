@@ -15,40 +15,37 @@ class ItensRepository extends ChangeNotifier {
 
   late Database db;
 
-  ItensRepository() {
-    _initRepository();
-  }
-
-  _initRepository() async {
-    await _recuperarItens();
-  }
-
-  _recuperarItens() async {
+  recuperarItens(int idLista) async {
     db = await Banco.instancia.database;
-    _itens.clear();
-    final List<Map<String, dynamic>> itensMap = await db.query(
-      itemTableName,
-    );
-    debugPrint("$itensMap");
-    for (int i = 0; i < itensMap.length; i++) {
-      _itens.add(
-        ItemModel(
-          idItem: itensMap[i][itemColumnId],
-          idLista: itensMap[i][itemColumnListaId],
-          nome: itensMap[i][itemColumnName],
-          descricao: itensMap[i][itemColumnDescricao],
-          quantidade:double.parse( itensMap[i][itemColumnQuantidade].toString()),
-          preco: double.parse( itensMap[i][itemColumnPreco].toString()),
-          comprado: itensMap[i][itemColumnComprado],
-          indice: itensMap[i][itemColumnIndice],
-        ),
+    
+      final List<Map<String, dynamic>> itensMap = await db.query(
+        itemTableName,
+        where: "$itemColumnListaId = ?",
+        whereArgs: [idLista],
       );
-    }
-    for (int i = 0; i < _itens.length; i++) {
-      debugPrint("${_itens[i]}");
-    }
+      debugPrint("$itensMap");
+      for (int i = 0; i < itensMap.length; i++) {
+        _itens.add(
+          ItemModel(
+            idItem: itensMap[i][itemColumnId],
+            idLista: itensMap[i][itemColumnListaId],
+            nome: itensMap[i][itemColumnName],
+            descricao: itensMap[i][itemColumnDescricao],
+            quantidade:
+                double.parse(itensMap[i][itemColumnQuantidade].toString()),
+            preco: double.parse(itensMap[i][itemColumnPreco].toString()),
+            comprado: itensMap[i][itemColumnComprado],
+            indice: itensMap[i][itemColumnIndice],
+          ),
+        );
+      }
+      for (int i = 0; i < _itens.length; i++) {
+        debugPrint("${_itens[i]}");
+      }
+      debugPrint("Repository: ${DateTime.now()}");
 
-    _organizarItemPorLista();
+      _organizarItemPorLista();
+    
   }
 
   _organizarItemPorLista() {
@@ -71,7 +68,7 @@ class ItensRepository extends ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     debugPrint("Vai tomar:    $id");
-    _recuperarItens();
+    recuperarItens(item.idLista);
   }
 
   atualizarItem(ItemModel item) async {
@@ -82,7 +79,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    _recuperarItens();
+    recuperarItens(item.idLista);
   }
 
   excluirItem(ItemModel item) async {
@@ -92,6 +89,6 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    _recuperarItens();
+    recuperarItens(item.idLista);
   }
 }

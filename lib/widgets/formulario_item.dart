@@ -28,7 +28,7 @@ class _FormularioItemState extends State<FormularioItem> {
   CamposFormulario cf = CamposFormulario();
   @override
   Widget build(BuildContext context) {
-    final itensR = context.read<ItensRepository>();
+    final itensR = context.watch<ItensRepository>();
     return AlertDialog(
         title: Text(
           widget.item == null ? 'Cadastrar Item' : 'Editar Item',
@@ -102,7 +102,7 @@ class _FormularioItemState extends State<FormularioItem> {
           ),
           TextButton(
               child: Text(
-               widget.item == null ? 'Cadastrar' : 'Salvar',
+                widget.item == null ? 'Cadastrar' : 'Salvar',
                 style: Estilos().corpoColor(context, tamanho: 'm'),
               ),
               onPressed: () {
@@ -131,7 +131,7 @@ class _FormularioItemState extends State<FormularioItem> {
         ]);
   }
 
- _resetTextController() {
+  _resetTextController() {
     nomeItem.clear();
     quantidadeItem.clear();
     precoItem.clear();

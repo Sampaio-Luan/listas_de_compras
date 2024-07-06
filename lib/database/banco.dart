@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:listas_de_compras/constants/db_constants.dart';
 
 class Banco {
-  // construtor com acessoprivado
+  // construtor com acesso privado
   Banco._();
 
   // instancia do Banco

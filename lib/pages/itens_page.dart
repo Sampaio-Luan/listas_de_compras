@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:listas_de_compras/repositories/itens_repository.dart';
 import 'package:listas_de_compras/widgets/formulario_item.dart';
 
-import '../controllers/itens_controller.dart';
 import '../models/lista.module.dart';
 
 class ItensPage extends StatefulWidget {
@@ -18,50 +18,57 @@ class ItensPage extends StatefulWidget {
 
 class _ItensPageState extends State<ItensPage> {
   @override
-  void initState() {
-    super.initState();
-    _recuperarItens();
-  }
-
-  _recuperarItens() async {
-    final itensCTL = Provider.of<ItensController>(context, listen: true);
-    itensCTL.recuperarItens(context, widget.lista.id);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.lista.nome),
         centerTitle: true,
       ),
-      body: Consumer<ItensController>(builder: (context, itensCTL, _) {
-        return itensCTL.itensDaLista.isEmpty
+      body: Consumer<ItensRepository>(builder: (context, itensRP, _) {
+       itensRP.recuperarItens(widget.lista.id);
+        debugPrint("Page: ${DateTime.now().toLocal()}");
+        return itensRP.itens.isEmpty
             ? const Center(
                 child: Text(
                   "Adicione um Item",
                 ),
               )
             : ListView.builder(
-                itemCount: itensCTL.itensDaLista.length,
+                itemCount: itensRP.itens.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(itensCTL.itensDaLista[index].nome),
-                    subtitle: Text(itensCTL.itensDaLista[index].descricao),
+                  return Card.outlined(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("NOME: ${itensRP.itens[index].nome}"),
+                            Text(
+                                "DESCRICAO: ${itensRP.itens[index].descricao}"),
+                            Text("COMPRADO: ${itensRP.itens[index].comprado}"),
+                            Text("PRECO: ${itensRP.itens[index].preco}"),
+                            Text(
+                                "QUANTIDADE: ${itensRP.itens[index].quantidade}"),
+                            Text("INDICE: ${itensRP.itens[index].indice}"),
+                            Text("ID_LISTA: ${itensRP.itens[index].idLista}"),
+                            Text("ID_ITEM: ${itensRP.itens[index].idItem}"),
+                          ]),
+                    ),
                   );
                 },
               );
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => FormularioItem(
-                idLista: widget.lista.id,
-                item: null,
-              ),
-            ),
-          );
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return FormularioItem(
+                  item: null,
+                  idLista: widget.lista.id,
+                );
+              });
         },
         child: const Icon(Icons.add),
       ),
