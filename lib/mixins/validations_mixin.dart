@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 mixin ValidacoesMixin {
   String? preenchimentoObrigatorio(
       {required String? input, required String? message}) {
@@ -18,35 +17,55 @@ mixin ValidacoesMixin {
     return null;
   }
 
-  String? multiValidacoes({required List<String? Function()> validacoes}) {
-    for (final func in validacoes) {
-      final validation = func();
+  String? valorMinimo({required String? input}) {
+    if (input != null) {
 
-      if (validation != null) {
-        return validation;
+      if (input.length > 4) {
+        input = input.replaceAll(RegExp(r'[^\d,]'), '').replaceAll(',', '.');
+      } else {
+        input = input.replaceAll(',', '.');
       }
-    }
 
+      double valor = double.parse(input);
+
+      if (valor <= 0) {
+        return "Deve ser maior que 0";
+      }
+
+      
+    }
     return null;
   }
+}
 
-  isValidado({
-    required BuildContext context,
-    required GlobalKey<FormState> formularioKey,
-  }) {
-    if (formularioKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).primaryColor,
+String? multiValidacoes({required List<String? Function()> validacoes}) {
+  for (final func in validacoes) {
+    final validation = func();
 
-          content: const Text(
-            "Salvo com sucesso !!!",
-            style: TextStyle(fontSize: 16),
-          ),
-          duration: const Duration(seconds: 3), // Defina o tempo desejado
-        ),
-      );
-      return 0;
+    if (validation != null) {
+      return validation;
     }
+  }
+
+  return null;
+}
+
+isValidado({
+  required BuildContext context,
+  required GlobalKey<FormState> formularioKey,
+}) {
+  if (formularioKey.currentState!.validate()) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+
+        content: const Text(
+          "Salvo com sucesso !!!",
+          style: TextStyle(fontSize: 16),
+        ),
+        duration: const Duration(seconds: 3), // Defina o tempo desejado
+      ),
+    );
+    return 0;
   }
 }

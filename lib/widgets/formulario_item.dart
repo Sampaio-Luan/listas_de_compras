@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import '../mixins/validations_mixin.dart';
 import '../models/item.module.dart';
 import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
@@ -18,13 +19,13 @@ class FormularioItem extends StatefulWidget {
   State<FormularioItem> createState() => _FormularioItemState();
 }
 
-class _FormularioItemState extends State<FormularioItem> {
+class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
   TextEditingController nomeItem = TextEditingController();
   TextEditingController descricaoItem = TextEditingController();
   TextEditingController quantidadeItem = TextEditingController();
   TextEditingController precoItem = TextEditingController();
   TextEditingController tipoMedida = TextEditingController();
-  GlobalKey formKeyItem = GlobalKey<FormState>();
+  final formKeyItem = GlobalKey<FormState>();
 
   CamposFormulario cf = CamposFormulario();
 
@@ -32,8 +33,17 @@ class _FormularioItemState extends State<FormularioItem> {
   @override
   void initState() {
     super.initState();
-    tipoMedida.text = 'uni';
-    quantidadeItem.text = '1';
+
+    if (widget.item != null) {
+      nomeItem.text = widget.item!.nome;
+      descricaoItem.text = widget.item!.descricao;
+      quantidadeItem.text = widget.item!.quantidade.toString();
+      precoItem.text = widget.item!.preco.toString();
+      tipoMedida.text = 'kg';
+    } else {
+      tipoMedida.text = 'uni';
+      quantidadeItem.text = '1';
+    }
   }
 
   @override
@@ -153,7 +163,7 @@ class _FormularioItemState extends State<FormularioItem> {
                   controle: descricaoItem,
                   label: 'Descrição',
                   qtdLinha: 2,
-                  valida: true,
+                  valida: false,
                 ),
                 const SizedBox(
                   height: 10,
@@ -185,27 +195,31 @@ class _FormularioItemState extends State<FormularioItem> {
               ),
               onPressed: () {
                 _formatarValores();
-                // if (widget.item == null) {
-                //   ItemModel i = ItemModel(
-                //     idItem: 0,
-                //     idLista: widget.idLista!,
-                //     nome: nomeItem.text,
-                //     descricao: descricaoItem.text,
-                //     quantidade: double.parse(quantidadeItem.text),
-                //     preco: double.parse(precoItem.text),
-                //     comprado: 0,
-                //     indice: 0,
-                //   );
-                //   itensR.inserirItem(i);
-                // } else {
-                //   widget.item!.nome = nomeItem.text;
-                //   widget.item!.quantidade = double.parse(quantidadeItem.text);
-                //   widget.item!.preco = double.parse(precoItem.text);
-                //   widget.item!.descricao = descricaoItem.text;
-                //   itensR.atualizarItem(widget.item!);
-                // }
-                // _resetTextController();
-                // Navigator.of(context).pop();
+                if (isValidado(context: context, formularioKey: formKeyItem) ==
+                    0) {
+                  if (widget.item == null) {
+                    ItemModel i = ItemModel(
+                      idItem: 0,
+                      idLista: widget.idLista!,
+                      nome: nomeItem.text,
+                      descricao:
+                          descricaoItem.text.isEmpty ? '' : descricaoItem.text,
+                      quantidade: _formatarQuantidade(),
+                      preco: _formatarPreco(),
+                      comprado: 0,
+                      indice: 0,
+                    );
+                    itensR.inserirItem(i);
+                  } else {
+                    widget.item!.nome = nomeItem.text;
+                    widget.item!.quantidade = _formatarQuantidade();
+                    widget.item!.preco = _formatarPreco();
+                    widget.item!.descricao = descricaoItem.text;
+                    itensR.atualizarItem(widget.item!);
+                  }
+                  _resetTextController();
+                  Navigator.of(context).pop();
+                }
               }),
         ]);
   }
@@ -240,7 +254,7 @@ class _FormularioItemState extends State<FormularioItem> {
     return double.parse(qtd);
   }
 
-   _formatarPreco() {
+  _formatarPreco() {
     String preco = precoItem.text;
     preco = preco.replaceAll(RegExp(r'[^\d,]'), '').replaceAll(',', '.');
     debugPrint('Fpreco: $preco');

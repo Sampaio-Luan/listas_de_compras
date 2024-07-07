@@ -8,6 +8,7 @@ import 'package:listas_de_compras/theme/estilos.dart';
 import 'package:listas_de_compras/widgets/formulario_item.dart';
 
 import '../models/lista.module.dart';
+import '../widgets/layout_item.dart';
 
 class ItensPage extends StatefulWidget {
   final ListaModel lista;
@@ -46,30 +47,7 @@ class _ItensPageState extends State<ItensPage> {
                     child: ListView.builder(
                       itemCount: itensRP.itens.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Card.outlined(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("NOME: ${itensRP.itens[index].nome}"),
-                                  Text(
-                                      "DESCRICAO: ${itensRP.itens[index].descricao}"),
-                                  Text(
-                                      "COMPRADO: ${itensRP.itens[index].comprado}"),
-                                  Text("PRECO: ${itensRP.itens[index].preco}"),
-                                  Text(
-                                      "QUANTIDADE: ${itensRP.itens[index].quantidade}"),
-                                  Text(
-                                      "INDICE: ${itensRP.itens[index].indice}"),
-                                  Text(
-                                      "ID_LISTA: ${itensRP.itens[index].idLista}"),
-                                  Text(
-                                      "ID_ITEM: ${itensRP.itens[index].idItem}"),
-                                ]),
-                          ),
-                        );
+                        return LayoutItem(item: itensRP.itens[index]);
                       },
                     ),
                   ),

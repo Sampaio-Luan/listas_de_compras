@@ -6,19 +6,17 @@ import 'package:intl/intl.dart';
 import '../mixins/validations_mixin.dart';
 import '../theme/estilos.dart';
 
-class CamposFormulario with ValidacoesMixin { 
+class CamposFormulario with ValidacoesMixin {
   linha(
     context, {
     required TextEditingController controle,
     required String label,
     required int qtdLinha,
     required bool valida,
-   
   }) {
     return TextFormField(
       controller: controle,
       decoration: InputDecoration(
-        
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(
@@ -26,20 +24,20 @@ class CamposFormulario with ValidacoesMixin {
         ),
       ),
       maxLines: qtdLinha,
-      validator: valida ? (value) => preenchimentoObrigatorio(input: value, message: null): null,
-      
+      validator: valida
+          ? (value) => preenchimentoObrigatorio(input: value, message: null)
+          : null,
     );
   }
 
   apenasNumeros(
-    context,  {
+    context, {
     required TextEditingController controle,
     required String label,
     required int qtdLinha,
     required bool valida,
-    
   }) {
-    return TextField(
+    return TextFormField(
       controller: controle,
       decoration: InputDecoration(
         labelText: label,
@@ -54,6 +52,12 @@ class CamposFormulario with ValidacoesMixin {
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
         LengthLimitingTextInputFormatter(4),
       ],
+      validator: valida
+          ? (value) => multiValidacoes(validacoes: [
+                () => preenchimentoObrigatorio(input: value, message: null),
+                () => valorMinimo(input: value)
+              ])
+          : null,
     );
   }
 
@@ -63,10 +67,9 @@ class CamposFormulario with ValidacoesMixin {
     required String label,
     required bool valida,
   }) {
-    return TextField(
+    return TextFormField(
       controller: controle,
       decoration: InputDecoration(
-       
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(
@@ -78,6 +81,12 @@ class CamposFormulario with ValidacoesMixin {
         FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
         CurrencyInputFormatter()
       ],
+      validator: valida
+          ? (value) => multiValidacoes(validacoes: [
+                () => preenchimentoObrigatorio(input: value, message: null),
+                () => valorMinimo(input: value)
+              ])
+          : null,
       onChanged: (value) {
         debugPrint(controle.text);
       },
@@ -93,9 +102,7 @@ class CamposFormulario with ValidacoesMixin {
   }) {
     return TextField(
       controller: controle,
-      
       decoration: InputDecoration(
-       
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(
@@ -113,8 +120,6 @@ class CamposFormulario with ValidacoesMixin {
       },
     );
   }
-
-
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {
