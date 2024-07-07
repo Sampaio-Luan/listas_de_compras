@@ -15,37 +15,41 @@ class ItensRepository extends ChangeNotifier {
 
   late Database db;
 
+  ItensRepository() {
+    recuperarItens(-1);
+  }
+
   recuperarItens(int idLista) async {
     db = await Banco.instancia.database;
-    
-      final List<Map<String, dynamic>> itensMap = await db.query(
-        itemTableName,
-        where: "$itemColumnListaId = ?",
-        whereArgs: [idLista],
+    _itens.clear();
+    final List<Map<String, dynamic>> itensMap = await db.query(
+      itemTableName,
+      where: "$itemColumnListaId = ?",
+      whereArgs: [idLista],
+    );
+    debugPrint("$itensMap");
+    for (int i = 0; i < itensMap.length; i++) {
+      _itens.add(
+        ItemModel(
+          idItem: itensMap[i][itemColumnId],
+          idLista: itensMap[i][itemColumnListaId],
+          nome: itensMap[i][itemColumnName],
+          descricao: itensMap[i][itemColumnDescricao],
+          quantidade:
+              double.parse(itensMap[i][itemColumnQuantidade].toString()),
+          preco: double.parse(itensMap[i][itemColumnPreco].toString()),
+          comprado: itensMap[i][itemColumnComprado],
+          indice: itensMap[i][itemColumnIndice],
+        ),
       );
-      debugPrint("$itensMap");
-      for (int i = 0; i < itensMap.length; i++) {
-        _itens.add(
-          ItemModel(
-            idItem: itensMap[i][itemColumnId],
-            idLista: itensMap[i][itemColumnListaId],
-            nome: itensMap[i][itemColumnName],
-            descricao: itensMap[i][itemColumnDescricao],
-            quantidade:
-                double.parse(itensMap[i][itemColumnQuantidade].toString()),
-            preco: double.parse(itensMap[i][itemColumnPreco].toString()),
-            comprado: itensMap[i][itemColumnComprado],
-            indice: itensMap[i][itemColumnIndice],
-          ),
-        );
-      }
-      for (int i = 0; i < _itens.length; i++) {
-        debugPrint("${_itens[i]}");
-      }
-      debugPrint("Repository: ${DateTime.now()}");
+    }
+    for (int i = 0; i < _itens.length; i++) {
+      debugPrint("${_itens[i]}");
+    }
+    debugPrint("Repository: ${DateTime.now()}");
 
-      _organizarItemPorLista();
-    
+    _organizarItemPorLista();
+    notifyListeners();
   }
 
   _organizarItemPorLista() {
@@ -57,7 +61,6 @@ class ItensRepository extends ChangeNotifier {
         _itensPorLista[item.idLista] = [item];
       }
     }
-    notifyListeners();
   }
 
   inserirItem(ItemModel item) async {

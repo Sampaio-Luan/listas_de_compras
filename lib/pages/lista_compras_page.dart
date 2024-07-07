@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/listas_repository.dart';
-import '../widgets/formulario.dart';
+import '../widgets/formulario_lista.dart';
 
 import 'itens_page.dart';
 

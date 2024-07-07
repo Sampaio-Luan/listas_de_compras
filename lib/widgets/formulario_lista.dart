@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:listas_de_compras/models/lista.module.dart';
 
+import '../mixins/validations_mixin.dart';
 import '../repositories/listas_repository.dart';
 import '../theme/estilos.dart';
 import '../widgets/campos_formulario.dart';
@@ -19,12 +20,12 @@ class Formulario extends StatefulWidget {
   State<Formulario> createState() => _FormularioState();
 }
 
-class _FormularioState extends State<Formulario> {
+class _FormularioState extends State<Formulario> with ValidacoesMixin {
   TextEditingController nomeLista = TextEditingController();
 
   TextEditingController descricaoLista = TextEditingController();
 
-  GlobalKey formKeyLista = GlobalKey<FormState>();
+  final formKeyLista = GlobalKey<FormState>();
 
   CamposFormulario cf = CamposFormulario();
   @override
@@ -65,7 +66,7 @@ class _FormularioState extends State<Formulario> {
                 controle: descricaoLista,
                 label: 'Descrição',
                 qtdLinha: 2,
-                valida: true,
+                valida: false,
               ),
             ]),
           ),
@@ -84,31 +85,32 @@ class _FormularioState extends State<Formulario> {
             },
           ),
           TextButton(
-            child: Text(
-              'Salvar',
-              style: Estilos().corpoColor(context, tamanho: 'm'),
-            ),
-            onPressed: () {
-              if (widget.lista == null) {
-                ListaModel l = ListaModel(
-                    id: 0,
-                    nome: nomeLista.text,
-                    descricao: descricaoLista.text,
-                    criacao: DateTime.now().toString(),
-                    indice: 0,
-                    icone: 'sacola');
+              child: Text(
+                'Salvar',
+                style: Estilos().corpoColor(context, tamanho: 'm'),
+              ),
+              onPressed: () {
+                if (isValidado(context: context, formularioKey: formKeyLista) == 0) {
+                  if (widget.lista == null) {
+                    ListaModel l = ListaModel(
+                        id: 0,
+                        nome: nomeLista.text,
+                        descricao: descricaoLista.text.isEmpty ? '' : descricaoLista.text,
+                        criacao: DateTime.now().toString(),
+                        indice: 0,
+                        icone: 'sacola');
 
-                listasR.inserirLista(l);
-              } else {
-                widget.lista!.nome = nomeLista.text;
-                widget.lista!.descricao = descricaoLista.text;
-                listasR.atualizarLista(widget.lista!);
-              }
-              nomeLista.clear();
-              descricaoLista.clear();
-              Navigator.of(context).pop();
-            },
-          ),
+                    listasR.inserirLista(l);
+                  } else {
+                    widget.lista!.nome = nomeLista.text;
+                    widget.lista!.descricao = descricaoLista.text;
+                    listasR.atualizarLista(widget.lista!);
+                  }
+                  nomeLista.clear();
+                  descricaoLista.clear();
+                  Navigator.of(context).pop();
+                }
+              }),
         ]);
   }
 }
