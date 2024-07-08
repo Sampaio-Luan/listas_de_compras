@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class Estilos {
@@ -113,6 +114,13 @@ class Estilos {
         );
       default:
     }
+  }
+
+  sutil(context, {required double tamanho}) {
+    return TextStyle(
+      color: Theme.of(context).colorScheme.onSurface.withAlpha(150),
+      fontSize: tamanho,
+    );
   }
 
   label(context, {required String tamanho}) {

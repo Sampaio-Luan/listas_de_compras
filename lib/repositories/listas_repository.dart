@@ -31,7 +31,7 @@ class ListasRepository extends ChangeNotifier {
       listas.add(ListaModel(
           id: listasMap[i]['id_lista'],
           nome: listasMap[i]['nome_lista'],
-          descricao: listasMap[i]['descricao_lista'],
+          descricao: listasMap[i]['descricao_lista']??'',
           criacao: listasMap[i]['criacao'],
           indice: listasMap[i]['indice'],
           icone: listasMap[i]['icone']));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../mixins/validations_mixin.dart';
@@ -35,10 +36,12 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
     super.initState();
 
     if (widget.item != null) {
+      final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+      String p = formatter.format(widget.item!.preco);
       nomeItem.text = widget.item!.nome;
       descricaoItem.text = widget.item!.descricao;
       quantidadeItem.text = widget.item!.quantidade.toString();
-      precoItem.text = widget.item!.preco.toString();
+      precoItem.text = p;
       tipoMedida.text = 'kg';
     } else {
       tipoMedida.text = 'uni';

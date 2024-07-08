@@ -1,15 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../models/item.module.dart';
 import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
-import 'formulario_item.dart';
+import 'opcoes_modificacao.dart';
 
 class LayoutItem extends StatefulWidget {
   final ItemModel item;
@@ -32,7 +30,7 @@ class _LayoutItemState extends State<LayoutItem> {
 
   @override
   Widget build(BuildContext context) {
-   
+    final itemR = context.read<ItensRepository>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Card.filled(
@@ -65,10 +63,12 @@ class _LayoutItemState extends State<LayoutItem> {
                   onChanged: (value) {
                     setState(() {
                       item.comprado = value! == true ? 1 : 0;
+                      item.comprado = value ? 1 : 0;
+                      itemR.atualizarItem(item);
                     });
                   },
                 ),
-                _menu()
+                OpcoesModificacao(item: item),
               ]),
           title: Text(item.nome,
               style: Estilos().tituloColor(context, tamanho: 'p')),
@@ -80,64 +80,6 @@ class _LayoutItemState extends State<LayoutItem> {
           ]),
         ),
       ),
-    );
-
-
-
- }
-
-  _menu() {
-    final itensR = context.read<ItensRepository>();
-    return PopupMenuButton<dynamic>(
-      position: PopupMenuPosition.under,
-      elevation: 1,
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          child: _label(label: 'Editar'),
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return FormularioItem(
-                    item: item,
-                    idLista: null,
-                  );
-                });
-          },
-        ),
-        PopupMenuItem(
-          child: _label(label: 'Excluir'),
-          onTap: () {
-            itensR.excluirItem(item);
-          },
-        ),
-      ],
-    );
-  }
-
-  _label({required String label}) {
-    Map<String, Widget> labels = {
-      'Editar': Icon(
-        PhosphorIconsRegular.clipboardText,
-        color: Theme.of(context).colorScheme.primary,
-        size: 22,
-      ),
-      'Excluir': Icon(
-        PhosphorIconsRegular.trash,
-        color: Theme.of(context).colorScheme.primary,
-        size: 22,
-      ),
-    };
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          label.length <= 6 ? '$label ' : label,
-          style: Estilos().corpoColor(context, tamanho: 'p'),
-        ),
-        const SizedBox(width: 10),
-        labels[label]!,
-      ],
     );
   }
 }

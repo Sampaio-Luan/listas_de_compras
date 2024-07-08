@@ -9,18 +9,18 @@ import '../repositories/listas_repository.dart';
 import '../theme/estilos.dart';
 import '../widgets/campos_formulario.dart';
 
-class Formulario extends StatefulWidget {
+class FormularioLista extends StatefulWidget {
   final ListaModel? lista;
-  const Formulario({
+  const FormularioLista({
     super.key,
     this.lista,
   });
 
   @override
-  State<Formulario> createState() => _FormularioState();
+  State<FormularioLista> createState() => _FormularioListaState();
 }
 
-class _FormularioState extends State<Formulario> with ValidacoesMixin {
+class _FormularioListaState extends State<FormularioLista> with ValidacoesMixin {
   TextEditingController nomeLista = TextEditingController();
 
   TextEditingController descricaoLista = TextEditingController();

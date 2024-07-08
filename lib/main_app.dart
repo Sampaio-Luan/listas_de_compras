@@ -35,7 +35,8 @@ class MainApp extends StatelessWidget {
       initialRoute: 'apagar',
       routes: {
         'principal': (context) => const PrincipalPage(),
-        'listas_de_compras': (context) => const ListasDeComprasPage(),
+        'listas': (context) => const ListasDeComprasPage(),
+        
         'abertura': (context) => const AberturaPage(),
         'apagar': (context) =>
             const MyHomePage(title: 'Flutter Demo Home Page'),

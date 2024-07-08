@@ -19,7 +19,7 @@ class ItensRepository extends ChangeNotifier {
     recuperarItens(-1);
   }
 
-  recuperarItens(int idLista) async {
+ recuperarItens(int idLista) async {
     db = await Banco.instancia.database;
     _itens.clear();
     final List<Map<String, dynamic>> itensMap = await db.query(
@@ -50,6 +50,7 @@ class ItensRepository extends ChangeNotifier {
 
     _organizarItemPorLista();
     notifyListeners();
+    return _itens;
   }
 
   _organizarItemPorLista() {
