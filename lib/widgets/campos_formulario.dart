@@ -17,12 +17,15 @@ class CamposFormulario with ValidacoesMixin {
     return TextFormField(
       controller: controle,
       decoration: InputDecoration(
+        hintText: qtdLinha == 2 ? 'Por exemplo "Marca x ou y"' : null,
+        hintStyle: Estilos().sutil(context, tamanho: 15),
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
+      
       maxLines: qtdLinha,
       validator: valida
           ? (value) => preenchimentoObrigatorio(input: value, message: null)
@@ -38,6 +41,7 @@ class CamposFormulario with ValidacoesMixin {
     required bool valida,
   }) {
     return TextFormField(
+      
       controller: controle,
       decoration: InputDecoration(
         labelText: label,
@@ -100,7 +104,7 @@ class CamposFormulario with ValidacoesMixin {
     required bool valida,
     required TextEditingController tipoM,
   }) {
-    return TextField(
+    return TextFormField(
       controller: controle,
       decoration: InputDecoration(
         labelText: label,
@@ -115,6 +119,12 @@ class CamposFormulario with ValidacoesMixin {
         DecimalInputFormatter(),
         LengthLimitingTextInputFormatter(7)
       ],
+      validator: valida
+          ? (value) => multiValidacoes(validacoes: [
+                () => preenchimentoObrigatorio(input: value, message: null),
+                () => valorMinimo(input: value)
+              ])
+          : null,
       onChanged: (value) {
         debugPrint(controle.text);
       },

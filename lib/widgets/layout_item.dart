@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/itens_controller.dart';
 import '../models/item.module.dart';
-import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
 import 'opcoes_modificacao.dart';
@@ -30,17 +30,18 @@ class _LayoutItemState extends State<LayoutItem> {
 
   @override
   Widget build(BuildContext context) {
-    final itemR = context.read<ItensRepository>();
+    final itemC = context.read<ItensController>();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Card.filled(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Card.outlined(
         color: Theme.of(context).colorScheme.brightness == Brightness.light
             ? Theme.of(context).colorScheme.primaryContainer
-            : Theme.of(context).colorScheme.tertiaryContainer,
+            : Theme.of(context).colorScheme.background,
         elevation: 0,
         child: ListTile(
           isThreeLine: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+          contentPadding:  const EdgeInsets.only(left: 10.0),
+          
           leading: CircleAvatar(
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             child: Text(
@@ -64,7 +65,7 @@ class _LayoutItemState extends State<LayoutItem> {
                     setState(() {
                       item.comprado = value! == true ? 1 : 0;
                       item.comprado = value ? 1 : 0;
-                      itemR.atualizarItem(item);
+                      itemC.atualizarItem(item);
                     });
                   },
                 ),
@@ -74,9 +75,19 @@ class _LayoutItemState extends State<LayoutItem> {
               style: Estilos().tituloColor(context, tamanho: 'p')),
           subtitle:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(flex: 3, child: Text(item.quantidade.toString())),
+            Expanded(
+              flex: 3,
+              child: Text(
+                '${item.medida == 'uni' ? item.quantidade.toStringAsFixed(0) : item.quantidade} ${item.medida}',
+              ),
+            ),
             const Expanded(child: Text('X')),
-            Expanded(flex: 4, child: Text(formatter.format(item.preco))),
+            Expanded(
+              flex: 4,
+              child: Text(
+                formatter.format(item.preco),
+              ),
+            ),
           ]),
         ),
       ),

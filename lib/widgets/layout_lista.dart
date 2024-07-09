@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/itens_controller.dart';
 import '../models/lista.module.dart';
 import '../pages/itens_page.dart';
 import '../repositories/itens_repository.dart';
@@ -32,16 +32,20 @@ class _LayoutListaState extends State<LayoutLista> {
 
   @override
   Widget build(BuildContext context) {
-    final itemR = context.read<ItensRepository>();
+    final itensC = context.read<ItensController>();
     return Card.outlined(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.background,
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 00, top: 15, bottom: 5),
         child: Column(children: [
           Expanded(
             flex: 3,
             child: InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               onTap: () {
-                itemR.recuperarItens(lista.id);
+                itensC.iniciarControle(lista.id);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

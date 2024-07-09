@@ -20,12 +20,14 @@ class FormularioLista extends StatefulWidget {
   State<FormularioLista> createState() => _FormularioListaState();
 }
 
-class _FormularioListaState extends State<FormularioLista> with ValidacoesMixin {
+class _FormularioListaState extends State<FormularioLista>
+    with ValidacoesMixin {
   TextEditingController nomeLista = TextEditingController();
 
   TextEditingController descricaoLista = TextEditingController();
 
   final formKeyLista = GlobalKey<FormState>();
+  bool autoValidar = false;
 
   CamposFormulario cf = CamposFormulario();
   @override
@@ -50,6 +52,9 @@ class _FormularioListaState extends State<FormularioLista> with ValidacoesMixin 
           width: MediaQuery.of(context).size.width,
           child: Form(
             key: formKeyLista,
+            autovalidateMode: autoValidar
+                ? AutovalidateMode.onUserInteraction
+                : AutovalidateMode.disabled,
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               cf.linha(
                 context,
@@ -90,15 +95,22 @@ class _FormularioListaState extends State<FormularioLista> with ValidacoesMixin 
                 style: Estilos().corpoColor(context, tamanho: 'm'),
               ),
               onPressed: () {
-                if (isValidado(context: context, formularioKey: formKeyLista) == 0) {
+                setState(() {
+                  autoValidar = true;
+                });
+                if (isValidado(context: context, formularioKey: formKeyLista) ==
+                    0) {
                   if (widget.lista == null) {
                     ListaModel l = ListaModel(
                         id: 0,
                         nome: nomeLista.text,
-                        descricao: descricaoLista.text.isEmpty ? '' : descricaoLista.text,
+                        descricao: descricaoLista.text.isEmpty
+                            ? ''
+                            : descricaoLista.text,
                         criacao: DateTime.now().toString(),
                         indice: 0,
-                        icone: 'sacola');
+                        icone: 'sacola',
+                        tema: 'padrao');
 
                     listasR.inserirLista(l);
                   } else {

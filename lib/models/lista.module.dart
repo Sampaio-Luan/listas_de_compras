@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../constants/const_tb_lista.dart';
+
 class ListaModel {
   int id;
   String nome;
@@ -7,6 +9,7 @@ class ListaModel {
   String criacao;
   int indice;
   String icone;
+  String tema;
 
   ListaModel({
     required this.id,
@@ -15,29 +18,33 @@ class ListaModel {
     required this.criacao,
     required this.indice,
     required this.icone,
+    required this.tema,
   });
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
     
-    result.addAll({'nome_lista': nome});
-    result.addAll({'descricao_lista': descricao});
-    result.addAll({'criacao': criacao});
-    result.addAll({'indice': indice});
-    result.addAll({'icone': icone});
+    
+    result.addAll({listaColumnName: nome});
+    result.addAll({listaColumnDescricao: descricao});
+    result.addAll({listaColumnCriacao: criacao});
+    result.addAll({listaColumnIndice: indice});
+    result.addAll({listaColumnIcone: icone});
+    result.addAll({listaColumnTema: tema});
 
     return result;
   }
 
   factory ListaModel.fromMap(Map<String, dynamic> map) {
     return ListaModel(
-      id: map['id'],
-      nome: map['nome'] ?? '',
-      descricao: map['descricao'] ?? '',
-      criacao: map['criacao'] ?? '',
-      indice: map['indice']?.toInt() ?? 0,
-      icone: map['icone'] ?? '',
+      id: map[listaColumnId] ?? 0,
+      nome: map[listaColumnName] ?? '',
+      descricao: map[listaColumnDescricao] ?? '',
+      criacao: map[listaColumnCriacao] ?? '',
+      indice: map[listaColumnIndice] ?? 0,
+      icone: map[listaColumnIcone] ?? '',
+      tema: map[listaColumnTema] ?? '',
     );
   }
 

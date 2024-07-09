@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import '../constants/db_constants.dart';
+import 'package:listas_de_compras/models/item.module.dart';
+
+import '../constants/const_tb_item.dart';
 import '../database/banco.dart';
-import '../models/item.module.dart';
 
 class ItensRepository extends ChangeNotifier {
   final List<ItemModel> _itens = [];
@@ -19,7 +20,7 @@ class ItensRepository extends ChangeNotifier {
     recuperarItens(-1);
   }
 
- recuperarItens(int idLista) async {
+  recuperarItens(int idLista) async {
     db = await Banco.instancia.database;
     _itens.clear();
     final List<Map<String, dynamic>> itensMap = await db.query(
@@ -27,29 +28,17 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnListaId = ?",
       whereArgs: [idLista],
     );
+
     debugPrint("$itensMap");
     for (int i = 0; i < itensMap.length; i++) {
-      _itens.add(
-        ItemModel(
-          idItem: itensMap[i][itemColumnId],
-          idLista: itensMap[i][itemColumnListaId],
-          nome: itensMap[i][itemColumnName],
-          descricao: itensMap[i][itemColumnDescricao],
-          quantidade:
-              double.parse(itensMap[i][itemColumnQuantidade].toString()),
-          preco: double.parse(itensMap[i][itemColumnPreco].toString()),
-          comprado: itensMap[i][itemColumnComprado],
-          indice: itensMap[i][itemColumnIndice],
-        ),
-      );
-    }
-    for (int i = 0; i < _itens.length; i++) {
+      _itens.add(ItemModel.fromMap(itensMap[i]));
       debugPrint("${_itens[i]}");
     }
-    debugPrint("Repository: ${DateTime.now()}");
+
+    debugPrint(db.query(itemTableName).toString());
 
     _organizarItemPorLista();
-    notifyListeners();
+    
     return _itens;
   }
 

@@ -1,7 +1,10 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:listas_de_compras/constants/db_constants.dart';
+import '../constants/const_tb_item.dart';
+import '../constants/const_tb_lista.dart';
+
+
 
 class Banco {
   // construtor com acesso privado
@@ -22,6 +25,7 @@ class Banco {
   }
 
   _initDatabase() async {
+   
     return await openDatabase(
       join(await getDatabasesPath(), 'banco.db'),
       version: 1,

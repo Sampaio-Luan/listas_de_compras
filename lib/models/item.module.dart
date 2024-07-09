@@ -1,12 +1,15 @@
 import 'dart:convert';
 
-import '../constants/db_constants.dart';
+import '../constants/const_tb_item.dart';
+
+
 class ItemModel {
   int idItem;
   int idLista;
   String nome;
   String descricao;
   double quantidade;
+  String medida;
   double preco;
   int comprado;
   int indice;
@@ -17,6 +20,7 @@ class ItemModel {
     required this.nome,
     required this.descricao,
     required this.quantidade,
+    required this.medida,
     required this.preco,
     required this.comprado,
     required this.indice,
@@ -25,10 +29,13 @@ class ItemModel {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
+    
+
     result.addAll({itemColumnListaId: idLista});
     result.addAll({itemColumnName: nome});
     result.addAll({itemColumnDescricao: descricao});
     result.addAll({itemColumnQuantidade: quantidade});
+    result.addAll({itemColumnMedida: medida});
     result.addAll({itemColumnPreco: preco});
     result.addAll({itemColumnComprado: comprado});
     result.addAll({itemColumnIndice: indice});
@@ -42,8 +49,9 @@ class ItemModel {
       idLista: map[itemColumnListaId] ?? 0,
       nome: map[itemColumnName] ?? '',
       descricao: map[itemColumnDescricao] ?? '',
-      quantidade: map[itemColumnQuantidade] ?? 0,
-      preco: map[itemColumnPreco] ?? 0,
+      quantidade: map[itemColumnQuantidade] ?? 0.0,
+      medida: map[itemColumnMedida] ?? '',
+      preco: map[itemColumnPreco] ?? 0.0,
       comprado: map[itemColumnComprado] ?? 0,
       indice: map[itemColumnIndice] ?? 0,
       

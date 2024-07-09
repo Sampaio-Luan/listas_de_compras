@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:listas_de_compras/constants/db_constants.dart';
 import 'package:listas_de_compras/models/lista.module.dart';
 
+import '../constants/const_tb_lista.dart';
 import '../database/banco.dart';
 
 class ListasRepository extends ChangeNotifier {
@@ -28,13 +28,7 @@ class ListasRepository extends ChangeNotifier {
       listaTableName,
     );
     for (int i = 0; i < listasMap.length; i++) {
-      listas.add(ListaModel(
-          id: listasMap[i]['id_lista'],
-          nome: listasMap[i]['nome_lista'],
-          descricao: listasMap[i]['descricao_lista']??'',
-          criacao: listasMap[i]['criacao'],
-          indice: listasMap[i]['indice'],
-          icone: listasMap[i]['icone']));
+      listas.add(ListaModel.fromMap(listasMap[i]));
 
       debugPrint("get Lista:    ${listas[i]}");
     }

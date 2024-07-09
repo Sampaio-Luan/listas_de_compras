@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/itens_controller.dart';
 import '../mixins/validations_mixin.dart';
 import '../models/item.module.dart';
-import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
 import 'campos_formulario.dart';
@@ -29,6 +29,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
   final formKeyItem = GlobalKey<FormState>();
 
   CamposFormulario cf = CamposFormulario();
+  bool autoValidar = false;
 
   String resumo = '';
   @override
@@ -42,7 +43,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
       descricaoItem.text = widget.item!.descricao;
       quantidadeItem.text = widget.item!.quantidade.toString();
       precoItem.text = p;
-      tipoMedida.text = 'kg';
+      tipoMedida.text = widget.item!.medida;
     } else {
       tipoMedida.text = 'uni';
       quantidadeItem.text = '1';
@@ -51,7 +52,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
 
   @override
   Widget build(BuildContext context) {
-    final itensR = context.watch<ItensRepository>();
+    final itemC = context.read<ItensController>();
     return AlertDialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 30),
         title: Text(
@@ -64,6 +65,9 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
             width: MediaQuery.of(context).size.width,
             child: Form(
               key: formKeyItem,
+              autovalidateMode: autoValidar
+                  ? AutovalidateMode.onUserInteraction
+                  : AutovalidateMode.disabled,
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 cf.linha(
                   context,
@@ -103,6 +107,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                     ),
                     Expanded(
                       child: DropdownButtonFormField(
+                          alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.symmetric(horizontal: 1),
                           style: Estilos().corpoColor(context, tamanho: 'p'),
                           decoration: const InputDecoration(
@@ -171,10 +176,6 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  'Resumo: $resumo',
-                  style: Estilos().corpoColor(context, tamanho: 'p'),
-                ),
               ]),
             ),
           ),
@@ -197,7 +198,9 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                 style: Estilos().corpoColor(context, tamanho: 'm'),
               ),
               onPressed: () {
-                _formatarValores();
+                setState(() {
+                  autoValidar = true;
+                });
                 if (isValidado(context: context, formularioKey: formKeyItem) ==
                     0) {
                   if (widget.item == null) {
@@ -208,17 +211,18 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                       descricao:
                           descricaoItem.text.isEmpty ? '' : descricaoItem.text,
                       quantidade: _formatarQuantidade(),
+                      medida: tipoMedida.text,
                       preco: _formatarPreco(),
                       comprado: 0,
                       indice: 0,
                     );
-                    itensR.inserirItem(i);
+                    itemC.adicionarItem(i);
                   } else {
                     widget.item!.nome = nomeItem.text;
                     widget.item!.quantidade = _formatarQuantidade();
                     widget.item!.preco = _formatarPreco();
                     widget.item!.descricao = descricaoItem.text;
-                    itensR.atualizarItem(widget.item!);
+                    itemC.atualizarItem(widget.item!);
                   }
                   _resetTextController();
                   Navigator.of(context).pop();
