@@ -38,6 +38,14 @@ class OpcoesFiltros extends StatelessWidget {
                   }
                 },
               ),
+              PopupMenuItem(
+                child: _label(context, label: 'Todos'),
+                onTap: () {
+                  if (itemOuLista == 'item') {
+                    itemC.filtrarItens('Todos');
+                  }
+                },
+              ),
             ]);
   }
 
@@ -51,6 +59,11 @@ class OpcoesFiltros extends StatelessWidget {
       ),
       'A comprar': Icon(
         PhosphorIconsRegular.square,
+        color: Theme.of(context).colorScheme.primary,
+        size: tamanho,
+      ),
+      'Todos': Icon(
+        PhosphorIconsRegular.listBullets,
         color: Theme.of(context).colorScheme.primary,
         size: tamanho,
       ),

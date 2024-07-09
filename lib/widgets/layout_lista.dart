@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../controllers/itens_controller.dart';
 import '../models/lista.module.dart';
 import '../pages/itens_page.dart';
-import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
 import 'opcoes_modificacao.dart';

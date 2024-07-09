@@ -7,83 +7,104 @@ import '../repositories/itens_repository.dart';
 
 class ItensController extends ChangeNotifier {
   final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
-  double _total = 0;
-  String get total => formatter.format(_total);
-
-  final List<ItemModel> _itens = [];
-  List<ItemModel> get itens => _itens;
-
-  final List<ItemModel> _itensFiltrados = [];
-  List<ItemModel> get itensFiltrados => _itensFiltrados;
 
   String _ordenarPor = '';
+  String _filtrarPor = '';
+  double _precoTotal = 0;
+  int _idLista = 2;
+
+  String get filtrarPor => _filtrarPor;
   String get ordenarPor => _ordenarPor;
+  String get precoTotal => formatter.format(_precoTotal);
 
-  List<ItemModel> itemInterface = [];
+  final List<ItemModel> _itensFiltrados = [];
+  final List<ItemModel> _itensOrdenados = [];
+  final List<ItemModel> _itens = [];
 
-  int _idLista = 0;
+  List<ItemModel> get itens => _itens;
+  List<ItemModel> get itensFiltrados => _itensFiltrados;
+  List<ItemModel> get itensOrdenados => _itensOrdenados;
+
+  ItensController() {
+    iniciarControle(_idLista);
+  }
 
   iniciarControle(int idLista) {
     _idLista = idLista;
     recuperarItens();
-
   }
 
-  recuperarItens() async {
-    _itens.clear();
+  _limparTudo() {
     _itensFiltrados.clear();
-    itemInterface.clear();
-    _total = 0;
-    final itens = await ItensRepository().recuperarItens(_idLista);
-    for (var item in itens) {
-      _itens.add(item);
-      
-    }
-    itemInterface.addAll(_itens);
-    calculaTotal(_itens);
+    _itensOrdenados.clear();
+    _itens.clear();
+    _precoTotal = 0;
+    _ordenarPor = '';
+    _filtrarPor = '';
     notifyListeners();
   }
 
-  ordenarItens(String ordem)async {
+  recuperarItens() async {
+    _limparTudo();
+
+    final lItens = await ItensRepository().recuperarItens(_idLista);
+
+    for (var item in lItens) {
+      _itens.add(item);
+    }
+
+    calculaTotal(_itens);
+  }
+
+  ordenarItens(String ordem)  {
     _ordenarPor = ordem;
-    itemInterface.clear();
-    if (_ordenarPor == ordem) {
-      _itens.sort((a, b) => a.nome.compareTo(b.nome));
-    } else if (_ordenarPor == ordem) {
-      _itens.sort((a, b) => b.nome.compareTo(a.nome));
-    } else if (_ordenarPor == ordem) {
-      _itens.sort((a, b) => b.preco.compareTo(a.preco));
-    } else if (_ordenarPor == ordem) {
-      _itens.sort((a, b) => a.preco.compareTo(b.preco));
+    _itensOrdenados.clear();
+
+    if (ordem == 'A-z') {
+      _itens.sort((ItemModel a, ItemModel b) => a.nome.compareTo(b.nome));
+    } else if (ordem == 'Z-a') {
+      _itens.sort((ItemModel a, ItemModel b) => b.nome.compareTo(a.nome));
+    } else if (ordem == '+ Caro') {
+      _itens.sort((ItemModel a, ItemModel b) => b.preco.compareTo(a.preco));
+    }else{
+      _itens.sort((ItemModel a, ItemModel b) => a.preco.compareTo(b.preco));
     }
-    for (var i in _itens) {
-      itemInterface.add(i);
-      debugPrint("Ordem: ${i.nome}");
-    }
+
+      for (var i = 0; i < _itens.length; i++) {
+        debugPrint('ordenar controller $ordem: ${_itens[i].nome} -- ${_itens[i].preco}');
+      }
+      
+  
     notifyListeners();
   }
 
   filtrarItens(String filtro) {
     _itensFiltrados.clear();
-    itemInterface.clear();
+
+    _itensOrdenados.clear();
     if (filtro == 'Comprados') {
-      for (var item in _itens) {
-        if (item.comprado == 1) {
-          _itensFiltrados.add(item);
+      for (int i = 0; i < _itens.length; i++) {
+        if (_itens[i].comprado == 1) {
+          _itensFiltrados.add(_itens[i]);
         }
       }
-    } else {
-      for (var item in _itens) {
-        if (item.comprado == 0) {
-          _itensFiltrados.add(item);
+    }else if (filtro == 'A comprar') {
+      for (int i = 0; i < _itens.length; i++) {
+        if (_itens[i].comprado == 0) {
+          _itensFiltrados.add(_itens[i]);
         }
       }
+    }else{
+      _itensFiltrados.addAll(_itens);
+    }
+    for (var element in _itensFiltrados) {
+      debugPrint("Filtro: ${element.nome}");
     }
 
-    for (var item in _itensFiltrados) {
-      itemInterface.add(item);
-      debugPrint("Filtro: ${item.nome}");
-    }
+    // for (var item in _itensFiltrados) {
+    //   itemInterface.add(item);
+    //   debugPrint("Filtro: ${item.nome}");
+    // }
     notifyListeners();
   }
 
@@ -109,13 +130,13 @@ class ItensController extends ChangeNotifier {
   }
 
   calculaTotal(List<ItemModel> itens) {
-    double t = 0;
+    double total = 0;
     for (var item in itens) {
       if (item.comprado == 1) {
-        t += item.preco * item.quantidade;
+        total += item.preco * item.quantidade;
       }
     }
-    _total = t;
+    _precoTotal = total;
     notifyListeners();
   }
 }

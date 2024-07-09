@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:provider/provider.dart';
 
 import 'package:listas_de_compras/widgets/formulario_item.dart';
 
@@ -23,12 +22,17 @@ class ItensPage extends StatefulWidget {
 }
 
 class _ItensPageState extends State<ItensPage> {
-  late List<ItemModel> itens;
+  late ItensController controle;
   int i = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    controle = ItensController();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final itemC = context.watch<ItensController>();
-    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -40,44 +44,54 @@ class _ItensPageState extends State<ItensPage> {
               icon: const Icon(PhosphorIconsBold.magnifyingGlass)),
         ],
       ),
-      body: Column(children: [
-        Expanded(
-          child: Row(children: [
-            const Expanded(child: OpcoesOrdenacao(itemOuLista: 'item')),
-            const VerticalDivider(thickness: 2),
-            const Expanded(child: OpcoesFiltros(itemOuLista: 'item')),
-            const VerticalDivider(thickness: 2),
-            Expanded(
-              child: Checkbox(value: false, onChanged: (_) {}),
-            ),
-          ]),
-        ),
-        Expanded(
-            flex: 15,
-            child: itemC.itemInterface.isEmpty
-                ? const Center(child: Text("Adicione um Item"))
-                : Column(children: [
-                    Expanded(
-                      flex: 13,
-                      child: ListView.builder(
-                        itemCount: itemC.itemInterface.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return LayoutItem(item: itemC.itemInterface[index]);
-                        },
+      body: AnimatedBuilder(
+        animation: controle,
+        builder: (context, child) {
+          final  itemC = controle.itens;
+          return (itemC.isEmpty)
+              ? const Center(child: CircularProgressIndicator())
+              : Column(children: [
+                  Expanded(
+                    child: Row(children: [
+                      const Expanded(
+                          child: OpcoesOrdenacao(itemOuLista: 'item')),
+                      const VerticalDivider(thickness: 2),
+                      const Expanded(child: OpcoesFiltros(itemOuLista: 'item')),
+                      const VerticalDivider(thickness: 2),
+                      Expanded(
+                        child: Checkbox(value: false, onChanged: (_) {}),
                       ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 18.0),
-                        child: Row(children: [
-                          Text("Total: ${itemC.total}",
-                              style:
-                                  Estilos().tituloColor(context, tamanho: 'g')),
-                        ]),
-                      ),
-                    ),
-                  ]),),
-      ]),
+                    ]),
+                  ),
+                  Expanded(
+                    flex: 15,
+                    child: itemC.isEmpty
+                        ? const Center(child: Text("Adicione um Item"))
+                        : Column(children: [
+                            Expanded(
+                              flex: 13,
+                              child: ListView.builder(
+                                itemCount: itemC.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return LayoutItem(item: itemC[index]);
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 18.0),
+                                child: Row(children: [
+                                  Text("Total: ${controle.precoTotal}",
+                                      style: Estilos()
+                                          .tituloColor(context, tamanho: 'g')),
+                                ]),
+                              ),
+                            ),
+                          ]),
+                  ),
+                ]);
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
