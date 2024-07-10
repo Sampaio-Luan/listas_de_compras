@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:provider/provider.dart';
 
-import '../controllers/itens_controller.dart';
 import '../models/lista.module.dart';
 import '../pages/itens_page.dart';
 import '../theme/estilos.dart';
@@ -31,7 +29,7 @@ class _LayoutListaState extends State<LayoutLista> {
 
   @override
   Widget build(BuildContext context) {
-    final itensC = context.read<ItensController>();
+   
     return Card.outlined(
       elevation: 0,
       color: Theme.of(context).colorScheme.background,
@@ -44,7 +42,7 @@ class _LayoutListaState extends State<LayoutLista> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                itensC.iniciarControle(lista.id);
+                
                 Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -13,7 +13,7 @@ class OpcoesFiltros extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemC = context.watch<ItensController>();
+    final itemC = context.read<ItensController>();
     return PopupMenuButton<dynamic>(
         padding: const EdgeInsets.all(0),
         icon: const Icon(

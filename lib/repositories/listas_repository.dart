@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:listas_de_compras/models/lista.module.dart';
-
 import '../constants/const_tb_lista.dart';
 import '../database/banco.dart';
+import '../models/lista.module.dart';
 
 class ListasRepository extends ChangeNotifier {
   final List<ListaModel> listas = [];

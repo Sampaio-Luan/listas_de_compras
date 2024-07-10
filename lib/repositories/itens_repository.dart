@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:listas_de_compras/models/item.module.dart';
-
 import '../constants/const_tb_item.dart';
 import '../database/banco.dart';
+import '../models/item.module.dart';
 
 class ItensRepository extends ChangeNotifier {
   final List<ItemModel> _itens = [];
@@ -31,7 +30,7 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [idLista],
     );
 
-    debugPrint("$itensMap");
+    debugPrint("recuperar Itens repository: $itensMap");
 
     for (int i = 0; i < itensMap.length; i++) {
       _itens.add(ItemModel.fromMap(itensMap[i]));

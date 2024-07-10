@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'package:listas_de_compras/widgets/formulario_item.dart';
 
@@ -11,6 +12,7 @@ import '../theme/estilos.dart';
 import '../widgets/layout_item.dart';
 import '../widgets/opcoes_filtros.dart';
 import '../widgets/opcoes_ordenacao.dart';
+import '../widgets/painel_controle.dart';
 
 class ItensPage extends StatefulWidget {
   final ListaModel lista;
@@ -22,76 +24,59 @@ class ItensPage extends StatefulWidget {
 }
 
 class _ItensPageState extends State<ItensPage> {
-  late ItensController controle;
+  ItensController itensController = ItensController();
+
   int i = 0;
 
   @override
   void initState() {
     super.initState();
-    controle = ItensController();
+    itensController.iniciarController(idLista: widget.lista.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.lista.nome),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(PhosphorIconsBold.magnifyingGlass)),
-        ],
-      ),
-      body: AnimatedBuilder(
-        animation: controle,
-        builder: (context, child) {
-          final  itemC = controle.itens;
-          return (itemC.isEmpty)
-              ? const Center(child: CircularProgressIndicator())
-              : Column(children: [
-                  Expanded(
-                    child: Row(children: [
-                      const Expanded(
-                          child: OpcoesOrdenacao(itemOuLista: 'item')),
-                      const VerticalDivider(thickness: 2),
-                      const Expanded(child: OpcoesFiltros(itemOuLista: 'item')),
-                      const VerticalDivider(thickness: 2),
-                      Expanded(
-                        child: Checkbox(value: false, onChanged: (_) {}),
+      appBar: _appBar(titulo: widget.lista.nome),
+      body: Consumer<ItensController>(builder: (context, controle, child) {
+        debugPrint('itens page: ${controle.itensInterface.length}');
+        return controle.itensInterface.isEmpty
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(children: [
+                const Expanded(
+                  child: PainelControle(
+                    itemOuLista: 'item',
+                  ),
+                ),
+                Expanded(
+                  flex: 15,
+                  child: Column(children: [
+                    Expanded(
+                      flex: 13,
+                      child: ListView.builder(
+                        itemCount: controle.itensInterface.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return LayoutItem(
+                              item: controle.itensInterface[index]);
+                        },
                       ),
-                    ]),
-                  ),
-                  Expanded(
-                    flex: 15,
-                    child: itemC.isEmpty
-                        ? const Center(child: Text("Adicione um Item"))
-                        : Column(children: [
-                            Expanded(
-                              flex: 13,
-                              child: ListView.builder(
-                                itemCount: itemC.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return LayoutItem(item: itemC[index]);
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 18.0),
-                                child: Row(children: [
-                                  Text("Total: ${controle.precoTotal}",
-                                      style: Estilos()
-                                          .tituloColor(context, tamanho: 'g')),
-                                ]),
-                              ),
-                            ),
-                          ]),
-                  ),
-                ]);
-        },
-      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 18.0),
+                        child: Row(children: [
+                          Text("Total: ${controle.precoTotal}",
+                              style:
+                                  Estilos().tituloColor(context, tamanho: 'g')),
+                        ]),
+                      ),
+                    ),
+                  ]),
+                ),
+              ]);
+      }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -105,6 +90,22 @@ class _ItensPageState extends State<ItensPage> {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  AppBar _appBar({required String titulo}) {
+    return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      title: Text(titulo),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            PhosphorIconsBold.magnifyingGlass,
+          ),
+        ),
+      ],
     );
   }
 }
