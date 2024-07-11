@@ -8,10 +8,9 @@ import 'package:listas_de_compras/widgets/formulario_item.dart';
 import '../controllers/itens_controller.dart';
 import '../models/item.module.dart';
 import '../models/lista.module.dart';
+import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 import '../widgets/layout_item.dart';
-import '../widgets/opcoes_filtros.dart';
-import '../widgets/opcoes_ordenacao.dart';
 import '../widgets/painel_controle.dart';
 
 class ItensPage extends StatefulWidget {
@@ -26,57 +25,66 @@ class ItensPage extends StatefulWidget {
 class _ItensPageState extends State<ItensPage> {
   ItensController itensController = ItensController();
 
-  int i = 0;
-
-  @override
+  
+@override
   void initState() {
+   
     super.initState();
     itensController.iniciarController(idLista: widget.lista.id);
+    itensController.idLista = widget.lista.id;
   }
-
+ 
   @override
   Widget build(BuildContext context) {
+    final ctrl = context.watch<ItensRepository>();
+    //final ictrl = context.read<ItensController>();
+    
+  //ctrl.recuperarItens(widget.lista.id);
     return Scaffold(
       appBar: _appBar(titulo: widget.lista.nome),
-      body: Consumer<ItensController>(builder: (context, controle, child) {
-        debugPrint('itens page: ${controle.itensInterface.length}');
-        return controle.itensInterface.isEmpty
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Column(children: [
-                const Expanded(
-                  child: PainelControle(
-                    itemOuLista: 'item',
-                  ),
+      body: Column(children: [
+        ctrl.itens.isEmpty
+            ? Container()
+            : const Expanded(
+                child: PainelControle(
+                  itemOuLista: 'item',
                 ),
-                Expanded(
-                  flex: 15,
-                  child: Column(children: [
-                    Expanded(
-                      flex: 13,
+              ),
+        Expanded(
+          flex: 15,
+          child: Column(children: [
+            Consumer<ItensRepository>(builder: (context, controle, _) {
+              final itens = controle.itens;
+              debugPrint('itens page: ${itens.length}');
+
+              return itens.isEmpty
+                  ? _indicadorDeProgresso()
+                  : Expanded(
                       child: ListView.builder(
-                        itemCount: controle.itensInterface.length,
+                        itemCount: itens.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return LayoutItem(
-                              item: controle.itensInterface[index]);
+                          return LayoutItem(item: itens[index]);
                         },
                       ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 18.0),
-                        child: Row(children: [
-                          Text("Total: ${controle.precoTotal}",
-                              style:
-                                  Estilos().tituloColor(context, tamanho: 'g')),
-                        ]),
-                      ),
-                    ),
-                  ]),
+                    );
+            }),
+          ]),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Row(children: [
+              Text(
+                "Total: ${ctrl.itens.length} itens",
+                style: Estilos().tituloColor(
+                  context,
+                  tamanho: 'g',
                 ),
-              ]);
-      }),
+              ),
+            ]),
+          ),
+        ),
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -106,6 +114,15 @@ class _ItensPageState extends State<ItensPage> {
           ),
         ),
       ],
+    );
+  }
+
+  _indicadorDeProgresso() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.4,
+          horizontal: MediaQuery.of(context).size.width * 0.3),
+      child: const CircularProgressIndicator(),
     );
   }
 }

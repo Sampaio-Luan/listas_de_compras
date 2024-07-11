@@ -10,7 +10,7 @@ import '../repositories/listas_repository.dart';
 import 'main_app.dart';
 import 'repositories/itens_repository.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('pt_BR');
 

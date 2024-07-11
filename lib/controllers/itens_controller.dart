@@ -15,12 +15,14 @@ class ItensController extends ChangeNotifier {
 
   String get precoTotal => formatter.format(_precoTotal);
 
-  final List<ItemModel> _itensInterface = [];
-  final List<ItemModel> _itens = [];
+ final List<ItemModel> _itensInterface = [];
+  List<ItemModel> _itens = [];
 
   UnmodifiableListView<ItemModel> get itens => UnmodifiableListView(_itens);
   UnmodifiableListView<ItemModel> get itensInterface =>
       UnmodifiableListView(_itensInterface);
+
+set idLista(int setId) => _idLista; 
 
   iniciarController({required int idLista}) {
     _idLista = idLista;
@@ -31,21 +33,41 @@ class ItensController extends ChangeNotifier {
     _itensInterface.clear();
     _itens.clear();
     _precoTotal = 0;
+    debugPrint("limpar tudo");
+    notifyListeners();
+    debugPrint("limpou tudo e notificou os listeners");
   }
 
   recuperarItens() async {
     _limparTudo();
 
-    final lItens = await ItensRepository().recuperarItens(_idLista);
+    _itens = await ItensRepository().recuperarItens(_idLista);
+    debugPrint("itens controller: ${_itens.length}");
 
-    debugPrint(
-        "itens controller interface recuperar: ${_itensInterface.length}");
-    preencher(lItens);
+    _itensInterface.addAll(_itens);
+    debugPrint("controller interface recuperar: ${_itensInterface.length}");
+
+    for (int i = 0; i < _itensInterface.length; i++) {
+      debugPrint('itens Interface: ${_itensInterface[i].nome}');
+      debugPrint('\n itens _itens: ${_itens[i].nome}');
+    }
+   await Future.delayed(const Duration(milliseconds: 5000), () {
+    debugPrint('entrou no future');
+      notifyListeners();
+      debugPrint('notificou os listeners no future');
+    });
+
+    //preencher();
+
+    debugPrint("notificou os listeners apos recuperar itens e itens interface");
   }
 
-  preencher(dynamic i) {
-    for (var item in i) {
-      _itens.add(item);
+  
+
+  preencher() {
+    _itensInterface.clear();
+    for (var item in _itens) {
+      _itensInterface.add(item);
     }
 
     _itensInterface.addAll(_itens);
@@ -85,8 +107,9 @@ class ItensController extends ChangeNotifier {
     notifyListeners();
   }
 
-  filtrarItens(String filtro) {
+  filtrarItens(String filtro)async {
     _rebuildInterface();
+    _itens = await ItensRepository().recuperarItensFiltrado(filtro, _idLista);
 
     if (filtro == 'Comprados') {
       for (int i = 0; i < _itens.length; i++) {

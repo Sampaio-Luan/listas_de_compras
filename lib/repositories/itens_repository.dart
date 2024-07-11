@@ -8,14 +8,7 @@ import '../models/item.module.dart';
 
 class ItensRepository extends ChangeNotifier {
   final List<ItemModel> _itens = [];
-  final List<ItemModel> _itensFiltrados = [];
-  final List<ItemModel> _itensOrdenados = [];
   List<ItemModel> get itens => _itens;
-  List<ItemModel> get itensFiltrados => _itensFiltrados;
-  List<ItemModel> get itensOrdenados => _itensOrdenados;
-
-  final Map<int, List<ItemModel>> _itensPorLista = {};
-  Map<int, List<ItemModel>> get itensPorLista => _itensPorLista;
 
   late Database db;
 
@@ -30,60 +23,59 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [idLista],
     );
 
-    debugPrint("recuperar Itens repository: $itensMap");
+    debugPrint("recuperar Itens repository tamanho: ${itensMap.length}");
 
     for (int i = 0; i < itensMap.length; i++) {
       _itens.add(ItemModel.fromMap(itensMap[i]));
-      
-      debugPrint("${itensMap[i]}");
-    }
 
-    // _organizarItemPorLista();
+      debugPrint("recuperar itens repository: ${itensMap[i]}");
+    }
 
     return _itens;
   }
 
-  // _organizarItemPorLista() {
-  //   _itensPorLista.clear();
-  //   for (var item in _itens) {
-  //     if (_itensPorLista.containsKey(item.idLista)) {
-  //       _itensPorLista[item.idLista]!.add(item);
-  //     } else {
-  //       _itensPorLista[item.idLista] = [item];
-  //     }
-  //   }
-  // }
-
-  recuperarItensFiltrado(String filtro) async {
+  recuperarItensFiltrado(String filtro, int idLista) async {
     db = await Banco.instancia.database;
+    _itens.clear();
+    debugPrint('recuperarItensFiltrado: $filtro');
 
     int isComprado = filtro == 'Comprado' ? 1 : 0;
 
     final List<Map<String, dynamic>> itensMap = await db.query(
       itemTableName,
-      where: "$itemColumnName = ?",
-      whereArgs: [isComprado],
+      where: "$itemColumnComprado = ? AND $itemColumnListaId = ?",
+      whereArgs: [isComprado, idLista],
     );
 
+    debugPrint("filtrado repository tamanho: ${itensMap.length}");
+
     for (int i = 0; i < itensMap.length; i++) {
-      _itensFiltrados.add(ItemModel.fromMap(itensMap[i]));
+      _itens.add(ItemModel.fromMap(itensMap[i]));
+
+      debugPrint("Filtrado itens repository: ${itensMap[i]}");
     }
+
     notifyListeners();
-    return _itensFiltrados;
+    //return _itens;
   }
 
   recuperarItensOrdenado(String ordem) async {
     db = await Banco.instancia.database;
-
+    _itens.clear();
     final List<Map<String, dynamic>> itensMap = await db.query(
       itemTableName,
       orderBy: "$itemColumnName ASC",
     );
+
+    debugPrint("recuperarItensOrdenado repository tamanho: ${itensMap.length}");
     for (int i = 0; i < itensMap.length; i++) {
-      _itensOrdenados.add(ItemModel.fromMap(itensMap[i]));
+      _itens.add(ItemModel.fromMap(itensMap[i]));
+      debugPrint("recuperarItensOrdenado itens repository: ${itensMap[i]}");
     }
+
+    
     notifyListeners();
-    return _itensOrdenados;
+    return _itens;
   }
 
   inserirItem(ItemModel item) async {

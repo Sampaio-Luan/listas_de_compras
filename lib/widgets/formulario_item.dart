@@ -238,21 +238,21 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
     descricaoItem.clear();
   }
 
-  _formatarValores() {
-    _formatarQuantidade();
-    _formatarPreco();
+  // _formatarValores() {
+  //   _formatarQuantidade();
+  //   _formatarPreco();
 
-    if (tipoMedida.text == 'kg') {
-      double qtd = _formatarQuantidade();
-      resumo =
-          '$qtd ${qtd > 1 ? 'kg' : 'gramas'} de ${nomeItem.text} a ${precoItem.text} reais o quilo.';
-    } else {
-      resumo =
-          '${quantidadeItem.text} ${int.parse(quantidadeItem.text) > 1 ? 'unidades' : 'unidade'} de ${nomeItem.text} a ${precoItem.text} reais ${int.parse(quantidadeItem.text) > 1 ? 'cada' : ''}';
-    }
+  //   if (tipoMedida.text == 'kg') {
+  //     double qtd = _formatarQuantidade();
+  //     resumo =
+  //         '$qtd ${qtd > 1 ? 'kg' : 'gramas'} de ${nomeItem.text} a ${precoItem.text} reais o quilo.';
+  //   } else {
+  //     resumo =
+  //         '${quantidadeItem.text} ${int.parse(quantidadeItem.text) > 1 ? 'unidades' : 'unidade'} de ${nomeItem.text} a ${precoItem.text} reais ${int.parse(quantidadeItem.text) > 1 ? 'cada' : ''}';
+  //   }
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
 
   _formatarQuantidade() {
     String qtd = quantidadeItem.text;
