@@ -86,7 +86,7 @@ class ItensRepository extends ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     debugPrint("Vai tomar:    $id");
-    return await recuperarItens(item.idLista);
+    
   }
 
   atualizarItem(ItemModel item) async {
@@ -97,7 +97,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    return await recuperarItens(item.idLista);
+    
   }
 
   excluirItem(ItemModel item) async {
@@ -107,7 +107,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    return await recuperarItens(item.idLista);
+    
   }
 
   editarUmAtributo(
@@ -121,6 +121,30 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    return await recuperarItens(item.idLista);
+    
+  }
+
+  marcarTodosItens({required int idLista}) async {
+    db = await Banco.instancia.database;
+    await db.update(
+      itemTableName,
+      {itemColumnComprado: 1},
+      where: "$itemColumnListaId = ?",
+      whereArgs: [idLista],
+    );
+
+    debugPrint('REPOSITORIO Marcado todos itens');
+  }
+
+    desmarcarTodosItens({required int idLista}) async {
+    db = await Banco.instancia.database;
+    await db.update(
+      itemTableName,
+      {itemColumnComprado: 0},
+      where: "$itemColumnListaId = ?",
+      whereArgs: [idLista],
+    );
+
+    debugPrint('REPOSITORIO desmarcado todos itens');
   }
 }

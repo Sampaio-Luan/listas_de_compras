@@ -4,25 +4,39 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 
+import '../constants/const_strings_globais.dart';
 import '../models/item.module.dart';
 import '../repositories/itens_repository.dart';
 
 class ItensController extends ChangeNotifier {
+//#region ================== PROPRIEDADES ========================================
   final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
 
   double _precoTotal = 0;
-  int _idLista = 2;
+  int _idLista = 0;
 
   String get precoTotal => formatter.format(_precoTotal);
 
- final List<ItemModel> _itensInterface = [];
   List<ItemModel> _itens = [];
-
   UnmodifiableListView<ItemModel> get itens => UnmodifiableListView(_itens);
+
+  final List<ItemModel> _itensInterface = [];
   UnmodifiableListView<ItemModel> get itensInterface =>
       UnmodifiableListView(_itensInterface);
 
-set idLista(int setId) => _idLista; 
+   List<ItemModel> _itensPesquisados = [];
+  UnmodifiableListView<ItemModel> get itensPesquisados =>
+      UnmodifiableListView(_itensPesquisados);
+
+  String _filtro = '';
+  String get filtro => _filtro;
+
+  String _ordem = '';
+  String get ordem => _ordem;
+
+  bool isMarcadoTodosItens = false;
+
+//#endregion =====================================================================
 
   iniciarController({required int idLista}) {
     _idLista = idLista;
@@ -33,9 +47,9 @@ set idLista(int setId) => _idLista;
     _itensInterface.clear();
     _itens.clear();
     _precoTotal = 0;
+    _filtro = '';
+    _ordem = '';
     debugPrint("limpar tudo");
-    notifyListeners();
-    debugPrint("limpou tudo e notificou os listeners");
   }
 
   recuperarItens() async {
@@ -47,35 +61,24 @@ set idLista(int setId) => _idLista;
     _itensInterface.addAll(_itens);
     debugPrint("controller interface recuperar: ${_itensInterface.length}");
 
-    for (int i = 0; i < _itensInterface.length; i++) {
-      debugPrint('itens Interface: ${_itensInterface[i].nome}');
-      debugPrint('\n itens _itens: ${_itens[i].nome}');
+    int verificarComprados = 0;
+    for (int i = 0; i < _itens.length; i++) {
+      if (_itens[i].comprado == 1) {
+        verificarComprados++;
+      }
+      debugPrint('itens Interface controller: ${_itensInterface[i].nome}');
+      debugPrint('itens _itens controller: ${_itens[i].nome}');
     }
-   await Future.delayed(const Duration(milliseconds: 5000), () {
-    debugPrint('entrou no future');
-      notifyListeners();
-      debugPrint('notificou os listeners no future');
-    });
 
-    //preencher();
+    if (verificarComprados == _itensInterface.length) {
+      isMarcadoTodosItens = true;
+      debugPrint(
+          'marcado todos itens recuperar controller: $isMarcadoTodosItens');
+    }
+
+    _calculaTotal();
 
     debugPrint("notificou os listeners apos recuperar itens e itens interface");
-  }
-
-  
-
-  preencher() {
-    _itensInterface.clear();
-    for (var item in _itens) {
-      _itensInterface.add(item);
-    }
-
-    _itensInterface.addAll(_itens);
-    debugPrint(
-        "itens controller interface preencher: ${_itensInterface.length}");
-
-    calculaTotal(_itens);
-    notifyListeners();
   }
 
   _rebuildInterface() {
@@ -83,16 +86,20 @@ set idLista(int setId) => _idLista;
     notifyListeners();
   }
 
-  ordenarItens(String ordem) {
+  ordenarItens(String ordem) async {
+    _ordem = ordem;
+    debugPrint('Ordem no controller: $_ordem');
     _rebuildInterface();
-
-    _itensInterface.clear();
-
-    if (ordem == 'A-z') {
-      _itens.sort((ItemModel a, ItemModel b) => a.nome.compareTo(b.nome));
-    } else if (ordem == 'Z-a') {
-      _itens.sort((ItemModel a, ItemModel b) => b.nome.compareTo(a.nome));
-    } else if (ordem == '+ Caro') {
+    await Future.delayed(const Duration(milliseconds: 300), () {
+      debugPrint('Reordenando itens');
+    });
+    if (ordem == kAz) {
+      _itens.sort((ItemModel a, ItemModel b) =>
+          a.nome.toLowerCase().compareTo(b.nome.toLowerCase()));
+    } else if (ordem == kZa) {
+      _itens.sort((ItemModel a, ItemModel b) =>
+          b.nome.toLowerCase().compareTo(a.nome.toLowerCase()));
+    } else if (ordem == kCaro) {
       _itens.sort((ItemModel a, ItemModel b) => b.preco.compareTo(a.preco));
     } else {
       _itens.sort((ItemModel a, ItemModel b) => a.preco.compareTo(b.preco));
@@ -107,9 +114,15 @@ set idLista(int setId) => _idLista;
     notifyListeners();
   }
 
-  filtrarItens(String filtro)async {
+  filtrarItens(String filtro) async {
+    _filtro = filtro;
+    debugPrint('Filtro no controller: $_filtro');
+
     _rebuildInterface();
-    _itens = await ItensRepository().recuperarItensFiltrado(filtro, _idLista);
+
+    await Future.delayed(const Duration(milliseconds: 300), () {
+      debugPrint('Filtrando itens.'); // Prints after 1 second.
+    });
 
     if (filtro == 'Comprados') {
       for (int i = 0; i < _itens.length; i++) {
@@ -129,37 +142,85 @@ set idLista(int setId) => _idLista;
     for (var element in _itensInterface) {
       debugPrint("Filtro: ${element.nome}");
     }
+
+    notifyListeners();
   }
 
   adicionarItem(ItemModel item) {
     _itens.add(item);
-    calculaTotal(_itens);
+    _itensInterface.add(item);
+
     ItensRepository().inserirItem(item);
-    notifyListeners();
+    _calculaTotal();
   }
 
-  removerItem(ItemModel item) {
+  removerItem(ItemModel item) async {
     _itens.remove(item);
-    calculaTotal(_itens);
+    _itensInterface.remove(item);
+
     ItensRepository().excluirItem(item);
-    notifyListeners();
+    _calculaTotal();
   }
 
-  atualizarItem(ItemModel item) {
+  atualizarItem(ItemModel item) async {
     _itens[_itens.indexOf(item)] = item;
-    calculaTotal(_itens);
+    _itensInterface[_itensInterface.indexOf(item)] = item;
+
     ItensRepository().atualizarItem(item);
-    notifyListeners();
+    _calculaTotal();
   }
 
-  calculaTotal(List<ItemModel> itens) {
+  marcarTodos() async {
+    debugPrint('marcado todos itens funcao controller: $isMarcadoTodosItens');
+    _rebuildInterface();
+    await Future.delayed(const Duration(milliseconds: 300), () {
+      debugPrint('Controle Marcando/Desmarcando todos itens');
+    });
+    if (isMarcadoTodosItens) {
+      for (int i = 0; i < _itens.length; i++) {
+        _itens[i].comprado = 0;
+      }
+      isMarcadoTodosItens = !isMarcadoTodosItens;
+      debugPrint(
+          'marcado todos itens sair do if controller: $isMarcadoTodosItens');
+      ItensRepository().desmarcarTodosItens(idLista: _idLista);
+    } else {
+      for (int i = 0; i < _itens.length; i++) {
+        _itens[i].comprado = 1;
+      }
+      isMarcadoTodosItens = !isMarcadoTodosItens;
+      debugPrint(
+          'marcado todos itens sair do else controller: $isMarcadoTodosItens');
+      ItensRepository().marcarTodosItens(idLista: _idLista);
+    }
+
+    _itensInterface.addAll(_itens);
+
+    _calculaTotal();
+  }
+
+  _calculaTotal() {
     double total = 0;
-    for (var item in itens) {
+    for (var item in _itens) {
       if (item.comprado == 1) {
         total += item.preco * item.quantidade;
       }
     }
     _precoTotal = total;
-    // notifyListeners();
+    notifyListeners();
+  }
+
+  pesquisar({required String pesquisarPor}) async {
+    _rebuildInterface();
+
+    await Future.delayed(const Duration(milliseconds: 100), () {
+      debugPrint('Pesquisando itens.');
+    });
+    _itensPesquisados = _itens
+        .where((element) =>
+            element.nome.toLowerCase().contains(pesquisarPor.toLowerCase()))
+        .toList();
+    _itensInterface.addAll(_itensPesquisados);
+    notifyListeners();
   }
 }

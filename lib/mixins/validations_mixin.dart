@@ -53,14 +53,15 @@ String? multiValidacoes({required List<String? Function()> validacoes}) {
 isValidado({
   required BuildContext context,
   required GlobalKey<FormState> formularioKey,
+  required String mensagem,
 }) {
   if (formularioKey.currentState!.validate()) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).primaryColor,
 
-        content: const Text(
-          "Salvo com sucesso !!!",
+        content:  Text(
+          mensagem,
           style: TextStyle(fontSize: 16),
         ),
         duration: const Duration(seconds: 3), // Defina o tempo desejado

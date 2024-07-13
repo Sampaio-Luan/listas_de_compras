@@ -98,7 +98,12 @@ class _FormularioListaState extends State<FormularioLista>
                 setState(() {
                   autoValidar = true;
                 });
-                if (isValidado(context: context, formularioKey: formKeyLista) ==
+                if (isValidado(
+                        context: context,
+                        formularioKey: formKeyLista,
+                        mensagem: widget.lista == null
+                            ? 'Salvo com sucesso !!!'
+                            : 'Editado com sucesso !!!') ==
                     0) {
                   if (widget.lista == null) {
                     ListaModel l = ListaModel(

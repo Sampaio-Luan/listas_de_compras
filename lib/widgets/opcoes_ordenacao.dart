@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/const_strings_globais.dart';
 import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../theme/estilos.dart';
@@ -14,54 +15,53 @@ class OpcoesOrdenacao extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemC = context.watch<ItensController>();
+    final itemC = context.read<ItensController>();
     final listaC = context.read<ListasController>();
     return PopupMenuButton<dynamic>(
         padding: const EdgeInsets.all(0),
-        icon: const Icon(
-          PhosphorIconsRegular.arrowsDownUp,
+        icon: const Icon( PhosphorIconsRegular.arrowsDownUp,
         ),
         position: PopupMenuPosition.under,
         elevation: 1,
         itemBuilder: (context) => [
               PopupMenuItem(
-                child: _label(context, label: 'A-z'),
+                child: _label(context, label: kAz),
                 onTap: () {
                   if (itemOuLista == 'item') {
-                    itemC.ordenarItens('A-z');
+                    itemC.ordenarItens(kAz);
                   } else {
-                    listaC.ordenarListas('A-z');
+                    listaC.ordenarListas(kAz);
                   }
                 },
               ),
               PopupMenuItem(
-                child: _label(context, label: 'Z-a'),
+                child: _label(context, label: kZa),
                 onTap: () {
                   if (itemOuLista == 'item') {
-                    itemC.ordenarItens('Z-a');
+                    itemC.ordenarItens(kZa);
                   } else {
-                    listaC.ordenarListas('Z-a');
+                    listaC.ordenarListas(kZa);
                   }
                 },
               ),
               PopupMenuItem(
-                child: _label(context, label: '+ Caro'),
+                child: _label(context, label: kCaro),
                 onTap: () {
-                  itemC.ordenarItens('+ Caro');
+                  itemC.ordenarItens(kCaro);
                 },
               ),
               PopupMenuItem(
-                child: _label(context, label: '+ Barato'),
+                child: _label(context, label: kBarato),
                 onTap: () {
-                  itemC.ordenarItens('+ Barato');
+                  itemC.ordenarItens(kBarato);
                 },
               )
             ]);
   }
 
-  _label(context, {required String label}) {
+  _icone(context, {required String label}) {
     const double tamanho = 30;
-    Map<String, Widget> labels = {
+    Map<String, Icon> labels = {
       'A-z': Icon(
         PhosphorIconsRegular.sortAscending,
         color: Theme.of(context).colorScheme.primary,
@@ -84,6 +84,10 @@ class OpcoesOrdenacao extends StatelessWidget {
       ),
     };
 
+    return labels[label]!;
+  }
+
+  _label(context, {required String label}) {
     return ListTile(
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0.9),
@@ -92,7 +96,7 @@ class OpcoesOrdenacao extends StatelessWidget {
           style: Estilos().corpoColor(context, tamanho: 'p'),
         ),
       ),
-      trailing: labels[label]!,
+      trailing: _icone(context, label: label),
     );
   }
 }

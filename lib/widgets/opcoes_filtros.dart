@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/const_strings_globais.dart';
 import '../controllers/itens_controller.dart';
 import '../theme/estilos.dart';
 
@@ -13,36 +14,28 @@ class OpcoesFiltros extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemC = context.read<ItensController>();
+    final itemC = context.watch<ItensController>();
     return PopupMenuButton<dynamic>(
         padding: const EdgeInsets.all(0),
         icon: const Icon(
-        PhosphorIconsRegular.funnel,
-      ),
+          PhosphorIconsRegular.funnel,
+        ),
         position: PopupMenuPosition.under,
         elevation: 1,
         itemBuilder: (context) => [
               PopupMenuItem(
-                child: _label(context, label: 'Comprados'),
+                child: _label(context, label: kComprados),
                 onTap: () {
                   if (itemOuLista == 'item') {
-                    itemC.filtrarItens('Comprados');
+                    itemC.filtrarItens(kComprados);
                   }
                 },
               ),
               PopupMenuItem(
-                child: _label(context, label: 'A comprar'),
+                child: _label(context, label: kAComprar),
                 onTap: () {
                   if (itemOuLista == 'item') {
-                    itemC.filtrarItens('A comprar');
-                  }
-                },
-              ),
-              PopupMenuItem(
-                child: _label(context, label: 'Todos'),
-                onTap: () {
-                  if (itemOuLista == 'item') {
-                    itemC.filtrarItens('Todos');
+                    itemC.filtrarItens(kAComprar);
                   }
                 },
               ),
@@ -52,23 +45,23 @@ class OpcoesFiltros extends StatelessWidget {
   _label(context, {required String label}) {
     const double tamanho = 30;
     Map<String, Widget> labels = {
-      'Comprados': Icon(
+      kComprados: Icon(
         PhosphorIconsRegular.checkSquare,
         color: Theme.of(context).colorScheme.primary,
         size: tamanho,
       ),
-      'A comprar': Icon(
+      kAComprar: Icon(
         PhosphorIconsRegular.square,
         color: Theme.of(context).colorScheme.primary,
         size: tamanho,
       ),
-      'Todos': Icon(
+      kTodos: Icon(
         PhosphorIconsRegular.listBullets,
         color: Theme.of(context).colorScheme.primary,
         size: tamanho,
       ),
     };
-  return ListTile(
+    return ListTile(
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 1.5),
         child: Text(

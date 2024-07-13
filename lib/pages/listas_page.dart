@@ -19,6 +19,7 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
@@ -27,12 +28,15 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
         centerTitle: true,
       ),
       body: Consumer<ListasRepository>(builder: (context, listasR, _) {
+        
         return listasR.listas.isEmpty
-            ? const Center(
-                child: Text(
-                  "Adicione uma Lista",
-                ),
-              )
+            ? const Center(child: CircularProgressIndicator(),)
+            
+            // Center(
+            //     child: Text(
+            //       "Adicione uma Lista",
+            //     ),
+            //   )
             : Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: GridView.builder(

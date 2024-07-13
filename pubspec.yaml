@@ -48,6 +48,8 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   path: ^1.9.0
   flutter_phosphor_icons: ^0.0.1+6
+  flutter_slidable: ^3.1.1
+  card_loading: ^0.3.2
 
 dev_dependencies:
   flutter_test:

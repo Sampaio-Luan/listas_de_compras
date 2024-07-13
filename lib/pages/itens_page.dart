@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:listas_de_compras/widgets/formulario_item.dart';
 
 import '../controllers/itens_controller.dart';
-import '../models/item.module.dart';
 import '../models/lista.module.dart';
-import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 import '../widgets/layout_item.dart';
 import '../widgets/painel_controle.dart';
@@ -23,68 +22,130 @@ class ItensPage extends StatefulWidget {
 }
 
 class _ItensPageState extends State<ItensPage> {
-  ItensController itensController = ItensController();
-
-  
-@override
-  void initState() {
-   
-    super.initState();
-    itensController.iniciarController(idLista: widget.lista.id);
-    itensController.idLista = widget.lista.id;
-  }
- 
+  TextEditingController pesquisarPorItem = TextEditingController();
+  bool pesquisar = false;
+  void doNothing(BuildContext context) {}
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.watch<ItensRepository>();
-    //final ictrl = context.read<ItensController>();
-    
-  //ctrl.recuperarItens(widget.lista.id);
+    final ctrl = context.watch<ItensController>();
     return Scaffold(
-      appBar: _appBar(titulo: widget.lista.nome),
-      body: Column(children: [
-        ctrl.itens.isEmpty
-            ? Container()
-            : const Expanded(
-                child: PainelControle(
-                  itemOuLista: 'item',
-                ),
+      appBar: pesquisar
+          ? _appBarPesquisa(context)
+          : _appBar(titulo: widget.lista.nome),
+      body: ctrl.itens.isEmpty
+          ? const Center(
+              child: Text(
+                'Nenhum item encontrado',
               ),
-        Expanded(
-          flex: 15,
-          child: Column(children: [
-            Consumer<ItensRepository>(builder: (context, controle, _) {
-              final itens = controle.itens;
-              debugPrint('itens page: ${itens.length}');
-
-              return itens.isEmpty
-                  ? _indicadorDeProgresso()
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: itens.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return LayoutItem(item: itens[index]);
-                        },
+            )
+          : Column(children: [
+              pesquisar
+                  ? const SizedBox.shrink()
+                  : const Expanded(
+                      child: PainelControle(
+                        itemOuLista: 'item',
                       ),
-                    );
-            }),
-          ]),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: Row(children: [
-              Text(
-                "Total: ${ctrl.itens.length} itens",
-                style: Estilos().tituloColor(
-                  context,
-                  tamanho: 'g',
+                    ),
+              Expanded(
+                flex: 15,
+                child: Column(children: [
+                  Consumer<ItensController>(builder: (context, controle, _) {
+                    return controle.itensInterface.isEmpty
+                        ? Expanded(
+                            child: Center(
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: CircularProgressIndicator.adaptive(
+                                  strokeWidth: 5,
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: ListView.separated(
+                              itemCount: controle.itensInterface.length,
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const Divider(
+                                  height: 2,
+                                );
+                              },
+                              itemBuilder: (BuildContext context, int index) {
+                                return Slidable(
+                                  // Specify a key if the Slidable is dismissible.
+                                  key: const ValueKey(0),
+
+                                  startActionPane: ActionPane(
+                                      motion: const ScrollMotion(),
+                                      dismissible: null,
+                                      children: [
+                                        SlidableAction(
+                                            onPressed: (BuildContext context) {
+                                              ctrl.removerItem(
+                                                controle.itensInterface[index],
+                                              );
+                                            },
+                                            backgroundColor:
+                                                Colors.red.shade400,
+                                            icon: PhosphorIconsRegular
+                                                .trashSimple,
+                                            label: 'Deletar'),
+                                      ]),
+
+                                  endActionPane: ActionPane(
+                                      motion: const ScrollMotion(),
+                                      children: [
+                                        SlidableAction(
+                                            flex: 1,
+                                            onPressed: (BuildContext context) {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return FormularioItem(
+                                                      item: controle
+                                                              .itensInterface[
+                                                          index],
+                                                      idLista: null,
+                                                    );
+                                                  });
+                                            },
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            icon:
+                                                PhosphorIconsRegular.pencilLine,
+                                            label: 'Editar'),
+                                      ]),
+
+                                  child: LayoutItem(
+                                      item: controle.itensInterface[index]),
+                                );
+                              },
+                            ),
+                          );
+                  }),
+                ]),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 18.0),
+                  child: Row(children: [
+                    Text(
+                      "Total: ${ctrl.precoTotal}",
+                      style: Estilos().tituloColor(
+                        context,
+                        tamanho: 'g',
+                      ),
+                    ),
+                  ]),
                 ),
               ),
             ]),
-          ),
-        ),
-      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -108,7 +169,11 @@ class _ItensPageState extends State<ItensPage> {
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              pesquisar = !pesquisar;
+            });
+          },
           icon: const Icon(
             PhosphorIconsBold.magnifyingGlass,
           ),
@@ -117,12 +182,37 @@ class _ItensPageState extends State<ItensPage> {
     );
   }
 
-  _indicadorDeProgresso() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.4,
-          horizontal: MediaQuery.of(context).size.width * 0.3),
-      child: const CircularProgressIndicator(),
+  AppBar _appBarPesquisa(context) {
+    final ctrl = Provider.of<ItensController>(context, listen: false);
+    return AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            setState(() {
+              pesquisar = !pesquisar;
+            });
+          }),
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 10, right: 10),
+        child: TextField(
+          controller: pesquisarPorItem,
+          onEditingComplete: () {},
+          onChanged: (value) {
+            ctrl.pesquisar(pesquisarPor: pesquisarPorItem.text);
+          },
+          //style: const TextStyle(color: Colors.black),
+          //cursorColor: cor[widget.lis.tema],
+          autofocus: true,
+          decoration: const InputDecoration(
+              //focusColor: cor[widget.lis.tema],
+              //focusedBorder: UnderlineInputBorder(
+              // borderSide: BorderSide(color: Colors.black)),
+              //enabledBorder: UnderlineInputBorder(
+              //  borderSide: BorderSide(color: Colors.black)),
+              ),
+        ),
+      ),
     );
   }
 }

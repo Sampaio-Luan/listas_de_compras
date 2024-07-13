@@ -41,7 +41,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
       String p = formatter.format(widget.item!.preco);
       nomeItem.text = widget.item!.nome;
       descricaoItem.text = widget.item!.descricao;
-      quantidadeItem.text = widget.item!.quantidade.toString();
+      quantidadeItem.text = widget.item!.quantidade.toStringAsFixed(0);
       precoItem.text = p;
       tipoMedida.text = widget.item!.medida;
     } else {
@@ -201,7 +201,12 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                 setState(() {
                   autoValidar = true;
                 });
-                if (isValidado(context: context, formularioKey: formKeyItem) ==
+                if (isValidado(
+                        context: context,
+                        formularioKey: formKeyItem,
+                        mensagem: widget.item == null
+                            ? 'Cadastrado com sucesso !!!'
+                            : 'Editado com sucesso !!!') ==
                     0) {
                   if (widget.item == null) {
                     ItemModel i = ItemModel(
