@@ -50,6 +50,8 @@ dependencies:
   flutter_phosphor_icons: ^0.0.1+6
   flutter_slidable: ^3.1.1
   card_loading: ^0.3.2
+  shared_preferences: ^2.2.3
+  expandable_text: ^2.3.0
 
 dev_dependencies:
   flutter_test:

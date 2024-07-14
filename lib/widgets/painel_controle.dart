@@ -33,7 +33,7 @@ class _PainelControleState extends State<PainelControle> {
               width: 0,
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: itemC.filtro.isNotEmpty
                   ? ActionChip(
                       backgroundColor:

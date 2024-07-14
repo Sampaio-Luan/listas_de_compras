@@ -7,8 +7,6 @@ import '../controllers/itens_controller.dart';
 import '../models/item.module.dart';
 import '../theme/estilos.dart';
 
-import 'opcoes_modificacao.dart';
-
 class LayoutItem extends StatefulWidget {
   final ItemModel item;
 

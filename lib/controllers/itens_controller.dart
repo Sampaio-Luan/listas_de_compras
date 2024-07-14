@@ -24,7 +24,11 @@ class ItensController extends ChangeNotifier {
   UnmodifiableListView<ItemModel> get itensInterface =>
       UnmodifiableListView(_itensInterface);
 
-   List<ItemModel> _itensPesquisados = [];
+  final List<ItemModel> _itensSelecionados = [];
+  UnmodifiableListView<ItemModel> get itensSelecionados =>
+      UnmodifiableListView(_itensSelecionados);
+
+  List<ItemModel> _itensPesquisados = [];
   UnmodifiableListView<ItemModel> get itensPesquisados =>
       UnmodifiableListView(_itensPesquisados);
 
@@ -34,27 +38,41 @@ class ItensController extends ChangeNotifier {
   String _ordem = '';
   String get ordem => _ordem;
 
-  bool isMarcadoTodosItens = false;
+  bool _isMarcadoTodosItens = false;
+  bool get isMarcadoTodosItens => _isMarcadoTodosItens;
+  set setIsMarcadoTodosItens(value) {
+    _isMarcadoTodosItens = value;
+  }
+
+  bool _isPesquisar = false;
+  bool get isPesquisar => _isPesquisar;
+  set setIsPesquisar(value) {
+    _isPesquisar = value;
+    notifyListeners();
+  }
 
 //#endregion =====================================================================
 
   iniciarController({required int idLista}) {
     _idLista = idLista;
-    recuperarItens();
+    _limparTudo();
+    _recuperarItens();
   }
 
   _limparTudo() {
     _itensInterface.clear();
     _itens.clear();
+    _itensPesquisados.clear();
+    _itensSelecionados.clear();
     _precoTotal = 0;
     _filtro = '';
     _ordem = '';
+    _isMarcadoTodosItens = false;
+    _isPesquisar = false;
     debugPrint("limpar tudo");
   }
 
-  recuperarItens() async {
-    _limparTudo();
-
+  _recuperarItens() async {
     _itens = await ItensRepository().recuperarItens(_idLista);
     debugPrint("itens controller: ${_itens.length}");
 
@@ -71,9 +89,9 @@ class ItensController extends ChangeNotifier {
     }
 
     if (verificarComprados == _itensInterface.length) {
-      isMarcadoTodosItens = true;
+      _isMarcadoTodosItens = true;
       debugPrint(
-          'marcado todos itens recuperar controller: $isMarcadoTodosItens');
+          'marcado todos itens recuperar controller: $_isMarcadoTodosItens');
     }
 
     _calculaTotal();
@@ -146,51 +164,51 @@ class ItensController extends ChangeNotifier {
     notifyListeners();
   }
 
-  adicionarItem(ItemModel item) {
+  adicionarItem(ItemModel item) async {
+    ItensRepository().inserirItem(item);
     _itens.add(item);
     _itensInterface.add(item);
 
-    ItensRepository().inserirItem(item);
     _calculaTotal();
   }
 
   removerItem(ItemModel item) async {
+    ItensRepository().excluirItem(item);
     _itens.remove(item);
     _itensInterface.remove(item);
 
-    ItensRepository().excluirItem(item);
     _calculaTotal();
   }
 
   atualizarItem(ItemModel item) async {
+    ItensRepository().atualizarItem(item);
     _itens[_itens.indexOf(item)] = item;
     _itensInterface[_itensInterface.indexOf(item)] = item;
 
-    ItensRepository().atualizarItem(item);
     _calculaTotal();
   }
 
   marcarTodos() async {
-    debugPrint('marcado todos itens funcao controller: $isMarcadoTodosItens');
+    debugPrint('marcado todos itens funcao controller: $_isMarcadoTodosItens');
     _rebuildInterface();
     await Future.delayed(const Duration(milliseconds: 300), () {
       debugPrint('Controle Marcando/Desmarcando todos itens');
     });
-    if (isMarcadoTodosItens) {
+    if (_isMarcadoTodosItens) {
       for (int i = 0; i < _itens.length; i++) {
         _itens[i].comprado = 0;
       }
-      isMarcadoTodosItens = !isMarcadoTodosItens;
+      _isMarcadoTodosItens = !_isMarcadoTodosItens;
       debugPrint(
-          'marcado todos itens sair do if controller: $isMarcadoTodosItens');
+          'marcado todos itens sair do if controller: $_isMarcadoTodosItens');
       ItensRepository().desmarcarTodosItens(idLista: _idLista);
     } else {
       for (int i = 0; i < _itens.length; i++) {
         _itens[i].comprado = 1;
       }
-      isMarcadoTodosItens = !isMarcadoTodosItens;
+      _isMarcadoTodosItens = !_isMarcadoTodosItens;
       debugPrint(
-          'marcado todos itens sair do else controller: $isMarcadoTodosItens');
+          'marcado todos itens sair do else controller: $_isMarcadoTodosItens');
       ItensRepository().marcarTodosItens(idLista: _idLista);
     }
 
@@ -222,5 +240,34 @@ class ItensController extends ChangeNotifier {
         .toList();
     _itensInterface.addAll(_itensPesquisados);
     notifyListeners();
+  }
+
+  selecionarItens(ItemModel item) {
+    if (_itensSelecionados.contains(item)) {
+      _itensSelecionados.remove(item);
+    } else {
+      _itensSelecionados.add(item);
+    }
+
+    debugPrint(
+        'Selecionado itens controller: ${_itensSelecionados.length}');
+    notifyListeners();
+  }
+
+  limparListaSelecionados() {
+    _itensSelecionados.clear();
+    notifyListeners();
+  }
+
+  excluirItensSelecionados()async{
+    for (var item in _itensSelecionados) {
+      await ItensRepository().excluirItem(item);
+      _itens.remove(item);
+      _itensInterface.remove(item);
+    }
+    debugPrint ('Excluido itens selecionados controller');
+
+    _calculaTotal();
+    limparListaSelecionados();
   }
 }

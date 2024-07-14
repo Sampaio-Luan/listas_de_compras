@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
+import 'package:expandable_text/expandable_text.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
@@ -32,20 +34,19 @@ class _LayoutListaState extends State<LayoutLista> {
   @override
   Widget build(BuildContext context) {
     final itensController = context.read<ItensController>();
-   
+
     return Card.outlined(
       elevation: 0,
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.onBackground.withAlpha(50),
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 00, top: 15, bottom: 5),
         child: Column(children: [
           Expanded(
-            flex: 3,
+            flex: 4,
             child: InkWell(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                
                 itensController.iniciarController(idLista: lista.id);
                 Navigator.push(
                   context,
@@ -57,7 +58,7 @@ class _LayoutListaState extends State<LayoutLista> {
                 );
               },
               child: Expanded(
-                flex: 3,
+              
                 child: Row(children: [
                   Expanded(
                     child: Container(
@@ -65,27 +66,36 @@ class _LayoutListaState extends State<LayoutLista> {
                     ),
                   ),
                   Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                    flex: 5,
+                    child: SingleChildScrollView(
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              lista.descricao,
-                              textAlign: TextAlign.justify,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: Estilos().sutil(context, tamanho: 14),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 18.0),
+                              child: Text(
+                                fomatoData.format(DateTime.parse(lista.criacao)),
+                                
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: Estilos().sutil(context, tamanho: 10),
+                              ),
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              fomatoData.format(DateTime.parse(lista.criacao)),
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
-                              style: Estilos().sutil(context, tamanho: 14),
-                            )
+                            Padding(
+                              padding: const EdgeInsets.only(left: 25.0),
+                              child: ExpandableText(
+                                lista.descricao,
+                                style: const TextStyle(leadingDistribution: TextLeadingDistribution.proportional),
+                                expandText: 'Mostrar +',
+                                collapseText: 'Mostrar -',
+                                maxLines: 2,
+                                //linkColor: Colors.blue,
+                              ),
+                            ),
+                            
+                            
+                            
                           ]),
                     ),
                   )

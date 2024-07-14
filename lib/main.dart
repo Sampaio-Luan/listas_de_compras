@@ -8,6 +8,7 @@ import '../controllers/listas_controller.dart';
 import '../repositories/listas_repository.dart';
 
 import 'main_app.dart';
+import 'preferencias_usuario.dart';
 import 'repositories/itens_repository.dart';
 
 void main() async {
@@ -21,6 +22,10 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ItensRepository()),
         ChangeNotifierProvider(create: (context) => ListasController()),
         ChangeNotifierProvider(create: (context) => ListasRepository()),
+        ChangeNotifierProvider(
+          create: (context) => PreferenciasUsuarioShared(),
+          lazy: false,
+        ),
       ],
       child: const MainApp(),
     ),

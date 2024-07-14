@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../theme/theme.dart';
 import '../utils/util.dart';
 
 import 'pages/listas_page.dart';
+import 'preferencias_usuario.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    //final brightness = View.of(context).platformDispatcher.platformBrightness;
     TextTheme textTheme = createTextTheme(context, "Balsamiq Sans", "Pridi");
     MaterialTheme theme = MaterialTheme(textTheme);
+    final preferencias = context.watch<PreferenciasUsuarioShared>();
 
     Intl.defaultLocale = 'pt_BR';
 
@@ -28,11 +31,12 @@ class MainApp extends StatelessWidget {
       supportedLocales: const [Locale('pt', 'BR')],
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      theme: preferencias.temaEscuro ? theme.dark() : theme.light(),
       initialRoute: 'listas',
       routes: {
         'listas': (context) => const ListasDeComprasPage(),
       },
+      
     );
   }
 }

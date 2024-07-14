@@ -37,13 +37,16 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
     super.initState();
 
     if (widget.item != null) {
+      
       final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
-      String p = formatter.format(widget.item!.preco);
+
+      String precoFormatado = formatter.format(widget.item!.preco);
       nomeItem.text = widget.item!.nome;
       descricaoItem.text = widget.item!.descricao;
-      quantidadeItem.text = widget.item!.quantidade.toStringAsFixed(0);
-      precoItem.text = p;
+      quantidadeItem.text = widget.item!.medida == 'uni' ? widget.item!.quantidade.toStringAsFixed(0) : widget.item!.quantidade.toStringAsFixed(3);
+      precoItem.text = precoFormatado;
       tipoMedida.text = widget.item!.medida;
+      
     } else {
       tipoMedida.text = 'uni';
       quantidadeItem.text = '1';
@@ -105,38 +108,40 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                     const SizedBox(
                       width: 10,
                     ),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(horizontal: 1),
-                          style: Estilos().corpoColor(context, tamanho: 'p'),
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                            ),
-                          ),
-                          value: tipoMedida.text,
-                          items: const [
-                            DropdownMenuItem(
-                              value: 'uni',
-                              child: Text('Uni'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'kg',
-                              child: Text('Kg'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            tipoMedida.text = value.toString();
-                            if (tipoMedida.text == 'uni') {
-                              quantidadeItem.text = '1';
-                            } else {
-                              quantidadeItem.text = '0,${quantidadeItem.text}';
-                            }
-                            setState(() {});
-                          }),
+                    SegmentedButton<String>(
+                      showSelectedIcon: false,
+                      style: SegmentedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.all(0),
+                        visualDensity:
+                            const VisualDensity(vertical: 3, horizontal: -3.5),
+                            selectedBackgroundColor: Theme.of(context).colorScheme.primary,
+                            selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      segments: const <ButtonSegment<String>>[
+                        ButtonSegment<String>(
+                          value: 'uni',
+                          label: Text('Uni'),
+                        ),
+                        ButtonSegment<String>(
+                          value: 'kg',
+                          label: Text('Kg'),
+                        ),
+                      ],
+                      selected: <String>{tipoMedida.text},
+                      onSelectionChanged: (Set<String> newSelection) {
+                        setState(() {
+                          tipoMedida.text = newSelection.first;
+                          if (tipoMedida.text == 'uni') {
+                            double quantidade = double.parse(quantidadeItem.text.replaceAll(',', '.'));
+                            quantidadeItem.text = quantidade.toStringAsFixed(0);
+                          } else {
+                            quantidadeItem.text = '0,${quantidadeItem.text}';
+                          }
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -172,9 +177,6 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                   label: 'Descrição',
                   qtdLinha: 2,
                   valida: false,
-                ),
-                const SizedBox(
-                  height: 10,
                 ),
               ]),
             ),
@@ -225,6 +227,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                   } else {
                     widget.item!.nome = nomeItem.text;
                     widget.item!.quantidade = _formatarQuantidade();
+                    widget.item!.medida = tipoMedida.text;
                     widget.item!.preco = _formatarPreco();
                     widget.item!.descricao = descricaoItem.text;
                     itemC.atualizarItem(widget.item!);
@@ -262,14 +265,49 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
   _formatarQuantidade() {
     String qtd = quantidadeItem.text;
     qtd = qtd.replaceAll(',', '.');
-    debugPrint('Fqtd: $qtd');
+    debugPrint('Formatar qtd: $qtd');
     return double.parse(qtd);
   }
 
   _formatarPreco() {
     String preco = precoItem.text;
     preco = preco.replaceAll(RegExp(r'[^\d,]'), '').replaceAll(',', '.');
-    debugPrint('Fpreco: $preco');
+    debugPrint('Formatar preco: $preco');
     return double.parse(preco);
+  }
+}
+
+enum Calendar { day, week, month, year }
+
+class SingleChoice extends StatefulWidget {
+  const SingleChoice({super.key});
+
+  @override
+  State<SingleChoice> createState() => _SingleChoiceState();
+}
+
+class _SingleChoiceState extends State<SingleChoice> {
+  Calendar calendarView = Calendar.day;
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<Calendar>(
+      segments: const <ButtonSegment<Calendar>>[
+        ButtonSegment<Calendar>(
+            value: Calendar.day,
+            label: Text('Day'),
+            icon: Icon(Icons.calendar_view_day)),
+        ButtonSegment<Calendar>(
+            value: Calendar.week,
+            label: Text('Week'),
+            icon: Icon(Icons.calendar_view_week)),
+      ],
+      selected: <Calendar>{calendarView},
+      onSelectionChanged: (Set<Calendar> newSelection) {
+        setState(() {
+          calendarView = newSelection.first;
+        });
+      },
+    );
   }
 }

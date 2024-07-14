@@ -19,7 +19,6 @@ mixin ValidacoesMixin {
 
   String? valorMinimo({required String? input}) {
     if (input != null) {
-
       if (input.length > 4) {
         input = input.replaceAll(RegExp(r'[^\d,]'), '').replaceAll(',', '.');
       } else {
@@ -31,8 +30,6 @@ mixin ValidacoesMixin {
       if (valor <= 0) {
         return "Deve ser maior que 0";
       }
-
-      
     }
     return null;
   }
@@ -60,9 +57,9 @@ isValidado({
       SnackBar(
         backgroundColor: Theme.of(context).primaryColor,
 
-        content:  Text(
+        content: Text(
           mensagem,
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
         ),
         duration: const Duration(seconds: 3), // Defina o tempo desejado
       ),

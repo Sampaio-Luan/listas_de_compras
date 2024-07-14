@@ -85,7 +85,8 @@ class ItensRepository extends ChangeNotifier {
       item.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    debugPrint("Vai tomar:    $id");
+
+    debugPrint("Repositorio Inseriu: ${item.nome} - $id");
     
   }
 
@@ -97,7 +98,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    
+    debugPrint("Repositorio Atualizou: ${item.nome}");
   }
 
   excluirItem(ItemModel item) async {
@@ -107,7 +108,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    
+    debugPrint("Repositorio Excluiu: ${item.nome}");
   }
 
   editarUmAtributo(
