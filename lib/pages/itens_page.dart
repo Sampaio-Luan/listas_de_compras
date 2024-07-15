@@ -12,6 +12,8 @@ import '../widgets/formulario_item.dart';
 import '../widgets/n_layout_item.dart';
 import '../widgets/painel_controle.dart';
 
+import 'drawer_lista.dart';
+
 class ItensPage extends StatefulWidget {
   final ListaModel lista;
 
@@ -28,6 +30,7 @@ class _ItensPageState extends State<ItensPage> {
   Widget build(BuildContext context) {
     final ctrl = context.watch<ItensController>();
     return Scaffold(
+       drawer: const DrawerListas(),
       appBar: ctrl.itensSelecionados.isNotEmpty
           ? _appBarSelecionados(context)
           : ctrl.isPesquisar
@@ -142,6 +145,7 @@ class _ItensPageState extends State<ItensPage> {
   AppBar _appBarPadrao(context) {
     final controle = Provider.of<ItensController>(context, listen: false);
     return AppBar(
+     
       backgroundColor:
           Theme.of(context).colorScheme.brightness == Brightness.light
               ? Theme.of(context).colorScheme.primary

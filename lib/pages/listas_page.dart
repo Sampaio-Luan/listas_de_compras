@@ -8,6 +8,8 @@ import '../repositories/listas_repository.dart';
 import '../widgets/formulario_lista.dart';
 import '../widgets/layout_lista.dart';
 
+import 'drawer_lista.dart';
+
 class ListasDeComprasPage extends StatefulWidget {
   const ListasDeComprasPage({super.key});
 
@@ -20,45 +22,39 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
   Widget build(BuildContext context) {
     final preferencias = context.read<PreferenciasUsuarioShared>();
     return Scaffold(
+      drawer: const DrawerListas(),
       appBar: AppBar(
-        elevation: 0,
-          backgroundColor: Theme.of(context).colorScheme.brightness == Brightness.light
-              ? Theme.of(context).colorScheme.background
-              : Theme.of(context).colorScheme.primaryContainer,
+          elevation: 0,
+          backgroundColor:
+              Theme.of(context).colorScheme.brightness == Brightness.light
+                  ? Theme.of(context).colorScheme.background
+                  : Theme.of(context).colorScheme.primaryContainer,
           title: const Text(
             "Listas",
           ),
           centerTitle: true,
           actions: [
             IconButton(
-              onPressed: () {
-                preferencias.mudarTema();
-              },
-              icon: preferencias.temaEscuro
-                  ? const Icon(
-                      PhosphorIconsFill.moonStars,
-                      size: 30,
-                    )
-                  : const Icon(
-                      PhosphorIconsDuotone.sunDim,
-                      size: 30,
-                    ),
-            )
+                onPressed: () {
+                  preferencias.mudarTema();
+                },
+                icon: preferencias.temaEscuro
+                    ? const Icon(PhosphorIconsFill.moonStars, size: 30)
+                    : const Icon(PhosphorIconsDuotone.sunDim, size: 30))
           ]),
       body: Container(
         constraints: const BoxConstraints.expand(),
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: const Alignment(0.8, 1),
             colors: <Color>[
               Theme.of(context).colorScheme.brightness == Brightness.light
-              ? Theme.of(context).colorScheme.background
-              : Theme.of(context).colorScheme.primaryContainer,
+                  ? Theme.of(context).colorScheme.background
+                  : Theme.of(context).colorScheme.primaryContainer,
               Theme.of(context).colorScheme.brightness == Brightness.light
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.background,
-              
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.background,
             ],
           ),
         ),
@@ -67,12 +63,6 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-
-              // Center(
-              //     child: Text(
-              //       "Adicione uma Lista",
-              //     ),
-              //   )
               : Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: GridView.builder(

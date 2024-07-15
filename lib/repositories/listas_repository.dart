@@ -17,10 +17,10 @@ class ListasRepository extends ChangeNotifier {
   }
 
   _initRepository() async {
-    await _recuperarListas();
+    await recuperarListas();
   }
 
-  _recuperarListas() async {
+  recuperarListas() async {
     db = await Banco.instancia.database;
     listas.clear();
     final List<Map<String, dynamic>> listasMap = await db.query(
@@ -33,6 +33,7 @@ class ListasRepository extends ChangeNotifier {
     }
 
     notifyListeners();
+    return listas;
   }
 
   inserirLista(ListaModel lista) async {
@@ -43,7 +44,7 @@ class ListasRepository extends ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     debugPrint("Vai tomar:    $id");
-    _recuperarListas();
+    recuperarListas();
   }
 
   atualizarLista(ListaModel lista) async {
@@ -55,7 +56,7 @@ class ListasRepository extends ChangeNotifier {
       whereArgs: [lista.id],
     );
 
-    _recuperarListas();
+    recuperarListas();
   }
 
   excluirLista(ListaModel lista) async {
@@ -66,6 +67,6 @@ class ListasRepository extends ChangeNotifier {
       whereArgs: [lista.id],
     );
 
-    _recuperarListas();
+    recuperarListas();
   }
 }
