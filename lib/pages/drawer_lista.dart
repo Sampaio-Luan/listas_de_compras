@@ -41,7 +41,7 @@ class _DrawerListasState extends State<DrawerListas> {
             constraints: const BoxConstraints.expand(),
             color: Theme.of(context).colorScheme.primaryContainer,
             child: Padding(
-              padding: const EdgeInsets.only(left: 12, bottom: 8),
+              padding: const EdgeInsets.only(left: 12, bottom: 5),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -68,10 +68,10 @@ class _DrawerListasState extends State<DrawerListas> {
                           },
                           icon: preferencias.temaEscuro
                               ? const Icon(
-                                  PhosphorIconsRegular.lightbulbFilament,
+                                  PhosphorIconsFill.lamp,
                                   size: 24)
-                              : const Icon(PhosphorIconsRegular.lightbulb,
-                                  size: 24, color: Colors.black54),
+                              :  Icon(PhosphorIconsFill.lampPendant,
+                                  size: 24, color: Theme.of(context).colorScheme.primary),
                         ),
                       ),
                     )
@@ -80,10 +80,36 @@ class _DrawerListasState extends State<DrawerListas> {
           ),
         ),
         Expanded(
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const FormularioLista(lista: null);
+                  });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Row(children: [
+                Icon(PhosphorIconsFill.clipboardText,
+                    color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 12),
+                Text('Criar nova lista',
+                    style: Estilos().tituloColor(context, tamanho: 'p')),
+              ]),
+            ),
+          ),
+        ),
+        const Divider(
+          height: 0,
+          thickness: 0.5,
+        ),
+        Expanded(
           flex: 12,
           child: Consumer<ListasController>(
               builder: (context, controleLista, child) {
             return ListView.separated(
+                padding: const EdgeInsets.all(0),
                 itemCount: controleLista.listas.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return const Divider(height: 0, thickness: 0.5);
@@ -92,30 +118,6 @@ class _DrawerListasState extends State<DrawerListas> {
                   return NLayoutLista(lista: controleLista.listas[index]);
                 });
           }),
-        ),
-        const Divider(
-          height: 0,
-          thickness: 0.5,
-        ),
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const FormularioLista(
-                      lista: null,
-                    );
-                  });
-            },
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(PhosphorIconsFill.clipboardText,
-                  color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 12),
-              Text('Criar nova lista',
-                  style: Estilos().tituloColor(context, tamanho: 'p')),
-            ]),
-          ),
         ),
       ]),
     );

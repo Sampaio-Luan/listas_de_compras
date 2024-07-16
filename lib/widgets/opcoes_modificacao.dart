@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
 import '../models/lista.module.dart';
 import '../repositories/itens_repository.dart';
@@ -42,7 +43,7 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
 
   @override
   Widget build(BuildContext context) {
-    final listaR = context.watch<ListasRepository>();
+    final listaController = context.watch<ListasController>();
     final itemR = context.watch<ItensRepository>();
     return PopupMenuButton<dynamic>(
       padding: const EdgeInsets.all(0),
@@ -71,7 +72,7 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
           onTap: () {
             widget.item != null
                 ? itemR.excluirItem(item)
-                : listaR.excluirLista(lista);
+                : listaController.excluirLista(lista);
           },
         ),
       ],

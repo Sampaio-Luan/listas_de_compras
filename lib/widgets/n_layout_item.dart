@@ -95,7 +95,7 @@ class _NLayoutItemState extends State<NLayoutItem> {
                           : ExpandableText(
                               textAlign: TextAlign.justify,
                               widget.item.descricao,
-                              style: Estilos().sutil(context, tamanho: 13),
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withAlpha(190), fontSize: 12),
                               expandText: 'Mostrar +',
                               collapseText: 'Mostrar -',
                               maxLines: 1,
@@ -109,11 +109,11 @@ class _NLayoutItemState extends State<NLayoutItem> {
                             style: Estilos().sutil(context, tamanho: 12),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8.0),
+                         Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
                           child: Text(
                             'X',
-                            style: TextStyle(fontSize: 11),
+                           style: Estilos().sutil(context, tamanho: 9),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -121,15 +121,15 @@ class _NLayoutItemState extends State<NLayoutItem> {
                           flex: 5,
                           child: Text(
                             formatter.format(widget.item.preco),
-                            style: Estilos().sutil(context, tamanho: 12),
+                            style: Estilos().sutil(context, tamanho: 11),
                             //textAlign: TextAlign.end,
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 3.0),
+                         Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
                           child: Text(
                             '=',
-                            style: TextStyle(fontSize: 11),
+                            style: Estilos().sutil(context, tamanho: 9),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -138,7 +138,7 @@ class _NLayoutItemState extends State<NLayoutItem> {
                           child: Text(
                             formatter.format(
                                 widget.item.quantidade * widget.item.preco),
-                            style: TextStyle(color: Colors.teal.shade600.withAlpha(100), fontSize: 12),
+                            style: Estilos().sutil(context, tamanho: 11),
                             textAlign: TextAlign.end,
                           ),
                         ),

@@ -28,131 +28,146 @@ class _ItensPageState extends State<ItensPage> {
   Widget build(BuildContext context) {
     final ctrl = context.watch<ItensController>();
 
-    final controleListas = context.watch<ListasController>();
-    return Scaffold(
-      drawer: const DrawerListas(),
-      appBar: ctrl.itensSelecionados.isNotEmpty
-          ? _appBarSelecionados(context)
-          : ctrl.isPesquisar
-              ? _appBarPesquisa(context)
-              : _appBarPadrao(context),
-      body: ctrl.itens.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  '📝\nAinda sem itens em " ${ctrl.nomeLista} " , cadastre algum no botão de adcionar no canto inferior direito',
-                  textAlign: TextAlign.center,
-                  style: Estilos().corpoColor(context, tamanho: 'g'),
-                ),
-              ),
-            )
-          : Column(children: [
-              ctrl.isPesquisar && ctrl.itensInterface.isEmpty
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20.0, right: 20, top: 50),
-                      child: Text(
-                          'Não há "${pesquisarPorItem.text}" em ${ctrl.nomeLista}',
-                          textAlign: TextAlign.center,
-                          style: Estilos().corpoColor(context, tamanho: 'g')),
-                    )
-                  : const Expanded(flex:2 ,child: PainelControle(itemOuLista: 'item')),
-              Expanded(
-                flex: 34,
-                child: Column(children: [
-                  Consumer<ItensController>(builder: (context, controle, _) {
-                    return controle.itensInterface.isEmpty &&
-                            !controle.isPesquisar
-                        ? const Expanded(
-                            child: Center(
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircularProgressIndicator.adaptive(
-                                  strokeWidth: 5,
+    //final controleListas = context.watch<ListasController>();
+    return  Scaffold(
+          drawer: const DrawerListas(),
+          appBar: ctrl.itensSelecionados.isNotEmpty
+              ? _appBarSelecionados(context)
+              : ctrl.isPesquisar
+                  ? _appBarPesquisa(context)
+                  : _appBarPadrao(context),
+          body: ctrl.itens.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      '📝\nAinda sem itens em " ${ctrl.nomeLista} " , cadastre algum no botão de adcionar no canto inferior direito',
+                      textAlign: TextAlign.center,
+                      style: Estilos().corpoColor(context, tamanho: 'g'),
+                    ),
+                  ),
+                )
+              : Column(children: [
+                  const Expanded(
+                      flex: 2, child: PainelControle(itemOuLista: 'item')),
+                  ctrl.isPesquisar && ctrl.itensInterface.isEmpty ||
+                          ctrl.filtro.isNotEmpty && ctrl.itensInterface.isEmpty
+                      ? Expanded(
+                          flex: 34,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20.0, right: 20, top: 50),
+                            child: Text(
+                                ctrl.filtro.isNotEmpty
+                                    ? "Não há itens ${ctrl.filtro}"
+                                    : 'Não há "${pesquisarPorItem.text}" em ${ctrl.nomeLista}',
+                                textAlign: TextAlign.center,
+                                style: Estilos().corpoColor(context, tamanho: 'g')),
+                          ),
+                        )
+                      : Expanded(
+                          flex: 34,
+                          child: Column(children: [
+                            Consumer<ItensController>(
+                                builder: (context, controle, _) {
+                              return controle.itensInterface.isEmpty &&
+                                      !controle.isPesquisar &&
+                                      controle.filtro.isEmpty
+                                  ? const Expanded(
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircularProgressIndicator.adaptive(
+                                            strokeWidth: 5,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: ListView.separated(
+                                        itemCount: controle.itensInterface.length,
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return const Divider(
+                                              height: 1, thickness: 0.5);
+                                        },
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Slidable(
+                                            key: ValueKey(controle
+                                                .itensInterface[index].idItem
+                                                .toString()),
+                                            startActionPane: _actionPane(context,
+                                                item:
+                                                    controle.itensInterface[index],
+                                                tipoActionPane: 'Deletar'),
+                                            endActionPane: _actionPane(context,
+                                                item:
+                                                    controle.itensInterface[index],
+                                                tipoActionPane: 'Editar'),
+                                            child: NLayoutItem(
+                                                item:
+                                                    controle.itensInterface[index]),
+                                          );
+                                        },
+                                      ),
+                                    );
+                            }),
+                          ]),
+                        ),
+                  Expanded(
+                    flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 7,
+                    child: Container(
+                      constraints: const BoxConstraints.expand(),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer
+                          .withAlpha(150),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Total: ${ctrl.precoTotal}",
+                                style: Estilos().tituloColor(
+                                  context,
+                                  tamanho: 'm',
                                 ),
                               ),
-                            ),
-                          )
-                        : Expanded(
-                            child: ListView.separated(
-                              itemCount: controle.itensInterface.length,
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return const Divider(height: 1, thickness: 0.5);
-                              },
-                              itemBuilder: (BuildContext context, int index) {
-                                return Slidable(
-                                  key: ValueKey(controle
-                                      .itensInterface[index].idItem
-                                      .toString()),
-                                  startActionPane: _actionPane(context,
-                                      item: controle.itensInterface[index],
-                                      tipoActionPane: 'Deletar'),
-                                  endActionPane: _actionPane(context,
-                                      item: controle.itensInterface[index],
-                                      tipoActionPane: 'Editar'),
-                                  child: NLayoutItem(
-                                      item: controle.itensInterface[index]),
-                                );
-                              },
-                            ),
-                          );
-                  }),
-                ]),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  constraints: const BoxConstraints.expand(),
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withAlpha(150),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Total: ${ctrl.precoTotal}",
-                            style: Estilos().tituloColor(
-                              context,
-                              tamanho: 'm',
-                            ),
-                          ),
-                          Text(
-                            "Preço total da lista: ${ctrl.precoTotalLista}",
-                            style: Estilos().sutil(
-                              context,
-                              tamanho: 12,
-                            ),
-                          ),
-                        ]),
+                              Text(
+                                "Preço total da lista: ${ctrl.precoTotalLista}",
+                                style: Estilos().sutil(
+                                  context,
+                                  tamanho: 12,
+                                ),
+                              ),
+                            ]),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return FormularioItem(
-                  item: null,
-                  idLista: ctrl.idLista,
-                );
-              });
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+                ]),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return FormularioItem(
+                      item: null,
+                      idLista: ctrl.getIdLista,
+                    );
+                  });
+            },
+            child: const Icon(Icons.add),
+          ),
+        );
+  
   }
 
   AppBar _appBarPadrao(context) {
-    final controle = Provider.of<ItensController>(context, listen: false);
+    final controle = Provider.of<ItensController>(context, listen: true);
     return AppBar(
       backgroundColor:
           Theme.of(context).colorScheme.brightness == Brightness.light
@@ -184,7 +199,7 @@ class _ItensPageState extends State<ItensPage> {
   }
 
   AppBar _appBarPesquisa(context) {
-    final controle = Provider.of<ItensController>(context, listen: false);
+    final controle = Provider.of<ItensController>(context, listen: true);
     return AppBar(
       backgroundColor:
           Theme.of(context).colorScheme.brightness == Brightness.light
@@ -238,7 +253,7 @@ class _ItensPageState extends State<ItensPage> {
   }
 
   AppBar _appBarSelecionados(context) {
-    final ctrl = Provider.of<ItensController>(context, listen: false);
+    final ctrl = Provider.of<ItensController>(context, listen: true);
     return AppBar(
         foregroundColor: Colors.white,
         backgroundColor:

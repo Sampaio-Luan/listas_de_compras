@@ -18,54 +18,38 @@ class PainelControle extends StatefulWidget {
 }
 
 class _PainelControleState extends State<PainelControle> {
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ItensController>(builder: (context, itemC, _) {
       return Column(children: [
         Expanded(
           child: Row(children: [
-            Expanded(
-              child:  OpcoesOrdenacao(itemOuLista: widget.itemOuLista),
-            ),
-            const VerticalDivider(
-              thickness: 1,
-              width: 0,
-
-            ),
+            Expanded(child: OpcoesOrdenacao(itemOuLista: widget.itemOuLista)),
+            const VerticalDivider(thickness: 0.7, width: 0),
             Expanded(
               flex: 5,
               child: itemC.filtro.isNotEmpty
                   ? ActionChip(
                       backgroundColor:
                           Theme.of(context).colorScheme.inversePrimary,
-                      avatar: const Icon(
-                        PhosphorIconsRegular.x,
-                      ),
+                      avatar: const Icon(PhosphorIconsRegular.x),
                       label: Text(itemC.filtro),
                       onPressed: () {
                         itemC.filtrarItens('');
-                      },
-                    )
-                  : OpcoesFiltros(
-                      itemOuLista: widget.itemOuLista,
-                    ),
+                      })
+                  : OpcoesFiltros(itemOuLista: widget.itemOuLista),
             ),
-            const VerticalDivider(
-              thickness: 1,
-              width: 0,
-            ),
+            const VerticalDivider(thickness: 0.7, width: 0),
             Expanded(
-              child: Checkbox(value: itemC.isMarcadoTodosItens, onChanged: (_) {
-              
-                itemC.marcarTodos();
-              }),
+              child: Checkbox(
+                  value: itemC.isMarcadoTodosItens,
+                  onChanged: (_) {
+                    itemC.marcarTodos();
+                  }),
             ),
           ]),
         ),
-        const Divider(
-          height: 0,
-        ),
+        const Divider(height: 0, thickness: 0.5),
       ]);
     });
   }

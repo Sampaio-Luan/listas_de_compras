@@ -34,7 +34,7 @@ class ListasRepository extends ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     debugPrint("💁🏻📝RPL inserirLista() id: $id");
-    recuperarListas();
+    return id;
   }
 
   atualizarLista(ListaModel lista) async {

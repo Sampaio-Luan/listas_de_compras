@@ -16,7 +16,7 @@ class ItensController extends ChangeNotifier {
   double _precoTotal = 0;
   double _precoTotalLista = 0;
   int _idLista = -1;
-  int get idLista => _idLista;
+  int get getIdLista => _idLista;
 
   String _nomeLista = '';
   String get nomeLista => _nomeLista;
@@ -70,7 +70,9 @@ class ItensController extends ChangeNotifier {
       debugPrint(
           '🤴🏻🧺CTi iniciarController(): _idLista $_idLista, _nomeLista $_nomeLista');
       _limparTudo();
+      notifyListeners();
       _recuperarItens();
+      
     }
   }
 
@@ -97,7 +99,7 @@ class ItensController extends ChangeNotifier {
     debugPrint(
         "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
         
-
+    notifyListeners();
     _calculaTotal();
     _calculaPrecoTotalLista();
   }

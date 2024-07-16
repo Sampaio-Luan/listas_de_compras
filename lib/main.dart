@@ -23,7 +23,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ItensController()),
         ChangeNotifierProvider(create: (context) => ItensRepository()),
         ChangeNotifierProvider(create: (context) => ListasController(),
-            
+            lazy: false,
         ),
         ChangeNotifierProvider(create: (context) => ListasRepository()),
       ],

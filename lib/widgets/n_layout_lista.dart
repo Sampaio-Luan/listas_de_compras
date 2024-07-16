@@ -22,40 +22,38 @@ class NLayoutLista extends StatelessWidget {
     final preferencias = context.read<PreferenciasUsuarioShared>();
     return InkWell(
       onTap: () {
-        itensController.iniciarController(idLista: lista.id, nomeLista: lista.nome);
+        itensController.iniciarController(
+            idLista: lista.id, nomeLista: lista.nome);
         preferencias.setUltimaListaVisitada(lista.id);
-       Navigator.of(context).pop();
+        Navigator.of(context).pop();
       },
-      child: Container(
-        color: itensController.idLista == lista.id
-            ? Theme.of(context).colorScheme.inversePrimary.withAlpha(110)
-            : null,
-        child: Row(children: [
-          const Expanded(child: CircleAvatar()),
-          const SizedBox(width: 15),
-          Expanded(
-            flex: 6,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(lista.nome,
-                  overflow: TextOverflow.ellipsis,
-                  style: Estilos().corpoColor(context, tamanho: 'p')),
-              // ExpandableText(
-              //     textAlign: TextAlign.justify,
-              //     lista.descricao,
-              //     style: Estilos().sutil(context, tamanho: 12),
-              //     expandText: '+',
-              //     collapseText: '-',
-              //     maxLines: 1),
-              //const SizedBox(height: 5),
-              Text(fomatoData.format(DateTime.parse(lista.criacao)),
-                  style: Estilos().sutil(context, tamanho: 11)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            color: itensController.getIdLista == lista.id
+                ? Theme.of(context).colorScheme.inversePrimary.withAlpha(110)
+                : null,
+            child: Row(children: [
+              const Expanded(child: CircleAvatar()),
+              const SizedBox(width: 15),
+              Expanded(
+                flex: 6,
+                child:
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(lista.nome,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withAlpha(190), fontSize: 16)),
+                  Text(fomatoData.format(DateTime.parse(lista.criacao)),
+                      style: Estilos().sutil(context, tamanho: 11)),
+                ]),
+              ),
+              Expanded(child: OpcoesModificacao(lista: lista)),
             ]),
           ),
-          Expanded(
-            child: OpcoesModificacao(lista: lista),
-          )
-        ]),
+        ),
       ),
     );
   }

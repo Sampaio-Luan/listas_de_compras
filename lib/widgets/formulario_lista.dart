@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'package:listas_de_compras/models/lista.module.dart';
 
+import '../controllers/listas_controller.dart';
 import '../mixins/validations_mixin.dart';
-import '../repositories/listas_repository.dart';
 import '../theme/estilos.dart';
 import '../widgets/campos_formulario.dart';
 
@@ -41,7 +41,7 @@ class _FormularioListaState extends State<FormularioLista>
 
   @override
   Widget build(BuildContext context) {
-    final listasR = context.read<ListasRepository>();
+    final listasR = context.read<ListasController>();
     return AlertDialog(
         title: Text(
           'Criar Lista',
