@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../theme/theme.dart';
 import '../utils/util.dart';
 
-import 'pages/listas_page.dart';
+import 'pages/itens_page.dart';
 import 'preferencias_usuario.dart';
 
 class MainApp extends StatelessWidget {
@@ -32,11 +32,10 @@ class MainApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: preferencias.temaEscuro ? theme.dark() : theme.light(),
-      initialRoute: 'listas',
+      initialRoute: 'itens_page',
       routes: {
-        'listas': (context) => const ListasDeComprasPage(),
+        'itens_page': (context) => const ItensPage(),
       },
-      
     );
   }
 }

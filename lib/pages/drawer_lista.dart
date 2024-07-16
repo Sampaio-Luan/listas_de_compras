@@ -26,8 +26,11 @@ class _DrawerListasState extends State<DrawerListas> {
 
     return Drawer(
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20), bottomRight: Radius.circular(0))),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(20),
+          bottomRight: Radius.circular(0),
+        ),
+      ),
       //width: MediaQuery.of(context).size.width * 0.6,
       elevation: 0,
 
@@ -38,16 +41,13 @@ class _DrawerListasState extends State<DrawerListas> {
             constraints: const BoxConstraints.expand(),
             color: Theme.of(context).colorScheme.primaryContainer,
             child: Padding(
-              padding: const EdgeInsets.only(top: 30.0, left: 12),
+              padding: const EdgeInsets.only(left: 12, bottom: 8),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    // Text(
-                    //   formatoData.format(DateTime.now()),
-                    //   style: Estilos().sutil(context, tamanho: 15),
-                    // ),
                     Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Minhas Listas',
@@ -63,26 +63,22 @@ class _DrawerListasState extends State<DrawerListas> {
                             Theme.of(context).colorScheme.primary.withAlpha(70),
                         radius: 20,
                         child: IconButton(
-                            onPressed: () {
-                              preferencias.mudarTema();
-                            },
-                            icon: preferencias.temaEscuro
-                                ? const Icon(
-                                    PhosphorIconsRegular.lightbulbFilament,
-                                    size: 24)
-                                : const Icon(PhosphorIconsRegular.lightbulb,
-                                    size: 24,color: Colors.black54, )),
+                          onPressed: () {
+                            preferencias.mudarTema();
+                          },
+                          icon: preferencias.temaEscuro
+                              ? const Icon(
+                                  PhosphorIconsRegular.lightbulbFilament,
+                                  size: 24)
+                              : const Icon(PhosphorIconsRegular.lightbulb,
+                                  size: 24, color: Colors.black54),
+                        ),
                       ),
                     )
                   ]),
             ),
           ),
         ),
-
-        // const Divider(
-        //   height: 0,
-        //   thickness: 1,
-        // ),
         Expanded(
           flex: 12,
           child: Consumer<ListasController>(
@@ -90,10 +86,7 @@ class _DrawerListasState extends State<DrawerListas> {
             return ListView.separated(
                 itemCount: controleLista.listas.length,
                 separatorBuilder: (BuildContext context, int index) {
-                  return const Divider(
-                    height: 2,
-                    thickness: 0.5,
-                  );
+                  return const Divider(height: 0, thickness: 0.5);
                 },
                 itemBuilder: (context, index) {
                   return NLayoutLista(lista: controleLista.listas[index]);

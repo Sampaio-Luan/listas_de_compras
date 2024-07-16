@@ -9,13 +9,20 @@ import '../models/item.module.dart';
 import '../repositories/itens_repository.dart';
 
 class ItensController extends ChangeNotifier {
-//#region ================== PROPRIEDADES ========================================
+//#region ================== * ATRIBUTOS * ========================================
   final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+  final formatoData = DateFormat.jms('pt_BR');
 
   double _precoTotal = 0;
-  int _idLista = 0;
+  double _precoTotalLista = 0;
+  int _idLista = -1;
+  int get idLista => _idLista;
+
+  String _nomeLista = '';
+  String get nomeLista => _nomeLista;
 
   String get precoTotal => formatter.format(_precoTotal);
+  String get precoTotalLista => formatter.format(_precoTotalLista);
 
   List<ItemModel> _itens = [];
   UnmodifiableListView<ItemModel> get itens => UnmodifiableListView(_itens);
@@ -53,10 +60,18 @@ class ItensController extends ChangeNotifier {
 
 //#endregion =====================================================================
 
-  iniciarController({required int idLista}) {
-    _idLista = idLista;
-    _limparTudo();
-    _recuperarItens();
+
+  iniciarController({required int idLista, required String nomeLista}) {
+    if (idLista != _idLista) {
+      _idLista = idLista;
+      _nomeLista = nomeLista;
+      debugPrint(
+          '================================================ (${formatoData.format(DateTime.now())}) Nova Solicitação - $nomeLista =======================================================');
+      debugPrint(
+          '🤴🏻🧺CTi iniciarController(): _idLista $_idLista, _nomeLista $_nomeLista');
+      _limparTudo();
+      _recuperarItens();
+    }
   }
 
   _limparTudo() {
@@ -65,51 +80,41 @@ class ItensController extends ChangeNotifier {
     _itensPesquisados.clear();
     _itensSelecionados.clear();
     _precoTotal = 0;
+    _precoTotalLista = 0;
     _filtro = '';
     _ordem = '';
     _isMarcadoTodosItens = false;
     _isPesquisar = false;
-    debugPrint("limpar tudo");
+    
+    debugPrint('🤴🏻🧺CTi _limparTudo()');
   }
 
   _recuperarItens() async {
     _itens = await ItensRepository().recuperarItens(_idLista);
-    debugPrint("itens controller: ${_itens.length}");
+    debugPrint("🤴🏻🧺CTi _recuperarItens() _itens: ${_itens.length}");
 
     _itensInterface.addAll(_itens);
-    debugPrint("controller interface recuperar: ${_itensInterface.length}");
-
-    int verificarComprados = 0;
-    for (int i = 0; i < _itens.length; i++) {
-      if (_itens[i].comprado == 1) {
-        verificarComprados++;
-      }
-      debugPrint('itens Interface controller: ${_itensInterface[i].nome}');
-      debugPrint('itens _itens controller: ${_itens[i].nome}');
-    }
-
-    if (verificarComprados == _itensInterface.length) {
-      _isMarcadoTodosItens = true;
-      debugPrint(
-          'marcado todos itens recuperar controller: $_isMarcadoTodosItens');
-    }
+    debugPrint(
+        "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
+        
 
     _calculaTotal();
-
-    debugPrint("notificou os listeners apos recuperar itens e itens interface");
+    _calculaPrecoTotalLista();
   }
 
   _rebuildInterface() {
     _itensInterface.clear();
+    debugPrint(
+        "🤴🏻🧺CTi _rebuildInterface() _itensInterface: ${_itensInterface.length} ");
     notifyListeners();
   }
 
   ordenarItens(String ordem) async {
     _ordem = ordem;
-    debugPrint('Ordem no controller: $_ordem');
+    debugPrint('🤴🏻🧺CTi ordenarItens() _ordem: $_ordem');
     _rebuildInterface();
     await Future.delayed(const Duration(milliseconds: 300), () {
-      debugPrint('Reordenando itens');
+      debugPrint('🤴🏻🧺CTi ordenarItens() delay executado');
     });
     if (ordem == kAz) {
       _itens.sort((ItemModel a, ItemModel b) =>
@@ -122,24 +127,26 @@ class ItensController extends ChangeNotifier {
     } else {
       _itens.sort((ItemModel a, ItemModel b) => a.preco.compareTo(b.preco));
     }
+    debugPrint('\n\n');
 
     for (var i = 0; i < _itens.length; i++) {
       _itensInterface.add(_itens[i]);
       debugPrint(
-          'ordenar controller $ordem: ${_itens[i].nome} -- ${_itens[i].preco}');
+          '🤴🏻🧺CTi ordenarItens() _ordem ($_ordem):_itens nome${_itens[i].nome} --_itens preço${_itens[i].preco}');
     }
+    debugPrint('\n\n');
 
     notifyListeners();
   }
 
   filtrarItens(String filtro) async {
     _filtro = filtro;
-    debugPrint('Filtro no controller: $_filtro');
+    debugPrint('🤴🏻🧺CTi filtrarItens() _filto: $_filtro');
 
     _rebuildInterface();
 
     await Future.delayed(const Duration(milliseconds: 300), () {
-      debugPrint('Filtrando itens.'); // Prints after 1 second.
+      debugPrint('🤴🏻🧺CTi filtrarItens() delay'); // Prints after 1 second.
     });
 
     if (filtro == 'Comprados') {
@@ -157,42 +164,47 @@ class ItensController extends ChangeNotifier {
     } else {
       _itensInterface.addAll(_itens);
     }
+    debugPrint('\n\n');
     for (var element in _itensInterface) {
-      debugPrint("Filtro: ${element.nome}");
+      debugPrint(
+          "🤴🏻🧺CTi filtrarItens() _filtro($_filtro) _itensIterface.nome: ${element.nome}");
     }
+    debugPrint('\n\n');
 
     notifyListeners();
   }
 
   adicionarItem(ItemModel item) async {
-    ItensRepository().inserirItem(item);
+    await ItensRepository().inserirItem(item);
     _itens.add(item);
     _itensInterface.add(item);
-
+    debugPrint("🤴🏻🧺CTi adicionarItem() item: ${item.nome}");
     _calculaTotal();
+    _calculaPrecoTotalLista();
   }
 
   removerItem(ItemModel item) async {
-    ItensRepository().excluirItem(item);
+    await ItensRepository().excluirItem(item);
     _itens.remove(item);
     _itensInterface.remove(item);
-
+    debugPrint('🤴🏻🧺CTi removerItem() item: ${item.nome}');
     _calculaTotal();
+    _calculaPrecoTotalLista();
   }
 
   atualizarItem(ItemModel item) async {
-    ItensRepository().atualizarItem(item);
+    await ItensRepository().atualizarItem(item);
     _itens[_itens.indexOf(item)] = item;
     _itensInterface[_itensInterface.indexOf(item)] = item;
-
+    debugPrint('🤴🏻🧺CTi atualizarItem() item: ${item.nome}');
     _calculaTotal();
+    _calculaPrecoTotalLista();
   }
 
   marcarTodos() async {
-    debugPrint('marcado todos itens funcao controller: $_isMarcadoTodosItens');
     _rebuildInterface();
     await Future.delayed(const Duration(milliseconds: 300), () {
-      debugPrint('Controle Marcando/Desmarcando todos itens');
+      debugPrint('🤴🏻🧺CTi marcarTodos() delay');
     });
     if (_isMarcadoTodosItens) {
       for (int i = 0; i < _itens.length; i++) {
@@ -200,7 +212,7 @@ class ItensController extends ChangeNotifier {
       }
       _isMarcadoTodosItens = !_isMarcadoTodosItens;
       debugPrint(
-          'marcado todos itens sair do if controller: $_isMarcadoTodosItens');
+          '🤴🏻🧺CTi marcarTodos() marcado todos itens: $_isMarcadoTodosItens');
       ItensRepository().desmarcarTodosItens(idLista: _idLista);
     } else {
       for (int i = 0; i < _itens.length; i++) {
@@ -208,7 +220,7 @@ class ItensController extends ChangeNotifier {
       }
       _isMarcadoTodosItens = !_isMarcadoTodosItens;
       debugPrint(
-          'marcado todos itens sair do else controller: $_isMarcadoTodosItens');
+          '🤴🏻🧺CTi marcarTodos() marcado todos itens: $_isMarcadoTodosItens');
       ItensRepository().marcarTodosItens(idLista: _idLista);
     }
 
@@ -225,6 +237,17 @@ class ItensController extends ChangeNotifier {
       }
     }
     _precoTotal = total;
+    debugPrint('🤴🏻🧺CTi _calculaTotal() _precoTotal: $_precoTotal');
+    notifyListeners();
+  }
+
+  _calculaPrecoTotalLista() {
+    double total = 0;
+    for (var item in _itens) {
+      total += item.preco * item.quantidade;
+    }
+    _precoTotalLista = total;
+    debugPrint('🤴🏻🧺CTi _calculaPrecoTotalLista() _precoTotalLista: $_precoTotalLista');
     notifyListeners();
   }
 
@@ -232,7 +255,7 @@ class ItensController extends ChangeNotifier {
     _rebuildInterface();
 
     await Future.delayed(const Duration(milliseconds: 100), () {
-      debugPrint('Pesquisando itens.');
+      debugPrint('🤴🏻🧺 CTi pesquisar() delay');
     });
     _itensPesquisados = _itens
         .where((element) =>
@@ -250,22 +273,28 @@ class ItensController extends ChangeNotifier {
     }
 
     debugPrint(
-        'Selecionado itens controller: ${_itensSelecionados.length}');
+        '🤴🏻🧺 CTi selecionarItens() _itensSelecionados: ${_itensSelecionados.length}');
     notifyListeners();
   }
 
   limparListaSelecionados() {
     _itensSelecionados.clear();
+    debugPrint(
+        '🤴🏻🧺 CTi limparListaSelecionados() _itensSelecionados: ${_itensSelecionados.length}');
     notifyListeners();
   }
 
-  excluirItensSelecionados()async{
+  excluirItensSelecionados() async {
+    debugPrint(
+        '🤴🏻🧺 CTi excluirItensSelecionados() qtd de itens antes: ${_itens.length}');
     for (var item in _itensSelecionados) {
       await ItensRepository().excluirItem(item);
       _itens.remove(item);
       _itensInterface.remove(item);
     }
-    debugPrint ('Excluido itens selecionados controller');
+
+    debugPrint(
+        '🤴🏻🧺 CTi excluirItensSelecionados() qtd de itens após: ${_itens.length}');
 
     _calculaTotal();
     limparListaSelecionados();

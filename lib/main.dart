@@ -18,13 +18,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ItensController()),
-        ChangeNotifierProvider(create: (context) => ItensRepository()),
-        ChangeNotifierProvider(create: (context) => ListasController()),
-        ChangeNotifierProvider(create: (context) => ListasRepository(),
-        lazy: false,),
         ChangeNotifierProvider(
             create: (context) => PreferenciasUsuarioShared(), lazy: false),
+        ChangeNotifierProvider(create: (context) => ItensController()),
+        ChangeNotifierProvider(create: (context) => ItensRepository()),
+        ChangeNotifierProvider(create: (context) => ListasController(),
+            
+        ),
+        ChangeNotifierProvider(create: (context) => ListasRepository()),
       ],
       child: const MainApp(),
     ),

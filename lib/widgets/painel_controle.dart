@@ -31,9 +31,10 @@ class _PainelControleState extends State<PainelControle> {
             const VerticalDivider(
               thickness: 1,
               width: 0,
+
             ),
             Expanded(
-              flex: 3,
+              flex: 5,
               child: itemC.filtro.isNotEmpty
                   ? ActionChip(
                       backgroundColor:

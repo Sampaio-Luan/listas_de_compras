@@ -23,13 +23,10 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [idLista],
     );
 
-    debugPrint("recuperar Itens repository tamanho: ${itensMap.length}");
-
     for (int i = 0; i < itensMap.length; i++) {
       _itens.add(ItemModel.fromMap(itensMap[i]));
-
-      debugPrint("recuperar itens repository: ${itensMap[i]}");
     }
+    debugPrint('💁🏻‍♀️🧺RPi recuperarItens() _itens: ${_itens.length}');
 
     return _itens;
   }
@@ -37,7 +34,6 @@ class ItensRepository extends ChangeNotifier {
   recuperarItensFiltrado(String filtro, int idLista) async {
     db = await Banco.instancia.database;
     _itens.clear();
-    debugPrint('recuperarItensFiltrado: $filtro');
 
     int isComprado = filtro == 'Comprado' ? 1 : 0;
 
@@ -47,13 +43,11 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [isComprado, idLista],
     );
 
-    debugPrint("filtrado repository tamanho: ${itensMap.length}");
-
     for (int i = 0; i < itensMap.length; i++) {
       _itens.add(ItemModel.fromMap(itensMap[i]));
-
-      debugPrint("Filtrado itens repository: ${itensMap[i]}");
     }
+    debugPrint(
+        '💁🏻‍♀️🧺RPi recuperarItensFiltrados() filtro $filtro , itens: ${_itens.length}');
 
     notifyListeners();
     //return _itens;
@@ -67,13 +61,13 @@ class ItensRepository extends ChangeNotifier {
       orderBy: "$itemColumnName ASC",
     );
 
-    debugPrint("recuperarItensOrdenado repository tamanho: ${itensMap.length}");
+ 
     for (int i = 0; i < itensMap.length; i++) {
       _itens.add(ItemModel.fromMap(itensMap[i]));
-      debugPrint("recuperarItensOrdenado itens repository: ${itensMap[i]}");
+      
     }
 
-    
+    debugPrint('💁🏻‍♀️🧺RPi recuperarItensOrdenado() itens: ${_itens.length}, ordem: $ordem');
     notifyListeners();
     return _itens;
   }
@@ -86,7 +80,7 @@ class ItensRepository extends ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    debugPrint("Repositorio Inseriu: ${item.nome} - $id");
+    debugPrint('💁🏻‍♀️🧺RPi insrirItem, nome:${item.nome} - id: $id');
     
   }
 
@@ -98,7 +92,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    debugPrint("Repositorio Atualizou: ${item.nome}");
+    debugPrint('💁🏻‍♀️🧺RPi atualizarItem(), item: ${item.nome}');
   }
 
   excluirItem(ItemModel item) async {
@@ -108,7 +102,7 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    debugPrint("Repositorio Excluiu: ${item.nome}");
+    debugPrint('💁🏻‍♀️🧺RPi excluirItem(), item: ${item.nome}');
   }
 
   editarUmAtributo(
@@ -122,7 +116,8 @@ class ItensRepository extends ChangeNotifier {
       where: "$itemColumnId = ?",
       whereArgs: [item.idItem],
     );
-    
+
+    debugPrint('💁🏻‍♀️🧺RPi editarUmAtributo(), campo: $campo, valor: $valor, item: ${item.nome} e id: ${item.idItem} ');
   }
 
   marcarTodosItens({required int idLista}) async {
@@ -134,10 +129,10 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [idLista],
     );
 
-    debugPrint('REPOSITORIO Marcado todos itens');
+    debugPrint('💁🏻‍♀️🧺RPi marcarTodosItens()');
   }
 
-    desmarcarTodosItens({required int idLista}) async {
+  desmarcarTodosItens({required int idLista}) async {
     db = await Banco.instancia.database;
     await db.update(
       itemTableName,
@@ -146,6 +141,6 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [idLista],
     );
 
-    debugPrint('REPOSITORIO desmarcado todos itens');
+    debugPrint('💁🏻‍♀️🧺RPi desmarcarTodosItens()');
   }
 }

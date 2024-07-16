@@ -7,33 +7,23 @@ import '../database/banco.dart';
 import '../models/lista.module.dart';
 
 class ListasRepository extends ChangeNotifier {
-  final List<ListaModel> listas = [];
-  List<ListaModel> get getListas => listas;
+  final List<ListaModel> _listas = [];
+  List<ListaModel> get getListas => _listas;
 
   late Database db;
 
-  ListasRepository() {
-    _initRepository();
-  }
-
-  _initRepository() async {
-    await recuperarListas();
-  }
-
   recuperarListas() async {
     db = await Banco.instancia.database;
-    listas.clear();
+    _listas.clear();
     final List<Map<String, dynamic>> listasMap = await db.query(
       listaTableName,
     );
     for (int i = 0; i < listasMap.length; i++) {
-      listas.add(ListaModel.fromMap(listasMap[i]));
-
-      debugPrint("get Lista:    ${listas[i]}");
+      _listas.add(ListaModel.fromMap(listasMap[i]));
     }
+    debugPrint("💁🏻📝RPL recuperarLista(): ${_listas.length}");
 
-    notifyListeners();
-    return listas;
+    return _listas;
   }
 
   inserirLista(ListaModel lista) async {
@@ -43,7 +33,7 @@ class ListasRepository extends ChangeNotifier {
       lista.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    debugPrint("Vai tomar:    $id");
+    debugPrint("💁🏻📝RPL inserirLista() id: $id");
     recuperarListas();
   }
 
@@ -56,6 +46,8 @@ class ListasRepository extends ChangeNotifier {
       whereArgs: [lista.id],
     );
 
+    debugPrint("💁🏻📝RPL atualizarLista() id: ${lista.nome}");
+
     recuperarListas();
   }
 
@@ -66,6 +58,8 @@ class ListasRepository extends ChangeNotifier {
       where: '$listaColumnId = ?',
       whereArgs: [lista.id],
     );
+
+    debugPrint("💁🏻📝RPL excluirLista() id: ${lista.id}");
 
     recuperarListas();
   }

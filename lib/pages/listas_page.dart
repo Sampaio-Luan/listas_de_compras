@@ -59,7 +59,7 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
           ),
         ),
         child: Consumer<ListasRepository>(builder: (context, listasR, _) {
-          return listasR.listas.isEmpty
+          return listasR.getListas.isEmpty
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
@@ -67,7 +67,7 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
                   padding: const EdgeInsets.all(6.0),
                   child: GridView.builder(
                     shrinkWrap: true,
-                    itemCount: listasR.listas.length,
+                    itemCount: listasR.getListas.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -77,7 +77,7 @@ class _ListasDeComprasPageState extends State<ListasDeComprasPage> {
                     ),
                     itemBuilder: (context, index) {
                       return LayoutLista(
-                        lista: listasR.listas[index],
+                        lista: listasR.getListas[index],
                       );
                     },
                   ),
