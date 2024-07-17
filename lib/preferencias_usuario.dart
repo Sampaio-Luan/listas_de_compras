@@ -10,7 +10,7 @@ class PreferenciasUsuarioShared extends ChangeNotifier {
   bool _temaEscuro = false;
   bool get temaEscuro => _temaEscuro;
 
-  int ? _idUltimaListaVisitada ;
+  int  _idUltimaListaVisitada = -1;
   get idUltimaListaVisitada => _idUltimaListaVisitada;
 
 //#endregion =====================================================================
@@ -21,14 +21,14 @@ class PreferenciasUsuarioShared extends ChangeNotifier {
   _inicializar() async {
     _prefs = await SharedPreferences.getInstance();
     _temaEscuro = _prefs.getBool('temaEscuro') ?? false;
-    _idUltimaListaVisitada = _prefs.getInt('idUltimaLista') ;
+    _idUltimaListaVisitada = _prefs.getInt('idUltimaLista') ?? -1;
     debugPrint('📲😎Pref, temaEscuro: $_temaEscuro, idUltimaListaVisitada: $_idUltimaListaVisitada');
     notifyListeners();
   }
 
   setUltimaListaVisitada(int id) async {
     _idUltimaListaVisitada = id;
-    _prefs.setInt('idUltimaLista', _idUltimaListaVisitada!);
+    _prefs.setInt('idUltimaLista', _idUltimaListaVisitada);
    debugPrint('📲😎Pref, setUltimaListaVisitada(): $_idUltimaListaVisitada');
   }
 

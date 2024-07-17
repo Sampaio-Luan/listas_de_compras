@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../constants/const_tb_lista.dart';
 import '../database/banco.dart';
+import '../database/queries/const_queries.dart';
 import '../models/lista.module.dart';
 
 class ListasRepository extends ChangeNotifier {
@@ -14,10 +15,10 @@ class ListasRepository extends ChangeNotifier {
 
   recuperarListas() async {
     db = await Banco.instancia.database;
+
     _listas.clear();
-    final List<Map<String, dynamic>> listasMap = await db.query(
-      listaTableName,
-    );
+    final List<Map<String, dynamic>> listasMap =
+        await db.rawQuery(kListasComTotalItens);
     for (int i = 0; i < listasMap.length; i++) {
       _listas.add(ListaModel.fromMap(listasMap[i]));
     }

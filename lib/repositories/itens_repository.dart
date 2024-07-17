@@ -6,6 +6,7 @@ import '../constants/const_tb_item.dart';
 import '../database/banco.dart';
 import '../models/item.module.dart';
 
+
 class ItensRepository extends ChangeNotifier {
   final List<ItemModel> _itens = [];
   List<ItemModel> get itens => _itens;
@@ -61,13 +62,12 @@ class ItensRepository extends ChangeNotifier {
       orderBy: "$itemColumnName ASC",
     );
 
- 
     for (int i = 0; i < itensMap.length; i++) {
       _itens.add(ItemModel.fromMap(itensMap[i]));
-      
     }
 
-    debugPrint('💁🏻‍♀️🧺RPi recuperarItensOrdenado() itens: ${_itens.length}, ordem: $ordem');
+    debugPrint(
+        '💁🏻‍♀️🧺RPi recuperarItensOrdenado() itens: ${_itens.length}, ordem: $ordem');
     notifyListeners();
     return _itens;
   }
@@ -81,7 +81,6 @@ class ItensRepository extends ChangeNotifier {
     );
 
     debugPrint('💁🏻‍♀️🧺RPi insrirItem, nome:${item.nome} - id: $id');
-    
   }
 
   atualizarItem(ItemModel item) async {
@@ -117,7 +116,8 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [item.idItem],
     );
 
-    debugPrint('💁🏻‍♀️🧺RPi editarUmAtributo(), campo: $campo, valor: $valor, item: ${item.nome} e id: ${item.idItem} ');
+    debugPrint(
+        '💁🏻‍♀️🧺RPi editarUmAtributo(), campo: $campo, valor: $valor, item: ${item.nome} e id: ${item.idItem} ');
   }
 
   marcarTodosItens({required int idLista}) async {
@@ -143,4 +143,6 @@ class ItensRepository extends ChangeNotifier {
 
     debugPrint('💁🏻‍♀️🧺RPi desmarcarTodosItens()');
   }
+
+
 }

@@ -71,6 +71,7 @@ class ItensController extends ChangeNotifier {
       _limparTudo();
       notifyListeners();
       _recuperarItens();
+      return true;
     }
   }
 
@@ -89,9 +90,8 @@ class ItensController extends ChangeNotifier {
     debugPrint('🤴🏻🧺CTi _limparTudo()');
   }
 
-
-
   _recuperarItens() async {
+   
     _itens = await ItensRepository().recuperarItens(_idLista);
     debugPrint("🤴🏻🧺CTi _recuperarItens() _itens: ${_itens.length}");
 
@@ -303,4 +303,10 @@ class ItensController extends ChangeNotifier {
     _calculaTotal();
     limparListaSelecionados();
   }
+
+
+
+
+
+
 }

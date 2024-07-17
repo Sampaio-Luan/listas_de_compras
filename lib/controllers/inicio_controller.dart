@@ -11,6 +11,7 @@ class IniciarAppController extends ChangeNotifier {
   ItensController itensController;
   int idUltimaLista = -1;
   String titulo = '';
+  bool jaExecutado = false;
 
   IniciarAppController(
       {required this.listasController,
@@ -18,20 +19,25 @@ class IniciarAppController extends ChangeNotifier {
       required this.itensController});
 
   carregarPagina() async {
-    if (idUltimaLista == -1) {
+    bool iniciaLista = await listasController.recuperarListas();
+    bool iniciaItens = false;
+    if (iniciaLista) {
       idUltimaLista = await preferencias.idUltimaListaVisitada;
       titulo = listasController
           .listas[listasController.listas.indexOf(listasController.listas
               .firstWhere((element) => element.id == idUltimaLista))]
           .nome;
-      await itensController.iniciarController(
+      iniciaItens = await itensController.iniciarController(
           idLista: idUltimaLista, nomeLista: titulo);
 
       debugPrint(
           '😶‍🌫️🥱IAC carregarPagina():  id: $idUltimaLista, nome:$titulo');
-      return true;
     }
 
-    return false;
+    if (iniciaLista && iniciaItens) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

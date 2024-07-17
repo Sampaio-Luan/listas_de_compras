@@ -115,7 +115,9 @@ class _FormularioListaState extends State<FormularioLista>
                         criacao: DateTime.now().toString(),
                         indice: 0,
                         icone: 'sacola',
-                        tema: 'padrao');
+                        tema: 'padrao',
+                        totalItens: 0,
+                        totalComprados: 0);
 
                     listasR.inserirLista(l);
                   } else {

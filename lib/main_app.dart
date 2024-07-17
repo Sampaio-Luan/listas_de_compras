@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../theme/theme.dart';
 import '../utils/util.dart';
 
-import 'pages/itens_page.dart';
+import 'pages/pre_page.dart';
 import 'preferencias_usuario.dart';
 
 class MainApp extends StatelessWidget {
@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
       theme: preferencias.temaEscuro ? theme.dark() : theme.light(),
       initialRoute: 'itens_page',
       routes: {
-        'itens_page': (context) => const ItensPage(),
+        'itens_page': (context) => const PrePage(),
       },
     );
   }

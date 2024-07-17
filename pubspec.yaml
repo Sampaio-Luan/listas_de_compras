@@ -52,6 +52,7 @@ dependencies:
   card_loading: ^0.3.2
   shared_preferences: ^2.2.3
   expandable_text: ^2.3.0
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

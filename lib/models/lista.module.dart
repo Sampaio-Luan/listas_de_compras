@@ -10,6 +10,8 @@ class ListaModel {
   int indice;
   String icone;
   String tema;
+  int totalItens;
+  int totalComprados;
 
   ListaModel({
     required this.id,
@@ -19,6 +21,8 @@ class ListaModel {
     required this.indice,
     required this.icone,
     required this.tema,
+    required this.totalItens,
+    required this.totalComprados,
   });
 
   Map<String, dynamic> toMap() {
@@ -45,6 +49,8 @@ class ListaModel {
       indice: map[listaColumnIndice] ?? 0,
       icone: map[listaColumnIcone] ?? '',
       tema: map[listaColumnTema] ?? '',
+      totalItens: map['total_itens'] ?? 0,
+      totalComprados: map['itens_comprados'] ?? 0,
     );
   }
 

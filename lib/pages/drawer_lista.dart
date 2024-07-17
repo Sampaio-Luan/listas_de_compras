@@ -9,7 +9,7 @@ import 'package:listas_de_compras/controllers/listas_controller.dart';
 import '../preferencias_usuario.dart';
 import '../theme/estilos.dart';
 import '../widgets/formulario_lista.dart';
-import '../widgets/n_layout_lista.dart';
+import '../widgets/lista_layout.dart';
 
 class DrawerListas extends StatefulWidget {
   const DrawerListas({super.key});
@@ -67,11 +67,12 @@ class _DrawerListasState extends State<DrawerListas> {
                             preferencias.mudarTema();
                           },
                           icon: preferencias.temaEscuro
-                              ? const Icon(
-                                  PhosphorIconsFill.lamp,
-                                  size: 24)
-                              :  Icon(PhosphorIconsFill.lampPendant,
-                                  size: 24, color: Theme.of(context).colorScheme.primary),
+                              ? const Icon(PhosphorIconsFill.lamp, size: 24)
+                              : Icon(
+                                  PhosphorIconsFill.lampPendant,
+                                  size: 24,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                         ),
                       ),
                     )
@@ -108,12 +109,12 @@ class _DrawerListasState extends State<DrawerListas> {
           flex: 12,
           child: Consumer<ListasController>(
               builder: (context, controleLista, child) {
-            return ListView.separated(
+            return ListView.builder(
                 padding: const EdgeInsets.all(0),
                 itemCount: controleLista.listas.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return const Divider(height: 0, thickness: 0.5);
-                },
+                // separatorBuilder: (BuildContext context, int index) {
+                //   return const Divider(height: 0, thickness: 0.5);
+                // },
                 itemBuilder: (context, index) {
                   return NLayoutLista(lista: controleLista.listas[index]);
                 });

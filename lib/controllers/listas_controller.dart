@@ -11,29 +11,16 @@ class ListasController extends ChangeNotifier {
   List<ListaModel> _listas = [];
   List<ListaModel> get listas => _listas;
 
-  ListasController() {
-    _iniciaControllerLista();
-    debugPrint('🤹🏻📝CTL intanciada ListasController');
-  }
-
-  _iniciaControllerLista() async {
+  recuperarListas() async {
     if (_listas.isEmpty) {
-      _recuperarListas();
-    }
-  }
-
-  _recuperarListas() async {
     _listas = await ListasRepository().recuperarListas();
     debugPrint('🤹📝CTL _recuperarListas(): ${_listas.length}');
 
-    // int idLista = _listas[0].id;
-    // String nome = _listas[0].nome;
-
-    // debugPrint('🤹📝CTL _recuperarListas(): $idLista, $nome');
-    // debugPrint('🤹📝CTL _recuperarListas(): chamando a pagina');
-    // ItensController().iniciarController(idLista: idLista, nomeLista: nome);
-
     notifyListeners();
+    return true;
+    }
+    return true;
+    
   }
 
   inserirLista(ListaModel lista) async {
@@ -41,7 +28,7 @@ class ListasController extends ChangeNotifier {
     debugPrint('🤹📝CTL inserirLista(): id recuperado $id');
     _listas.clear();
 
-    _recuperarListas();
+    recuperarListas();
     ItensController().iniciarController(idLista: id, nomeLista: lista.nome);
 
     debugPrint('🤹📝CTL inserirLista(): ${lista.nome}');

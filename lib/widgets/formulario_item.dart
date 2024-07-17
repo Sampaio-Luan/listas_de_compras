@@ -26,7 +26,17 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
   TextEditingController quantidadeItem = TextEditingController();
   TextEditingController precoItem = TextEditingController();
   TextEditingController tipoMedida = TextEditingController();
+  TextEditingController prioridadeItem = TextEditingController();
   final formKeyItem = GlobalKey<FormState>();
+
+  List<String> prioridades = ['0', 'Alta', 'Média', 'Baixa', 'Nula'];
+  List<Color> prioridadesColor = [
+    Colors.red,
+    Colors.red.shade400,
+    Colors.orange.shade400,
+    Colors.green.shade700,
+    Colors.indigo.shade600
+  ];
 
   CamposFormulario cf = CamposFormulario();
   bool autoValidar = false;
@@ -37,19 +47,20 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
     super.initState();
 
     if (widget.item != null) {
-      
       final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
 
       String precoFormatado = formatter.format(widget.item!.preco);
       nomeItem.text = widget.item!.nome;
       descricaoItem.text = widget.item!.descricao;
-      quantidadeItem.text = widget.item!.medida == 'uni' ? widget.item!.quantidade.toStringAsFixed(0) : widget.item!.quantidade.toStringAsFixed(3);
+      quantidadeItem.text = widget.item!.medida == 'uni'
+          ? widget.item!.quantidade.toStringAsFixed(0)
+          : widget.item!.quantidade.toStringAsFixed(3);
       precoItem.text = precoFormatado;
       tipoMedida.text = widget.item!.medida;
-      
     } else {
       tipoMedida.text = 'uni';
       quantidadeItem.text = '1';
+      prioridadeItem.text = '4';
     }
   }
 
@@ -71,114 +82,96 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
               autovalidateMode: autoValidar
                   ? AutovalidateMode.onUserInteraction
                   : AutovalidateMode.disabled,
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                cf.linha(
-                  context,
-                  controle: nomeItem,
-                  label: 'Item',
-                  qtdLinha: 1,
-                  valida: true,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    tipoMedida.text == 'uni'
-                        ? Expanded(
-                            flex: 2,
-                            child: cf.apenasNumeros(
-                              context,
-                              controle: quantidadeItem,
-                              label: 'Quantidade',
-                              qtdLinha: 1,
-                              valida: true,
-                            ),
-                          )
-                        : Expanded(
-                            flex: 2,
-                            child: cf.decimal(
-                              context,
-                              controle: quantidadeItem,
-                              label: 'Quantidade',
-                              valida: true,
-                              tipoM: tipoMedida,
-                            ),
-                          ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    SegmentedButton<String>(
-                      showSelectedIcon: false,
-                      style: SegmentedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    Row(children: [
+                      Expanded(
+                        flex: 2,
+                        child: cf.linha(
+                          context,
+                          controle: nomeItem,
+                          label: 'Item',
+                          qtdLinha: 1,
+                          valida: true,
                         ),
-                        padding: const EdgeInsets.all(0),
-                        visualDensity:
-                            const VisualDensity(vertical: 3, horizontal: -3.5),
-                            selectedBackgroundColor: Theme.of(context).colorScheme.primary,
-                            selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
                       ),
-                      segments: const <ButtonSegment<String>>[
-                        ButtonSegment<String>(
-                          value: 'uni',
-                          label: Text('Uni'),
-                        ),
-                        ButtonSegment<String>(
-                          value: 'kg',
-                          label: Text('Kg'),
-                        ),
-                      ],
-                      selected: <String>{tipoMedida.text},
-                      onSelectionChanged: (Set<String> newSelection) {
-                        setState(() {
-                          tipoMedida.text = newSelection.first;
-                          if (tipoMedida.text == 'uni') {
-                            double quantidade = double.parse(quantidadeItem.text.replaceAll(',', '.'));
-                            quantidadeItem.text = quantidade.toStringAsFixed(0);
-                          } else {
-                            quantidadeItem.text = '0,${quantidadeItem.text}';
-                          }
-                        });
-                      },
+                      const SizedBox(width: 10),
+                      Expanded(child: _tipoDeMedida(context))
+                    ]),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(children: [
-                  Expanded(
-                    flex: 2,
-                    child: cf.moeda(
+                    Row(children: [
+                      tipoMedida.text == 'uni'
+                          ? Expanded(
+                              flex: 2,
+                              child: cf.apenasNumeros(
+                                context,
+                                controle: quantidadeItem,
+                                label: 'Quantidade',
+                                qtdLinha: 1,
+                                valida: true,
+                              ),
+                            )
+                          : Expanded(
+                              flex: 2,
+                              child: cf.decimal(
+                                context,
+                                controle: quantidadeItem,
+                                label: 'Quantidade',
+                                valida: true,
+                                tipoM: tipoMedida,
+                              ),
+                            ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: cf.moeda(
+                          context,
+                          controle: precoItem,
+                          label: 'Preço',
+                          valida: true,
+                        ),
+                      ),
+                    ]),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    cf.linha(
                       context,
-                      controle: precoItem,
-                      label: 'Preço',
-                      valida: true,
+                      controle: descricaoItem,
+                      label: 'Descrição',
+                      qtdLinha: 2,
+                      valida: false,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Text(
-                      tipoMedida.text == 'uni' ? 'A Unidade' : 'Por Quilo',
-                      style: Estilos().tituloColor(context, tamanho: 'p'),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  )
-                ]),
-                const SizedBox(
-                  height: 10,
-                ),
-                cf.linha(
-                  context,
-                  controle: descricaoItem,
-                  label: 'Descrição',
-                  qtdLinha: 2,
-                  valida: false,
-                ),
-              ]),
+                    _prioridade(context),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(children: [
+                      const Expanded(child: Text('Prioridade:')),
+                      Expanded(
+                        child: Text(
+                          prioridades[int.parse(
+                            prioridadeItem.text,
+                          )],
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              color: prioridadesColor[
+                                  int.parse(prioridadeItem.text)],
+                              fontSize: 16, 
+                              ),
+                        ),
+                      ),
+                    ]),
+                  ]),
             ),
           ),
         ),
@@ -275,37 +268,81 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
     debugPrint('Formatar preco: $preco');
     return double.parse(preco);
   }
-}
 
-enum Calendar { day, week, month, year }
-
-class SingleChoice extends StatefulWidget {
-  const SingleChoice({super.key});
-
-  @override
-  State<SingleChoice> createState() => _SingleChoiceState();
-}
-
-class _SingleChoiceState extends State<SingleChoice> {
-  Calendar calendarView = Calendar.day;
-
-  @override
-  Widget build(BuildContext context) {
-    return SegmentedButton<Calendar>(
-      segments: const <ButtonSegment<Calendar>>[
-        ButtonSegment<Calendar>(
-            value: Calendar.day,
-            label: Text('Day'),
-            icon: Icon(Icons.calendar_view_day)),
-        ButtonSegment<Calendar>(
-            value: Calendar.week,
-            label: Text('Week'),
-            icon: Icon(Icons.calendar_view_week)),
+  _tipoDeMedida(context) {
+    return SegmentedButton<String>(
+      showSelectedIcon: false,
+      style: SegmentedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(0),
+        visualDensity: const VisualDensity(vertical: 3, horizontal: -3.5),
+        selectedBackgroundColor: Theme.of(context).colorScheme.primary,
+        selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+      ),
+      segments: const <ButtonSegment<String>>[
+        ButtonSegment<String>(
+          value: 'uni',
+          label: Text('Uni'),
+        ),
+        ButtonSegment<String>(
+          value: 'kg',
+          label: Text('Kg'),
+        ),
       ],
-      selected: <Calendar>{calendarView},
-      onSelectionChanged: (Set<Calendar> newSelection) {
+      selected: <String>{tipoMedida.text},
+      onSelectionChanged: (Set<String> newSelection) {
         setState(() {
-          calendarView = newSelection.first;
+          tipoMedida.text = newSelection.first;
+          if (tipoMedida.text == 'uni') {
+            double quantidade =
+                double.parse(quantidadeItem.text.replaceAll(',', '.'));
+            quantidadeItem.text = quantidade.toStringAsFixed(0);
+          } else {
+            quantidadeItem.text = '0,${quantidadeItem.text}';
+          }
+        });
+      },
+    );
+  }
+
+  _prioridade(context) {
+    return SegmentedButton<int>(
+      showSelectedIcon: false,
+      style: SegmentedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(0),
+        visualDensity: const VisualDensity(vertical: 3, horizontal: -3.5),
+        selectedBackgroundColor: int.tryParse(prioridadeItem.text) == 4
+            ? Theme.of(context).colorScheme.primary
+            : prioridadesColor[int.parse(prioridadeItem.text)],
+        selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+      ),
+      segments: const <ButtonSegment<int>>[
+        ButtonSegment<int>(
+          value: 1,
+          label: Text('A'),
+        ),
+        ButtonSegment<int>(
+          value: 2,
+          label: Text('M'),
+        ),
+        ButtonSegment<int>(
+          value: 3,
+          label: Text('B'),
+        ),
+        ButtonSegment<int>(
+          value: 4,
+          label: Text('N'),
+        ),
+      ],
+      selected: <int>{int.parse(prioridadeItem.text)},
+      onSelectionChanged: (Set<int> newSelection) {
+        setState(() {
+          prioridadeItem.text = newSelection.first.toString();
         });
       },
     );

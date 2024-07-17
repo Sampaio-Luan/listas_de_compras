@@ -7,7 +7,6 @@ import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
 import '../models/lista.module.dart';
 import '../repositories/itens_repository.dart';
-import '../repositories/listas_repository.dart';
 import '../theme/estilos.dart';
 
 import 'formulario_item.dart';
