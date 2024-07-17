@@ -60,7 +60,6 @@ class ItensController extends ChangeNotifier {
 
 //#endregion =====================================================================
 
-
   iniciarController({required int idLista, required String nomeLista}) {
     if (idLista != _idLista) {
       _idLista = idLista;
@@ -72,7 +71,6 @@ class ItensController extends ChangeNotifier {
       _limparTudo();
       notifyListeners();
       _recuperarItens();
-      
     }
   }
 
@@ -87,9 +85,11 @@ class ItensController extends ChangeNotifier {
     _ordem = '';
     _isMarcadoTodosItens = false;
     _isPesquisar = false;
-    
+
     debugPrint('🤴🏻🧺CTi _limparTudo()');
   }
+
+
 
   _recuperarItens() async {
     _itens = await ItensRepository().recuperarItens(_idLista);
@@ -98,10 +98,11 @@ class ItensController extends ChangeNotifier {
     _itensInterface.addAll(_itens);
     debugPrint(
         "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
-        
+
     notifyListeners();
     _calculaTotal();
     _calculaPrecoTotalLista();
+    return _itens;
   }
 
   _rebuildInterface() {
@@ -249,7 +250,8 @@ class ItensController extends ChangeNotifier {
       total += item.preco * item.quantidade;
     }
     _precoTotalLista = total;
-    debugPrint('🤴🏻🧺CTi _calculaPrecoTotalLista() _precoTotalLista: $_precoTotalLista');
+    debugPrint(
+        '🤴🏻🧺CTi _calculaPrecoTotalLista() _precoTotalLista: $_precoTotalLista');
     notifyListeners();
   }
 

@@ -4,8 +4,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/inicio_controller.dart';
 import '../controllers/itens_controller.dart';
-import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
 import '../theme/estilos.dart';
 import '../widgets/formulario_item.dart';
@@ -27,15 +27,35 @@ class _ItensPageState extends State<ItensPage> {
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<ItensController>();
+    final controleApp = context.read<IniciarAppController>();
 
-    //final controleListas = context.watch<ListasController>();
-    return  Scaffold(
+    
+    return FutureBuilder(
+     future: controleApp.carregarPagina(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+        else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Text('😥\n${snapshot.error}'),
+            )
+          );
+        }
+        
+
+        return Scaffold(
           drawer: const DrawerListas(),
+        //#region ====================================== APP BAR ========================================================
           appBar: ctrl.itensSelecionados.isNotEmpty
               ? _appBarSelecionados(context)
               : ctrl.isPesquisar
                   ? _appBarPesquisa(context)
                   : _appBarPadrao(context),
+        //#endregion ====================================================================================================
+        
+        //#region ====================================== BODY CASO SEM ITENS ============================================
           body: ctrl.itens.isEmpty
               ? Center(
                   child: Padding(
@@ -47,9 +67,18 @@ class _ItensPageState extends State<ItensPage> {
                     ),
                   ),
                 )
+        //#endregion =======================================================================================================
+        
+        //#region ====================================== BODY CASO COM ITENS ============================================
               : Column(children: [
+        //#region ====================================== PAINEL CONTROLE ================================================
                   const Expanded(
-                      flex: 2, child: PainelControle(itemOuLista: 'item')),
+                    flex: 2,
+                    child: PainelControle(itemOuLista: 'item'),
+                  ),
+        //#endregion ====================================================================================================
+        
+        //#region ====================================== MENSSAGEM CASO SEM ITENS EM PESQUISA OU FILTRO =================
                   ctrl.isPesquisar && ctrl.itensInterface.isEmpty ||
                           ctrl.filtro.isNotEmpty && ctrl.itensInterface.isEmpty
                       ? Expanded(
@@ -58,13 +87,17 @@ class _ItensPageState extends State<ItensPage> {
                             padding: const EdgeInsets.only(
                                 left: 20.0, right: 20, top: 50),
                             child: Text(
-                                ctrl.filtro.isNotEmpty
-                                    ? "Não há itens ${ctrl.filtro}"
-                                    : 'Não há "${pesquisarPorItem.text}" em ${ctrl.nomeLista}',
-                                textAlign: TextAlign.center,
-                                style: Estilos().corpoColor(context, tamanho: 'g')),
+                              ctrl.filtro.isNotEmpty
+                                  ? "Não há itens ${ctrl.filtro}"
+                                  : 'Não há "${pesquisarPorItem.text}" em ${ctrl.nomeLista}',
+                              textAlign: TextAlign.center,
+                              style: Estilos().corpoColor(context, tamanho: 'g'),
+                            ),
                           ),
                         )
+        //#endregion =======================================================================================================
+        
+        //#region ====================================== LISTA DE ITENS =================================================
                       : Expanded(
                           flex: 34,
                           child: Column(children: [
@@ -116,6 +149,10 @@ class _ItensPageState extends State<ItensPage> {
                             }),
                           ]),
                         ),
+        
+        //#endregion ====================================================================================================
+        
+        //#region ====================================== PAINEL DE PRECO TOTAL ==========================================
                   Expanded(
                     flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 7,
                     child: Container(
@@ -132,38 +169,33 @@ class _ItensPageState extends State<ItensPage> {
                             children: [
                               Text(
                                 "Total: ${ctrl.precoTotal}",
-                                style: Estilos().tituloColor(
-                                  context,
-                                  tamanho: 'm',
-                                ),
+                                style: Estilos().tituloColor(context, tamanho: 'm'),
                               ),
                               Text(
                                 "Preço total da lista: ${ctrl.precoTotalLista}",
-                                style: Estilos().sutil(
-                                  context,
-                                  tamanho: 12,
-                                ),
+                                style: Estilos().sutil(context, tamanho: 12),
                               ),
                             ]),
                       ),
                     ),
                   ),
+        //#endregion ====================================================================================================
                 ]),
+        
+        //#endregion ====================================================================================================
+        
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return FormularioItem(
-                      item: null,
-                      idLista: ctrl.getIdLista,
-                    );
-                  });
-            },
-            child: const Icon(Icons.add),
-          ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return FormularioItem(item: null, idLista: ctrl.getIdLista);
+                    });
+              },
+              child: const Icon(Icons.add)),
         );
-  
+      }
+    );
   }
 
   AppBar _appBarPadrao(context) {
@@ -210,7 +242,7 @@ class _ItensPageState extends State<ItensPage> {
           icon: const Icon(Icons.clear),
           onPressed: () {
             controle.setIsPesquisar = !controle.isPesquisar;
-            //controle.sairPesquisa();
+
             pesquisarPorItem.clear();
             controle.filtrarItens('');
           }),

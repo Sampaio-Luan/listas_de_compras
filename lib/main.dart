@@ -7,6 +7,7 @@ import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../repositories/listas_repository.dart';
 
+import 'controllers/inicio_controller.dart';
 import 'main_app.dart';
 import 'preferencias_usuario.dart';
 import 'repositories/itens_repository.dart';
@@ -19,13 +20,20 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => PreferenciasUsuarioShared(), lazy: false),
+          create: (context) => PreferenciasUsuarioShared(),
+          lazy: false,
+        ),
         ChangeNotifierProvider(create: (context) => ItensController()),
         ChangeNotifierProvider(create: (context) => ItensRepository()),
-        ChangeNotifierProvider(create: (context) => ListasController(),
-            lazy: false,
-        ),
+        ChangeNotifierProvider(create: (context) => ListasController()),
         ChangeNotifierProvider(create: (context) => ListasRepository()),
+        ChangeNotifierProvider(
+          create: (context) => IniciarAppController(
+              listasController: context.read<ListasController>(),
+              preferencias: context.read<PreferenciasUsuarioShared>(),
+              itensController: context.read<ItensController>()),
+          lazy: false,
+        ),
       ],
       child: const MainApp(),
     ),
