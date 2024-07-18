@@ -109,12 +109,12 @@ class _DrawerListasState extends State<DrawerListas> {
           flex: 12,
           child: Consumer<ListasController>(
               builder: (context, controleLista, child) {
-            return ListView.builder(
+            return ListView.separated(
                 padding: const EdgeInsets.all(0),
                 itemCount: controleLista.listas.length,
-                // separatorBuilder: (BuildContext context, int index) {
-                //   return const Divider(height: 0, thickness: 0.5);
-                // },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider(height: 0, thickness: 0.3);
+                },
                 itemBuilder: (context, index) {
                   return NLayoutLista(lista: controleLista.listas[index]);
                 });

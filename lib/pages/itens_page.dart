@@ -94,8 +94,7 @@ class _ItensPageState extends State<ItensPage> {
                                       width: 50,
                                       height: 50,
                                       child: CircularProgressIndicator.adaptive(
-                                        strokeWidth: 5,
-                                      ),
+                                          strokeWidth: 5),
                                     ),
                                   ),
                                 )
@@ -105,26 +104,31 @@ class _ItensPageState extends State<ItensPage> {
                                     separatorBuilder:
                                         (BuildContext context, int index) {
                                       return const Divider(
-                                          height: 1, thickness: 0.5);
+                                        height: 0,
+                                        thickness: 0.7,
+                                      );
                                     },
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Slidable(
-                                        key: ValueKey(controle
-                                            .itensInterface[index].idItem
-                                            .toString()),
-                                        startActionPane: _actionPane(context,
+                                          key: ValueKey(controle
+                                              .itensInterface[index].idItem
+                                              .toString()),
+                                          startActionPane: _actionPane(
+                                            context,
                                             item:
                                                 controle.itensInterface[index],
-                                            tipoActionPane: 'Deletar'),
-                                        endActionPane: _actionPane(context,
+                                            tipoActionPane: 'Deletar',
+                                          ),
+                                          endActionPane: _actionPane(
+                                            context,
                                             item:
                                                 controle.itensInterface[index],
-                                            tipoActionPane: 'Editar'),
-                                        child: NLayoutItem(
-                                            item:
-                                                controle.itensInterface[index]),
-                                      );
+                                            tipoActionPane: 'Editar',
+                                          ),
+                                          child: NLayoutItem(
+                                              item: controle
+                                                  .itensInterface[index]));
                                     },
                                   ),
                                 );
@@ -133,37 +137,44 @@ class _ItensPageState extends State<ItensPage> {
                     ),
 
               //#endregion ====================================================================================================
-
-              //#region ====================================== PAINEL DE PRECO TOTAL ==========================================
-              Expanded(
-                flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 3 : 7,
-                child: Container(
-                  constraints: const BoxConstraints.expand(),
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withAlpha(150),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Total: ${ctrl.precoTotal}",
-                            style: Estilos().tituloColor(context, tamanho: 'm'),
-                          ),
-                          Text(
-                            "Preço total da lista: ${ctrl.precoTotalLista}",
-                            style: Estilos().sutil(context, tamanho: 12),
-                          ),
-                        ]),
-                  ),
-                ),
-              ),
-              //#endregion ====================================================================================================
             ]),
 
+      //#endregion ====================================================================================================
+
+      //#region ====================================== PAINEL DE PRECO TOTAL ==========================================
+      bottomSheet: ctrl.itens.isEmpty
+          ? null
+          : BottomSheet(
+              constraints: const BoxConstraints.expand(height: 60),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              onClosing: () {},
+              builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(children: [
+                          Icon(PhosphorIconsBold.checkSquare,
+                              size: 22,
+                              color: Theme.of(context).colorScheme.primary),
+                          const SizedBox(width: 10),
+                          Text(
+                            ctrl.precoTotal,
+                            style: Estilos().tituloColor(context, tamanho: 'p'),
+                          ),
+                        ]),
+                        const SizedBox(height: 5),
+                        Text(
+                          "Total da lista: ${ctrl.precoTotalLista}",
+                          style: Estilos().sutil(context, tamanho: 12),
+                        ),
+                      ]),
+                );
+              }),
       //#endregion ====================================================================================================
 
       floatingActionButton: FloatingActionButton(

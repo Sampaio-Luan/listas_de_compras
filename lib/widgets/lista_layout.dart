@@ -30,7 +30,7 @@ class NLayoutLista extends StatelessWidget {
         Navigator.of(context).pop();
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        padding: const EdgeInsets.all(5),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
@@ -102,7 +102,7 @@ class NLayoutLista extends StatelessWidget {
             )
           : CircularPercentIndicator(
               radius: 13,
-              lineWidth: 3.0,
+              lineWidth: 5.0,
               percent: qtdTotal == 0 ? 0 : (qtdComprado / qtdTotal) * 100 / 100,
               progressColor:
                   Theme.of(context).colorScheme.brightness == Brightness.light

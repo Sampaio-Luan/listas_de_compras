@@ -57,6 +57,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
           : widget.item!.quantidade.toStringAsFixed(3);
       precoItem.text = precoFormatado;
       tipoMedida.text = widget.item!.medida;
+      prioridadeItem.text = '4';
     } else {
       tipoMedida.text = 'uni';
       quantidadeItem.text = '1';

@@ -6,45 +6,43 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/itens_controller.dart';
+import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
 import '../theme/estilos.dart';
-
-class NLayoutItem extends StatefulWidget {
+class NLayoutItem extends StatelessWidget {
   final ItemModel item;
 
-  const NLayoutItem({
+   NLayoutItem({
     super.key,
     required this.item,
   });
 
-  @override
-  State<NLayoutItem> createState() => _NLayoutItemState();
-}
-
-class _NLayoutItemState extends State<NLayoutItem> {
   final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
 
   @override
   Widget build(BuildContext context) {
+    final lista = context.watch<ListasController>();
     return Consumer<ItensController>(builder: (context, itemC, _) {
       return InkWell(
         onLongPress: () {
-          itemC.itensSelecionados.isEmpty
-              ? itemC.selecionarItens(widget.item)
-              : null;
+          itemC.itensSelecionados.isEmpty ? itemC.selecionarItens(item) : null;
         },
         onTap: () {
-          itemC.itensSelecionados.isEmpty
-              ? null
-              : itemC.selecionarItens(widget.item);
+          itemC.itensSelecionados.isEmpty ? null : itemC.selecionarItens(item);
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          color: itemC.itensSelecionados.contains(widget.item)
+          decoration:  BoxDecoration(
+            border: const Border(
+              left: BorderSide(color: Colors.amber, width: 10),
+              right:BorderSide.none,
+              bottom: BorderSide.none,
+              top: BorderSide.none
+            ),
+             color: itemC.itensSelecionados.contains(item)
               ? Theme.of(context).colorScheme.brightness == Brightness.light
                   ? Theme.of(context).colorScheme.errorContainer
                   : Theme.of(context).colorScheme.onError
-              : widget.item.comprado == 0
+              : item.comprado == 0
                   ? null
                   : Theme.of(context).colorScheme.brightness == Brightness.light
                       ? Theme.of(context).colorScheme.primaryContainer
@@ -52,10 +50,12 @@ class _NLayoutItemState extends State<NLayoutItem> {
                           .colorScheme
                           .primaryContainer
                           .withAlpha(70),
+          ),
+          padding: const EdgeInsets.only(right: 10),
+         
           child: Row(children: [
             Expanded(
-              child: itemC.itensSelecionados.isNotEmpty &&
-                      itemC.itensSelecionados.contains(widget.item)
+              child: itemC.itensSelecionados.contains(item)
                   ? CircleAvatar(
                       //radius: 30,
                       backgroundColor:
@@ -67,14 +67,16 @@ class _NLayoutItemState extends State<NLayoutItem> {
                           color: Colors.white, size: 30),
                     )
                   : CircleAvatar(
-                      //radius: 25,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.inversePrimary,
+                      radius: 15,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withAlpha(100),
                       foregroundColor:
                           Theme.of(context).colorScheme.onPrimaryContainer,
                       child: Text(
-                        widget.item.nome.substring(0, 1).toUpperCase(),
-                        style: const TextStyle(fontSize: 20),
+                        item.nome[0].toUpperCase(),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
             ),
@@ -87,15 +89,22 @@ class _NLayoutItemState extends State<NLayoutItem> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        widget.item.nome,
-                        style: Estilos().tituloColor(context, tamanho: 'p'),
+                        item.nome,
+                        style: item.comprado == 1
+                            ? itemComCheck(context)
+                            : Estilos().tituloColor(context, tamanho: 'p'),
                       ),
-                      widget.item.descricao.isEmpty
+                      item.descricao.isEmpty
                           ? const SizedBox()
                           : ExpandableText(
                               textAlign: TextAlign.justify,
-                              widget.item.descricao,
-                              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withAlpha(190), fontSize: 12),
+                              item.descricao,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withAlpha(190),
+                                  fontSize: 12),
                               expandText: 'Mostrar +',
                               collapseText: 'Mostrar -',
                               maxLines: 1,
@@ -105,27 +114,27 @@ class _NLayoutItemState extends State<NLayoutItem> {
                         Expanded(
                           flex: 4,
                           child: Text(
-                            '${widget.item.medida == 'uni' ? widget.item.quantidade.toStringAsFixed(0) : widget.item.quantidade.toStringAsFixed(3)} ${widget.item.medida}',
+                            '${item.medida == 'uni' ? item.quantidade.toStringAsFixed(0) : item.quantidade.toStringAsFixed(3)} ${item.medida}',
                             style: Estilos().sutil(context, tamanho: 12),
                           ),
                         ),
-                         Padding(
+                        Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Text(
                             'X',
-                           style: Estilos().sutil(context, tamanho: 9),
+                            style: Estilos().sutil(context, tamanho: 9),
                             textAlign: TextAlign.center,
                           ),
                         ),
                         Expanded(
                           flex: 5,
                           child: Text(
-                            formatter.format(widget.item.preco),
+                            formatter.format(item.preco),
                             style: Estilos().sutil(context, tamanho: 11),
                             //textAlign: TextAlign.end,
                           ),
                         ),
-                         Padding(
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 3.0),
                           child: Text(
                             '=',
@@ -136,8 +145,7 @@ class _NLayoutItemState extends State<NLayoutItem> {
                         Expanded(
                           flex: 6,
                           child: Text(
-                            formatter.format(
-                                widget.item.quantidade * widget.item.preco),
+                            formatter.format(item.quantidade * item.preco),
                             style: Estilos().sutil(context, tamanho: 11),
                             textAlign: TextAlign.end,
                           ),
@@ -148,11 +156,12 @@ class _NLayoutItemState extends State<NLayoutItem> {
             ),
             Expanded(
               child: Checkbox(
-                  value: widget.item.comprado == 0 ? false : true,
+                  value: item.comprado == 0 ? false : true,
                   onChanged: (value) {
                     if (value != null) {
-                      widget.item.comprado = value ? 1 : 0;
-                      itemC.atualizarItem(widget.item);
+                      item.comprado = value ? 1 : 0;
+                      itemC.marcarDesmarcarItem(item);
+                      
                     }
                   }),
             ),
@@ -160,5 +169,16 @@ class _NLayoutItemState extends State<NLayoutItem> {
         ),
       );
     });
+  }
+
+  TextStyle itemComCheck(context) {
+    return TextStyle(
+      decoration: TextDecoration.lineThrough,
+      decorationColor: Theme.of(context).colorScheme.primary,
+      decorationThickness: 1,
+      fontSize: 18,
+      color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
+      overflow: TextOverflow.ellipsis,
+    );
   }
 }

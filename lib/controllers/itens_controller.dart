@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/const_strings_globais.dart';
+import '../constants/const_tb_item.dart';
 import '../models/item.module.dart';
 import '../repositories/itens_repository.dart';
+
+import 'listas_controller.dart';
 
 class ItensController extends ChangeNotifier {
 //#region ================== * ATRIBUTOS * ========================================
@@ -91,7 +94,6 @@ class ItensController extends ChangeNotifier {
   }
 
   _recuperarItens() async {
-   
     _itens = await ItensRepository().recuperarItens(_idLista);
     debugPrint("🤴🏻🧺CTi _recuperarItens() _itens: ${_itens.length}");
 
@@ -304,9 +306,18 @@ class ItensController extends ChangeNotifier {
     limparListaSelecionados();
   }
 
-
-
-
-
-
+  marcarDesmarcarItem(ItemModel item) async {
+    
+    final mOUd = await ItensRepository().editarUmAtributo(
+        campo: itemColumnComprado, valor: item.comprado, item: item);
+    if (mOUd) {
+      _itens[_itens.indexOf(item)] = item;
+      _itensInterface[_itensInterface.indexOf(item)] = item;
+      ListasController().qtdItensCompradosLista(_idLista);
+      debugPrint(
+          '🤴🏻🧺 CTi marcarDesmarcarItem() tamanho da lista ${ListasController().listas.length}');
+      notifyListeners();
+    }
+    debugPrint('🤴🏻🧺 CTi marcarDesmarcarItem()');
+  }
 }

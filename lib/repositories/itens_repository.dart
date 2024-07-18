@@ -118,6 +118,7 @@ class ItensRepository extends ChangeNotifier {
 
     debugPrint(
         '💁🏻‍♀️🧺RPi editarUmAtributo(), campo: $campo, valor: $valor, item: ${item.nome} e id: ${item.idItem} ');
+        return true;
   }
 
   marcarTodosItens({required int idLista}) async {
@@ -130,6 +131,7 @@ class ItensRepository extends ChangeNotifier {
     );
 
     debugPrint('💁🏻‍♀️🧺RPi marcarTodosItens()');
+    
   }
 
   desmarcarTodosItens({required int idLista}) async {
