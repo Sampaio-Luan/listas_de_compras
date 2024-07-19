@@ -4,6 +4,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/itens_controller.dart';
+import '../controllers/listas_controller.dart';
 
 import 'opcoes_filtros.dart';
 import 'opcoes_ordenacao.dart';
@@ -20,6 +21,7 @@ class PainelControle extends StatefulWidget {
 class _PainelControleState extends State<PainelControle> {
   @override
   Widget build(BuildContext context) {
+    final listaC = context.watch<ListasController>();
     return Consumer<ItensController>(builder: (context, itemC, _) {
       return Column(children: [
         Expanded(
@@ -44,7 +46,7 @@ class _PainelControleState extends State<PainelControle> {
               child: Checkbox(
                   value: itemC.isMarcadoTodosItens,
                   onChanged: (_) {
-                    itemC.marcarTodos();
+                    itemC.marcarTodos(listaC);
                   }),
             ),
           ]),

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/itens_controller.dart';
-import '../mixins/validations_mixin.dart';
-import '../models/item.module.dart';
-import '../theme/estilos.dart';
+import '../../controllers/itens_controller.dart';
+import '../../controllers/listas_controller.dart';
+import '../../mixins/validations_mixin.dart';
+import '../../models/item.module.dart';
+import '../../theme/estilos.dart';
 
 import 'campos_formulario.dart';
 
@@ -205,6 +206,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                             : 'Editado com sucesso !!!') ==
                     0) {
                   if (widget.item == null) {
+                    final listaC = context.read<ListasController>();
                     ItemModel i = ItemModel(
                       idItem: 0,
                       idLista: widget.idLista!,
@@ -217,7 +219,9 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                       comprado: 0,
                       indice: 0,
                     );
+                    listaC.qtdItensLista(widget.idLista!, itemC.itens.length + 1);
                     itemC.adicionarItem(i);
+                    
                   } else {
                     widget.item!.nome = nomeItem.text;
                     widget.item!.quantidade = _formatarQuantidade();

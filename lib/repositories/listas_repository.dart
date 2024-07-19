@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
+import '../constants/const_tb_item.dart';
 import '../constants/const_tb_lista.dart';
 import '../database/banco.dart';
 import '../database/queries/const_queries.dart';
@@ -17,11 +18,14 @@ class ListasRepository extends ChangeNotifier {
     db = await Banco.instancia.database;
 
     _listas.clear();
+
     final List<Map<String, dynamic>> listasMap =
         await db.rawQuery(kListasComTotalItens);
+
     for (int i = 0; i < listasMap.length; i++) {
       _listas.add(ListaModel.fromMap(listasMap[i]));
     }
+
     debugPrint("💁🏻📝RPL recuperarLista(): ${_listas.length}");
 
     return _listas;
@@ -29,17 +33,21 @@ class ListasRepository extends ChangeNotifier {
 
   inserirLista(ListaModel lista) async {
     db = await Banco.instancia.database;
+
     final id = await db.insert(
       listaTableName,
       lista.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
     debugPrint("💁🏻📝RPL inserirLista() id: $id");
+
     return id;
   }
 
   atualizarLista(ListaModel lista) async {
     db = await Banco.instancia.database;
+
     await db.update(
       listaTableName,
       lista.toMap(),
@@ -54,6 +62,7 @@ class ListasRepository extends ChangeNotifier {
 
   excluirLista(ListaModel lista) async {
     db = await Banco.instancia.database;
+
     await db.delete(
       listaTableName,
       where: '$listaColumnId = ?',
@@ -61,6 +70,13 @@ class ListasRepository extends ChangeNotifier {
     );
 
     debugPrint("💁🏻📝RPL excluirLista() id: ${lista.id}");
+    db.delete(
+      itemTableName,
+      where: '$itemColumnListaId = ?',
+      whereArgs: [lista.id],
+    );
+
+    debugPrint("💁🏻📝RPL excluirLista() excluiu itens");
 
     recuperarListas();
   }

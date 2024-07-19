@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 
 import 'package:listas_de_compras/models/lista.module.dart';
 
-import '../controllers/listas_controller.dart';
-import '../mixins/validations_mixin.dart';
-import '../theme/estilos.dart';
-import '../widgets/campos_formulario.dart';
+import '../../controllers/itens_controller.dart';
+import '../../controllers/listas_controller.dart';
+import '../../mixins/validations_mixin.dart';
+import '../../theme/estilos.dart';
+
+import 'campos_formulario.dart';
 
 class FormularioLista extends StatefulWidget {
   final ListaModel? lista;
@@ -105,8 +107,9 @@ class _FormularioListaState extends State<FormularioLista>
                             ? 'Salvo com sucesso !!!'
                             : 'Editado com sucesso !!!') ==
                     0) {
+                      final itemC = context.read<ItensController>();
                   if (widget.lista == null) {
-                    ListaModel l = ListaModel(
+                    ListaModel lista = ListaModel(
                         id: 0,
                         nome: nomeLista.text,
                         descricao: descricaoLista.text.isEmpty
@@ -119,12 +122,18 @@ class _FormularioListaState extends State<FormularioLista>
                         totalItens: 0,
                         totalComprados: 0);
 
-                    listasR.inserirLista(l);
+                    listasR.inserirLista(lista, itemC );
                   } else {
+
+                    
+
                     widget.lista!.nome = nomeLista.text;
                     widget.lista!.descricao = descricaoLista.text;
+
                     listasR.atualizarLista(widget.lista!);
+                    itemC.setNomeLista(nomeLista.text);
                   }
+                  
                   nomeLista.clear();
                   descricaoLista.clear();
                   Navigator.of(context).pop();

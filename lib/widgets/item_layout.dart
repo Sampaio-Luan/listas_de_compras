@@ -9,10 +9,11 @@ import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
 import '../theme/estilos.dart';
+
 class NLayoutItem extends StatelessWidget {
   final ItemModel item;
 
-   NLayoutItem({
+  NLayoutItem({
     super.key,
     required this.item,
   });
@@ -31,28 +32,30 @@ class NLayoutItem extends StatelessWidget {
           itemC.itensSelecionados.isEmpty ? null : itemC.selecionarItens(item);
         },
         child: Container(
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             border: const Border(
-              left: BorderSide(color: Colors.amber, width: 10),
-              right:BorderSide.none,
-              bottom: BorderSide.none,
-              top: BorderSide.none
-            ),
-             color: itemC.itensSelecionados.contains(item)
-              ? Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.errorContainer
-                  : Theme.of(context).colorScheme.onError
-              : item.comprado == 0
-                  ? null
-                  : Theme.of(context).colorScheme.brightness == Brightness.light
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withAlpha(70),
+                left: BorderSide(color: Colors.amber, width: 10),
+                right: BorderSide.none,
+                bottom: BorderSide.none,
+                top: BorderSide.none),
+            color: itemC.itensSelecionados.contains(item)
+                ? Theme.of(context).colorScheme.brightness == Brightness.light
+                    ? Theme.of(context).colorScheme.errorContainer
+                    : Theme.of(context).colorScheme.onError
+                : item.comprado == 0
+                    ? null
+                    : Theme.of(context).colorScheme.brightness ==
+                            Brightness.light
+                        ? Theme.of(context)
+                            .colorScheme
+                            .primaryContainer
+                            .withAlpha(120)
+                        : Theme.of(context)
+                            .colorScheme
+                            .primaryContainer
+                            .withAlpha(70),
           ),
           padding: const EdgeInsets.only(right: 10),
-         
           child: Row(children: [
             Expanded(
               child: itemC.itensSelecionados.contains(item)
@@ -160,8 +163,7 @@ class NLayoutItem extends StatelessWidget {
                   onChanged: (value) {
                     if (value != null) {
                       item.comprado = value ? 1 : 0;
-                      itemC.marcarDesmarcarItem(item);
-                      
+                      itemC.marcarDesmarcarItem(item, lista);
                     }
                   }),
             ),
@@ -174,10 +176,9 @@ class NLayoutItem extends StatelessWidget {
   TextStyle itemComCheck(context) {
     return TextStyle(
       decoration: TextDecoration.lineThrough,
-      decorationColor: Theme.of(context).colorScheme.primary,
       decorationThickness: 1,
       fontSize: 18,
-      color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
+      color: Theme.of(context).colorScheme.onBackground.withAlpha(130),
       overflow: TextOverflow.ellipsis,
     );
   }

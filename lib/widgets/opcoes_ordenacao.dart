@@ -30,7 +30,7 @@ class OpcoesOrdenacao extends StatelessWidget {
                   if (itemOuLista == 'item') {
                     itemC.ordenarItens(kAz);
                   } else {
-                    listaC.ordenarListas(kAz);
+                   // listaC.ordenarListas(kAz);
                   }
                 },
               ),
@@ -40,7 +40,7 @@ class OpcoesOrdenacao extends StatelessWidget {
                   if (itemOuLista == 'item') {
                     itemC.ordenarItens(kZa);
                   } else {
-                    listaC.ordenarListas(kZa);
+                   // listaC.ordenarListas(kZa);
                   }
                 },
               ),

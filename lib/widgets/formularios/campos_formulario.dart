@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 
 import 'package:intl/intl.dart';
 
-import '../mixins/validations_mixin.dart';
-import '../theme/estilos.dart';
+import '../../mixins/validations_mixin.dart';
+import '../../theme/estilos.dart';
 
 class CamposFormulario with ValidacoesMixin {
+  final cPadding = const EdgeInsets.symmetric(vertical: 2, horizontal: 15);
   linha(
     context, {
     required TextEditingController controle,
@@ -17,6 +18,7 @@ class CamposFormulario with ValidacoesMixin {
     return TextFormField(
       controller: controle,
       decoration: InputDecoration(
+        contentPadding: cPadding,
         hintText: qtdLinha == 2 ? 'Por exemplo "Marca x ou y"' : null,
         hintStyle: Estilos().sutil(context, tamanho: 15),
         labelText: label,
@@ -33,6 +35,31 @@ class CamposFormulario with ValidacoesMixin {
     );
   }
 
+    linhaItem(
+    context, {
+    required TextEditingController controle,
+
+  }) {
+    return TextFormField(
+      controller: controle,
+      
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+        hintText: 'Digite o nome do item' ,
+        hintStyle: Estilos().sutil(context, tamanho: 15),
+        labelText: 'Item',
+        labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+      ),
+      
+      
+      validator: (value) => preenchimentoObrigatorio(input: value, message: null)
+         
+    );
+  }
+
   apenasNumeros(
     context, {
     required TextEditingController controle,
@@ -44,6 +71,7 @@ class CamposFormulario with ValidacoesMixin {
       
       controller: controle,
       decoration: InputDecoration(
+        contentPadding: cPadding,
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(
@@ -74,6 +102,7 @@ class CamposFormulario with ValidacoesMixin {
     return TextFormField(
       controller: controle,
       decoration: InputDecoration(
+        contentPadding: cPadding,
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(
@@ -107,6 +136,7 @@ class CamposFormulario with ValidacoesMixin {
     return TextFormField(
       controller: controle,
       decoration: InputDecoration(
+        contentPadding: cPadding,
         labelText: label,
         labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
         border: OutlineInputBorder(

@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../theme/theme.dart';
 import '../utils/util.dart';
 
+import 'pages/categorias_page.dart';
+import 'pages/historico_page.dart';
 import 'pages/pre_page.dart';
 import 'preferencias_usuario.dart';
 
@@ -35,6 +37,8 @@ class MainApp extends StatelessWidget {
       initialRoute: 'itens_page',
       routes: {
         'itens_page': (context) => const PrePage(),
+        'categorias_page': (context) => const CategoriasPage(),
+        'historico_page': (context) => const HistoricoPage(),
       },
     );
   }

@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import '../controllers/itens_controller.dart';
 import '../models/item.module.dart';
 import '../theme/estilos.dart';
-import '../widgets/formulario_item.dart';
+import '../widgets/formularios/form_item_modal.dart';
+import '../widgets/formularios/formulario_item.dart';
 import '../widgets/item_layout.dart';
 import '../widgets/painel_controle.dart';
 
@@ -22,6 +23,7 @@ class ItensPage extends StatefulWidget {
 
 class _ItensPageState extends State<ItensPage> {
   TextEditingController pesquisarPorItem = TextEditingController();
+  bool chamarModal = false;
 
   @override
   Widget build(BuildContext context) {
@@ -99,37 +101,40 @@ class _ItensPageState extends State<ItensPage> {
                                   ),
                                 )
                               : Expanded(
-                                  child: ListView.separated(
-                                    itemCount: controle.itensInterface.length,
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return const Divider(
-                                        height: 0,
-                                        thickness: 0.7,
-                                      );
-                                    },
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Slidable(
-                                          key: ValueKey(controle
-                                              .itensInterface[index].idItem
-                                              .toString()),
-                                          startActionPane: _actionPane(
-                                            context,
-                                            item:
-                                                controle.itensInterface[index],
-                                            tipoActionPane: 'Deletar',
-                                          ),
-                                          endActionPane: _actionPane(
-                                            context,
-                                            item:
-                                                controle.itensInterface[index],
-                                            tipoActionPane: 'Editar',
-                                          ),
-                                          child: NLayoutItem(
-                                              item: controle
-                                                  .itensInterface[index]));
-                                    },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 60.0),
+                                    child: ListView.separated(
+                                      itemCount: controle.itensInterface.length,
+                                      separatorBuilder:
+                                          (BuildContext context, int index) {
+                                        return const Divider(
+                                          height: 0,
+                                          thickness: 0.7,
+                                        );
+                                      },
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Slidable(
+                                            key: ValueKey(controle
+                                                .itensInterface[index].idItem
+                                                .toString()),
+                                            startActionPane: _actionPane(
+                                              context,
+                                              item:
+                                                  controle.itensInterface[index],
+                                              tipoActionPane: 'Deletar',
+                                            ),
+                                            endActionPane: _actionPane(
+                                              context,
+                                              item:
+                                                  controle.itensInterface[index],
+                                              tipoActionPane: 'Editar',
+                                            ),
+                                            child: NLayoutItem(
+                                                item: controle
+                                                    .itensInterface[index]));
+                                      },
+                                    ),
                                   ),
                                 );
                         }),
@@ -142,50 +147,55 @@ class _ItensPageState extends State<ItensPage> {
       //#endregion ====================================================================================================
 
       //#region ====================================== PAINEL DE PRECO TOTAL ==========================================
-      bottomSheet: ctrl.itens.isEmpty
-          ? null
-          : BottomSheet(
-              constraints: const BoxConstraints.expand(height: 60),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              onClosing: () {},
-              builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(children: [
-                          Icon(PhosphorIconsBold.checkSquare,
-                              size: 22,
-                              color: Theme.of(context).colorScheme.primary),
-                          const SizedBox(width: 10),
-                          Text(
-                            ctrl.precoTotal,
-                            style: Estilos().tituloColor(context, tamanho: 'p'),
-                          ),
-                        ]),
-                        const SizedBox(height: 5),
-                        Text(
-                          "Total da lista: ${ctrl.precoTotalLista}",
-                          style: Estilos().sutil(context, tamanho: 12),
-                        ),
-                      ]),
-                );
-              }),
+      bottomSheet:  const FormItemModal() ,
+      
+      // ctrl.itens.isEmpty
+      //     ? null
+      //     : BottomSheet(
+      //         constraints: const BoxConstraints.expand(height: 60),
+      //         elevation: 2,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(0)),
+      //         onClosing: () {},
+      //         builder: (context) {
+      //           return Padding(
+      //             padding: const EdgeInsets.only(left: 12.0),
+      //             child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: [
+      //                   Row(children: [
+      //                     Icon(PhosphorIconsBold.checkSquare,
+      //                         size: 22,
+      //                         color: Theme.of(context).colorScheme.primary),
+      //                     const SizedBox(width: 10),
+      //                     Text(
+      //                       ctrl.precoTotal,
+      //                       style: Estilos().tituloColor(context, tamanho: 'p'),
+      //                     ),
+      //                   ]),
+      //                   const SizedBox(height: 5),
+      //                   Text(
+      //                     "Total da lista: ${ctrl.precoTotalLista}",
+      //                     style: Estilos().sutil(context, tamanho: 12),
+      //                   ),
+      //                 ]),
+      //           );
+      //         }),
       //#endregion ====================================================================================================
 
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return FormularioItem(item: null, idLista: ctrl.getIdLista);
-                });
-          },
-          child: const Icon(Icons.add)),
+      // floatingActionButton: FloatingActionButton(
+      //     onPressed: () {
+      //     setState(() {
+      //       chamarModal = !chamarModal;
+      //     });
+      //       showDialog(
+      //           context: context,
+      //           builder: (BuildContext context) {
+      //             return FormularioItem(item: null, idLista: ctrl.getIdLista);
+      //           });
+      //     },
+      //     child: const Icon(Icons.add)),
     );
   }
 

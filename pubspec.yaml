@@ -53,6 +53,8 @@ dependencies:
   shared_preferences: ^2.2.3
   expandable_text: ^2.3.0
   percent_indicator: ^4.2.3
+  dropdown_search: ^5.0.6
+  multi_dropdown: ^2.1.4
 
 dev_dependencies:
   flutter_test:

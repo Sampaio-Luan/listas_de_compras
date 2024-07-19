@@ -8,7 +8,7 @@ import 'package:listas_de_compras/controllers/listas_controller.dart';
 
 import '../preferencias_usuario.dart';
 import '../theme/estilos.dart';
-import '../widgets/formulario_lista.dart';
+import '../widgets/formularios/formulario_lista.dart';
 import '../widgets/lista_layout.dart';
 
 class DrawerListas extends StatefulWidget {
@@ -66,7 +66,7 @@ class _DrawerListasState extends State<DrawerListas> {
                           onPressed: () {
                             preferencias.mudarTema();
                           },
-                          icon: preferencias.temaEscuro
+                          icon: Theme.of(context).brightness == Brightness.dark
                               ? const Icon(PhosphorIconsFill.lamp, size: 24)
                               : Icon(
                                   PhosphorIconsFill.lampPendant,
@@ -92,9 +92,9 @@ class _DrawerListasState extends State<DrawerListas> {
             child: Padding(
               padding: const EdgeInsets.only(left: 15.0),
               child: Row(children: [
-                Icon(PhosphorIconsFill.clipboardText,
+                Icon(PhosphorIconsDuotone.notePencil,
                     color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 Text('Criar nova lista',
                     style: Estilos().tituloColor(context, tamanho: 'p')),
               ]),
@@ -120,7 +120,56 @@ class _DrawerListasState extends State<DrawerListas> {
                 });
           }),
         ),
+        const Divider(
+          height: 0,
+          thickness: 0.5,
+        ),
+        _botaoDrawer(
+          context,
+          icone: PhosphorIconsDuotone.stackPlus,
+          titulo: 'Gerenciar categorias',
+          rota: 'categorias_page',
+        ),
+        const Divider(
+          height: 0,
+          thickness: 0.5,
+        ),
+        _botaoDrawer(
+          context,
+          icone: PhosphorIconsDuotone.clockCounterClockwise,
+          titulo: 'Historico de compras',
+          rota: 'historico_page',
+        ),
+        const Divider(
+          height: 0,
+          thickness: 0.5,
+        ),
+         _botaoDrawer(
+          context,
+          icone: PhosphorIconsDuotone.palette,
+          titulo: 'Tema de cores',
+          rota: 'tema-de-cores',
+        ),
       ]),
+    );
+  }
+
+  _botaoDrawer(context,
+      {required String titulo, required IconData icone, required String rota}) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushNamed(rota);
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Row(children: [
+            Icon(icone, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 12),
+            Text(titulo, style: Estilos().tituloColor(context, tamanho: 'p')),
+          ]),
+        ),
+      ),
     );
   }
 }

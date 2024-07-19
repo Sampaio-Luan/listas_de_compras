@@ -9,8 +9,8 @@ import '../models/lista.module.dart';
 import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
-import 'formulario_item.dart';
-import 'formulario_lista.dart';
+import 'formularios/formulario_item.dart';
+import 'formularios/formulario_lista.dart';
 
 class OpcoesModificacao extends StatefulWidget {
   final ListaModel? lista;
