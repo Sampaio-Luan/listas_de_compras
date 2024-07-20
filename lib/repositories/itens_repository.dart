@@ -81,6 +81,7 @@ class ItensRepository extends ChangeNotifier {
     );
 
     debugPrint('💁🏻‍♀️🧺RPi insrirItem, nome:${item.nome} - id: $id');
+    return id;
   }
 
   atualizarItem(ItemModel item) async {
@@ -116,8 +117,7 @@ class ItensRepository extends ChangeNotifier {
       whereArgs: [item.idItem],
     );
 
-    debugPrint(
-        '💁🏻‍♀️🧺RPi editarUmAtributo(), campo: $campo, valor: $valor, item: ${item.nome} e id: ${item.idItem} ');
+    debugPrint('💁🏻‍♀️🧺RPi editarUmAtributo(), campo: $campo, valor: $valor, item: ${item.nome} e id: ${item.idItem} ');
         return true;
   }
 

@@ -85,76 +85,81 @@ class NLayoutItem extends StatelessWidget {
             ),
             Expanded(
               flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        item.nome,
-                        style: item.comprado == 1
-                            ? itemComCheck(context)
-                            : Estilos().tituloColor(context, tamanho: 'p'),
-                      ),
-                      item.descricao.isEmpty
-                          ? const SizedBox()
-                          : ExpandableText(
-                              textAlign: TextAlign.justify,
-                              item.descricao,
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withAlpha(190),
-                                  fontSize: 12),
-                              expandText: 'Mostrar +',
-                              collapseText: 'Mostrar -',
-                              maxLines: 1,
-                              //linkColor: Colors.blue,
+              child: InkWell(
+                onTap: itemC.itensSelecionados.isNotEmpty ? null : () {
+                  itemC.habilitarformEdicao(item);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          item.nome,
+                          style: item.comprado == 1
+                              ? itemComCheck(context)
+                              : Estilos().tituloColor(context, tamanho: 'p'),
+                        ),
+                        item.descricao.isEmpty
+                            ? const SizedBox()
+                            : ExpandableText(
+                                textAlign: TextAlign.justify,
+                                item.descricao,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withAlpha(190),
+                                    fontSize: 12),
+                                expandText: 'Mostrar +',
+                                collapseText: 'Mostrar -',
+                                maxLines: 1,
+                                //linkColor: Colors.blue,
+                              ),
+                        Row(children: [
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                              '${item.medida == 'uni' ? item.quantidade.toStringAsFixed(0) : item.quantidade.toStringAsFixed(3)} ${item.medida}',
+                              style: Estilos().sutil(context, tamanho: 12),
                             ),
-                      Row(children: [
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            '${item.medida == 'uni' ? item.quantidade.toStringAsFixed(0) : item.quantidade.toStringAsFixed(3)} ${item.medida}',
-                            style: Estilos().sutil(context, tamanho: 12),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Text(
-                            'X',
-                            style: Estilos().sutil(context, tamanho: 9),
-                            textAlign: TextAlign.center,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              'X',
+                              style: Estilos().sutil(context, tamanho: 9),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            formatter.format(item.preco),
-                            style: Estilos().sutil(context, tamanho: 11),
-                            //textAlign: TextAlign.end,
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              formatter.format(item.preco),
+                              style: Estilos().sutil(context, tamanho: 11),
+                              //textAlign: TextAlign.end,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                          child: Text(
-                            '=',
-                            style: Estilos().sutil(context, tamanho: 9),
-                            textAlign: TextAlign.center,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                            child: Text(
+                              '=',
+                              style: Estilos().sutil(context, tamanho: 9),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: Text(
-                            formatter.format(item.quantidade * item.preco),
-                            style: Estilos().sutil(context, tamanho: 11),
-                            textAlign: TextAlign.end,
+                          Expanded(
+                            flex: 6,
+                            child: Text(
+                              formatter.format(item.quantidade * item.preco),
+                              style: Estilos().sutil(context, tamanho: 11),
+                              textAlign: TextAlign.end,
+                            ),
                           ),
-                        ),
+                        ]),
                       ]),
-                    ]),
+                ),
               ),
             ),
             Expanded(

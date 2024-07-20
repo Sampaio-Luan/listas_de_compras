@@ -5,6 +5,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/itens_controller.dart';
+import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
 import '../theme/estilos.dart';
 import '../widgets/formularios/form_item_modal.dart';
@@ -102,7 +103,7 @@ class _ItensPageState extends State<ItensPage> {
                                 )
                               : Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 60.0),
+                                    padding:  EdgeInsets.only(bottom: controle.isFormCompleto ? 340 : 135.0),
                                     child: ListView.separated(
                                       itemCount: controle.itensInterface.length,
                                       separatorBuilder:
@@ -149,53 +150,7 @@ class _ItensPageState extends State<ItensPage> {
       //#region ====================================== PAINEL DE PRECO TOTAL ==========================================
       bottomSheet:  const FormItemModal() ,
       
-      // ctrl.itens.isEmpty
-      //     ? null
-      //     : BottomSheet(
-      //         constraints: const BoxConstraints.expand(height: 60),
-      //         elevation: 2,
-      //         shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.circular(0)),
-      //         onClosing: () {},
-      //         builder: (context) {
-      //           return Padding(
-      //             padding: const EdgeInsets.only(left: 12.0),
-      //             child: Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: [
-      //                   Row(children: [
-      //                     Icon(PhosphorIconsBold.checkSquare,
-      //                         size: 22,
-      //                         color: Theme.of(context).colorScheme.primary),
-      //                     const SizedBox(width: 10),
-      //                     Text(
-      //                       ctrl.precoTotal,
-      //                       style: Estilos().tituloColor(context, tamanho: 'p'),
-      //                     ),
-      //                   ]),
-      //                   const SizedBox(height: 5),
-      //                   Text(
-      //                     "Total da lista: ${ctrl.precoTotalLista}",
-      //                     style: Estilos().sutil(context, tamanho: 12),
-      //                   ),
-      //                 ]),
-      //           );
-      //         }),
-      //#endregion ====================================================================================================
 
-      // floatingActionButton: FloatingActionButton(
-      //     onPressed: () {
-      //     setState(() {
-      //       chamarModal = !chamarModal;
-      //     });
-      //       showDialog(
-      //           context: context,
-      //           builder: (BuildContext context) {
-      //             return FormularioItem(item: null, idLista: ctrl.getIdLista);
-      //           });
-      //     },
-      //     child: const Icon(Icons.add)),
     );
   }
 
@@ -318,6 +273,7 @@ class _ItensPageState extends State<ItensPage> {
     required String tipoActionPane,
   }) {
     final ctrl = Provider.of<ItensController>(context, listen: false);
+    final lista = Provider.of<ListasController>(context, listen: false);
     return ActionPane(
         motion: const ScrollMotion(),
         dismissible: null,
@@ -325,7 +281,7 @@ class _ItensPageState extends State<ItensPage> {
           SlidableAction(
             onPressed: (BuildContext context) {
               if (tipoActionPane == 'Deletar') {
-                ctrl.removerItem(item);
+                ctrl.removerItem(item, lista);
               } else {
                 showDialog(
                     context: context,

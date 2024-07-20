@@ -53,16 +53,20 @@ class ItensController extends ChangeNotifier {
 
   bool _isMarcadoTodosItens = false;
   bool get isMarcadoTodosItens => _isMarcadoTodosItens;
-  set setIsMarcadoTodosItens(value) {
-    _isMarcadoTodosItens = value;
-  }
 
   bool _isPesquisar = false;
   bool get isPesquisar => _isPesquisar;
-  set setIsPesquisar(value) {
-    _isPesquisar = value;
-    notifyListeners();
-  }
+
+  bool _isFormCompleto = false;
+  bool get isFormCompleto => _isFormCompleto;
+
+   bool _isFormEdicao = false;
+  bool get isFormEdicao => _isFormEdicao;
+
+  ItemModel? _itemParaEdicaoForm;
+  ItemModel? get itemParaEdicaoForm => _itemParaEdicaoForm;
+
+
 
 //#endregion ================ * END ATRIBUTOS * ================================
 
@@ -92,8 +96,7 @@ class ItensController extends ChangeNotifier {
     debugPrint("🤴🏻🧺CTi _recuperarItens() _itens: ${_itens.length}");
 
     _itensInterface.addAll(_itens);
-    debugPrint(
-        "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
+    debugPrint("🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
 
     notifyListeners();
     _calculaTotal();
@@ -106,7 +109,8 @@ class ItensController extends ChangeNotifier {
 //#region =================== * INSERIR * ======================================
 
   adicionarItem(ItemModel item) async {
-    await ItensRepository().inserirItem(item);
+    int id = await ItensRepository().inserirItem(item);
+    item.idItem = id;
     _itens.add(item);
     _itensInterface.add(item);
     debugPrint("🤴🏻🧺CTi adicionarItem() item: ${item.nome}");
@@ -119,6 +123,8 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * ALTERAR * ======================================
 
+
+
   atualizarItem(ItemModel item) async {
     await ItensRepository().atualizarItem(item);
     _itens[_itens.indexOf(item)] = item;
@@ -126,6 +132,10 @@ class ItensController extends ChangeNotifier {
     debugPrint('🤴🏻🧺CTi atualizarItem() item: ${item.nome}');
     _calculaTotal();
     _calculaPrecoTotalLista();
+  }
+
+   set setIsMarcadoTodosItens(value) {
+    _isMarcadoTodosItens = value;
   }
 
   marcarDesmarcarItem(ItemModel item, ListasController lista) async {
@@ -191,10 +201,11 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * DELETAR * ======================================
 
-  removerItem(ItemModel item) async {
+  removerItem(ItemModel item, ListasController lista) async {
     await ItensRepository().excluirItem(item);
     _itens.remove(item);
     _itensInterface.remove(item);
+    lista.qtdItensLista(_idLista, _itens.length);
     debugPrint('🤴🏻🧺CTi removerItem() item: ${item.nome}');
     _calculaTotal();
     _calculaPrecoTotalLista();
@@ -277,6 +288,11 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * PESQUISAR * ====================================
 
+  set setIsPesquisar(value) {
+    _isPesquisar = value;
+    notifyListeners();
+  }
+
   pesquisar({required String pesquisarPor}) async {
     _rebuildInterface();
 
@@ -347,6 +363,8 @@ class ItensController extends ChangeNotifier {
     _ordem = '';
     _isMarcadoTodosItens = false;
     _isPesquisar = false;
+    _isFormEdicao = false;
+    _isFormCompleto = false;
 
     debugPrint('🤴🏻🧺CTi _limparTudo()');
   }
@@ -410,6 +428,33 @@ setNomeLista (String nome) {
   notifyListeners();
 }
 //#endregion ================ * END NOME DA LISTA * ============================
+
+//#region =================== * FORMULARIO * ===================================
+
+setIsFormCompleto(bool value) {
+  _isFormCompleto = value;
+  debugPrint('🤴🏻🧺CTi set isFormCompleto() _isFormCompleto: $_isFormCompleto');
+  notifyListeners();
+}
+
+setIsFormEdicao(bool value) {
+  _isFormEdicao = value;
+  debugPrint('🤴🏻🧺CTi set setIsFormEdicao() _isFormEdicao: $_isFormEdicao');
+  notifyListeners();
+}
+
+habilitarformEdicao(ItemModel item) {
+  _itemParaEdicaoForm = item;
+  _isFormCompleto = true;
+  _isFormEdicao = true;
+  
+  debugPrint('🤴🏻🧺CTi habilitarformEdicao() _formEdicao: item:${item.nome}, isFormCompleto: $_isFormCompleto, isFormEdicao $_isFormEdicao');
+
+  notifyListeners();
+}
+
+
+//#endregion ================ * END FORMULARIO * ===============================
 
 //#endregion ================ * END INTERFACE * ================================
 
