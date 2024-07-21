@@ -17,7 +17,7 @@ class ItemPadraoModel {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
     
-    result.addAll({itemPadraoColumnId: idItemPadrao});
+   
     result.addAll({itemPadraoColumnCategoriaId: idCategoria});
     result.addAll({itemPadraoColumnNome: nome});
     return result;

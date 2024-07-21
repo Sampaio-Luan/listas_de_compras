@@ -25,7 +25,7 @@ class ItemHistoricoModel {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
     
-    result.addAll({itemHistoricoColumnItemId: id});
+   
     result.addAll({itemHistoricoColumnHistoricoId: idHistorico});
     result.addAll({itemHistoricoColumnNome: nome});
     result.addAll({itemHistoricoColumnQuantidade: quantidade});

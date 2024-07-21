@@ -14,7 +14,7 @@ class CategoriaModel {
 
   Map<String, dynamic> toMap() {  
     final result = <String, dynamic>{};
-    result.addAll({categoriaColumnId: id});
+    
     result.addAll({categoriaColumnName: nome});
     result.addAll({categoriaColumnGrau: grau});
     return result;

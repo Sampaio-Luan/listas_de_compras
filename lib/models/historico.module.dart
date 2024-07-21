@@ -16,7 +16,7 @@ class HistoricoModel {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-    result.addAll({historicoColumnId: id});
+    
     result.addAll({historicoColumnData: data});
     result.addAll({historicoColumnTitulo: titulo});
     result.addAll({historicoColumnDescricao: descricao});
