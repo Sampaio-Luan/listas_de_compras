@@ -1,7 +1,7 @@
 
 import 'const_tb_historico.dart';
 
-const String itemHistoricoTableName = 'tb_historico_item';
+const String itemHistoricoTableName = 'tb_item_historico';
 
 
 const String itemHistoricoColumnItemId = 'id_item';
