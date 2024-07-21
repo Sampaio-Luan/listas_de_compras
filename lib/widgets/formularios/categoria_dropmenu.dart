@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:multi_dropdown/multiselect_dropdown.dart';
-import 'package:multi_dropdown/widgets/hint_text.dart';
+
 
 class CategoriaDropMenu extends StatelessWidget {
   const CategoriaDropMenu({super.key});

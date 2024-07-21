@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../constants/const_strings_globais.dart';
 import '../controllers/itens_controller.dart';
-import '../controllers/listas_controller.dart';
 import '../theme/estilos.dart';
 
 class OpcoesOrdenacao extends StatelessWidget {
@@ -16,7 +15,6 @@ class OpcoesOrdenacao extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemC = context.read<ItensController>();
-    final listaC = context.read<ListasController>();
     return PopupMenuButton<dynamic>(
         padding: const EdgeInsets.all(0),
         icon: const Icon( PhosphorIconsRegular.arrowsDownUp,
