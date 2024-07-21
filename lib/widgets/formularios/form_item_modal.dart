@@ -64,7 +64,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
         shape: BeveledRectangleBorder(
           borderRadius: BorderRadius.circular(0),
         ),
-        elevation: 0,
+        elevation: 1,
         onClosing: () {},
         builder: (context) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
@@ -336,6 +336,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         selectedBackgroundColor: Theme.of(context).colorScheme.primary,
         selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+        padding: const EdgeInsets.all(0)
       ),
       segments: const <ButtonSegment<String>>[
         ButtonSegment<String>(
