@@ -13,6 +13,8 @@ class ItemModel {
   double preco;
   int comprado;
   int indice;
+  int prioridade;
+  int idCategoria;
 
   ItemModel({
     required this.idItem,
@@ -24,6 +26,8 @@ class ItemModel {
     required this.preco,
     required this.comprado,
     required this.indice,
+    required this.prioridade,
+    required this.idCategoria
   });
 
 
@@ -39,6 +43,8 @@ class ItemModel {
     result.addAll({itemColumnPreco: preco});
     result.addAll({itemColumnComprado: comprado});
     result.addAll({itemColumnIndice: indice});
+    result.addAll({itemColumnPrioridade: prioridade});
+    result.addAll({itemColumnCategoriaId: idCategoria});
   
     return result;
   }
@@ -54,6 +60,8 @@ class ItemModel {
       preco: map[itemColumnPreco] ?? 0.0,
       comprado: map[itemColumnComprado] ?? 0,
       indice: map[itemColumnIndice] ?? 0,
+      prioridade: map[itemColumnPrioridade] ?? 0,
+      idCategoria: map[itemColumnCategoriaId] ?? 0
       
     );
   }
