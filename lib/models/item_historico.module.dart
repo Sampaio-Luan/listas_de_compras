@@ -1,4 +1,4 @@
-import '../constants/const_tb_historico_item.dart';
+import '../constants/const_tb_item_historico.dart';
 
 class ItemHistoricoModel {
 
