@@ -1,0 +1,36 @@
+import '../constants/const_tb_historico.dart';
+
+class HistoricoModel {
+  int id;
+  String data;
+  String titulo;
+  String descricao;
+
+  HistoricoModel({
+    required this.id,
+    required this.data,
+    required this.titulo,
+    required this.descricao,
+  });
+
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+    result.addAll({historicoColumnId: id});
+    result.addAll({historicoColumnData: data});
+    result.addAll({historicoColumnTitulo: titulo});
+    result.addAll({historicoColumnDescricao: descricao});
+    return result;
+  }
+
+
+
+  factory HistoricoModel.fromMap(Map<String, dynamic> map) {
+    return HistoricoModel(
+      id: map[historicoColumnId] ?? 0,
+      data: map[historicoColumnData] ?? '',
+      titulo: map[historicoColumnTitulo] ?? '',
+      descricao: map[historicoColumnDescricao] ?? '');
+  }
+  
+}
