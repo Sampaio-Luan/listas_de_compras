@@ -164,6 +164,8 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                   : _formatarPreco(),
                                               comprado: 0,
                                               indice: 0,
+                                              prioridade: 0,
+                                              idCategoria: 0,
                                             );
                                             listaC.qtdItensLista(
                                                 itemC.getIdLista,

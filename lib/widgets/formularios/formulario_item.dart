@@ -218,6 +218,8 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                       preco: _formatarPreco(),
                       comprado: 0,
                       indice: 0,
+                      prioridade: 0,
+                      idCategoria: 0,
                     );
                     listaC.qtdItensLista(widget.idLista!, itemC.itens.length + 1);
                     itemC.adicionarItem(i);

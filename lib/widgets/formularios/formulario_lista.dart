@@ -37,7 +37,6 @@ class _FormularioListaState extends State<FormularioLista>
     super.initState();
     if (widget.lista != null) {
       nomeLista.text = widget.lista!.nome;
-      descricaoLista.text = widget.lista!.descricao;
     }
   }
 
@@ -107,33 +106,25 @@ class _FormularioListaState extends State<FormularioLista>
                             ? 'Salvo com sucesso !!!'
                             : 'Editado com sucesso !!!') ==
                     0) {
-                      final itemC = context.read<ItensController>();
+                  final itemC = context.read<ItensController>();
                   if (widget.lista == null) {
                     ListaModel lista = ListaModel(
                         id: 0,
                         nome: nomeLista.text,
-                        descricao: descricaoLista.text.isEmpty
-                            ? ''
-                            : descricaoLista.text,
                         criacao: DateTime.now().toString(),
                         indice: 0,
-                        icone: 'sacola',
                         tema: 'padrao',
                         totalItens: 0,
                         totalComprados: 0);
 
-                    listasR.inserirLista(lista, itemC );
+                    listasR.inserirLista(lista, itemC);
                   } else {
-
-                    
-
                     widget.lista!.nome = nomeLista.text;
-                    widget.lista!.descricao = descricaoLista.text;
 
                     listasR.atualizarLista(widget.lista!);
                     itemC.setNomeLista(nomeLista.text);
                   }
-                  
+
                   nomeLista.clear();
                   descricaoLista.clear();
                   Navigator.of(context).pop();
