@@ -9,6 +9,7 @@ import '../utils/util.dart';
 
 import 'pages/categorias_page.dart';
 import 'pages/historico_page.dart';
+import 'pages/itens_padrao_page.dart';
 import 'pages/pre_page.dart';
 import 'preferencias_usuario.dart';
 
@@ -39,6 +40,7 @@ class MainApp extends StatelessWidget {
         'itens_page': (context) => const PrePage(),
         'categorias_page': (context) => const CategoriasPage(),
         'historico_page': (context) => const HistoricoPage(),
+        'itens_padrao_page': (context) => const ItensPadraoPage(),
       },
     );
   }

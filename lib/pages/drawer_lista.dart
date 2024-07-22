@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -25,6 +26,7 @@ class _DrawerListasState extends State<DrawerListas> {
     final preferencias = context.read<PreferenciasUsuarioShared>();
 
     return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(20),
@@ -123,6 +125,15 @@ class _DrawerListasState extends State<DrawerListas> {
         const Divider(
           height: 0,
           thickness: 0.5,
+        ), _botaoDrawer(
+          context,
+          icone: PhosphorIconsDuotone.basket,
+          titulo: 'Gerenciar itens',
+          rota: 'itens_padrao_page',
+        ),
+        const Divider(
+          height: 0,
+          thickness: 0.5,
         ),
         _botaoDrawer(
           context,
@@ -144,7 +155,7 @@ class _DrawerListasState extends State<DrawerListas> {
           height: 0,
           thickness: 0.5,
         ),
-         _botaoDrawer(
+        _botaoDrawer(
           context,
           icone: PhosphorIconsDuotone.palette,
           titulo: 'Tema de cores',

@@ -10,6 +10,10 @@ import '../repositories/listas_repository.dart';
 import 'controllers/inicio_controller.dart';
 import 'main_app.dart';
 import 'preferencias_usuario.dart';
+import 'repositories/categorias_repository.dart';
+import 'repositories/historico_repository.dart';
+import 'repositories/itens_historico_repository.dart';
+import 'repositories/itens_padrao_repository.dart';
 import 'repositories/itens_repository.dart';
 
 void main() async {
@@ -34,6 +38,10 @@ void main() async {
               itensController: context.read<ItensController>()),
           lazy: false,
         ),
+        ChangeNotifierProvider(create: (context) => ItensPadraoRepository()),
+        ChangeNotifierProvider(create: (context) => HistoricoRepository()),
+        ChangeNotifierProvider(create: (context) => CategoriasRepository()),
+        ChangeNotifierProvider(create: (context) => ItensHistoricoRepository()),
       ],
       child: const MainApp(),
     ),

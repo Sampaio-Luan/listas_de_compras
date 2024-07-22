@@ -24,149 +24,190 @@ class ItensPage extends StatefulWidget {
 
 class _ItensPageState extends State<ItensPage> {
   TextEditingController pesquisarPorItem = TextEditingController();
-  bool chamarModal = false;
 
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<ItensController>();
+    final ctrlListas = context.watch<ListasController>();
 
     return Scaffold(
       drawer: const DrawerListas(),
+      endDrawer: const Drawer(),
       //#region ====================================== APP BAR ========================================================
-      appBar: ctrl.itensSelecionados.isNotEmpty
-          ? _appBarSelecionados(context)
-          : ctrl.isPesquisar
-              ? _appBarPesquisa(context)
-              : _appBarPadrao(context),
+      appBar: ctrlListas.listas.isEmpty
+          ? AppBar(
+              title: const Text('Não há listas'),
+              centerTitle: true,
+              backgroundColor:
+                  Theme.of(context).colorScheme.brightness == Brightness.light
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.primaryContainer,
+              foregroundColor:
+                  Theme.of(context).colorScheme.brightness == Brightness.light
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
+            )
+          : ctrl.itensSelecionados.isNotEmpty
+              ? _appBarSelecionados(context)
+              : ctrl.isPesquisar
+                  ? _appBarPesquisa(context)
+                  : _appBarPadrao(context),
       //#endregion ====================================================================================================
 
       //#region ====================================== BODY CASO SEM ITENS ============================================
-      body: ctrl.itens.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  '📝\nAinda sem itens em " ${ctrl.nomeLista} " , cadastre algum no botão de adcionar no canto inferior direito',
-                  textAlign: TextAlign.center,
-                  style: Estilos().corpoColor(context, tamanho: 'g'),
+      body: ctrlListas.listas.isEmpty
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  PhosphorIconsRegular.listChecks,
+                  size: 100,
+                  color: Theme.of(context).colorScheme.primary.withAlpha(200),
                 ),
-              ),
+                const SizedBox(height: 20),
+                Text(
+                  'Adicione uma lista, usando o menu lateral esquerdo.',
+                  style: Estilos().corpoColor(context, tamanho: 'g'),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             )
-          //#endregion =======================================================================================================
-
-          //#region ====================================== BODY CASO COM ITENS ============================================
-          : Column(children: [
-              //#region ====================================== PAINEL CONTROLE ================================================
-              const Expanded(
-                flex: 2,
-                child: PainelControle(itemOuLista: 'item'),
-              ),
-              //#endregion ====================================================================================================
-
-              //#region ====================================== MENSSAGEM CASO SEM ITENS EM PESQUISA OU FILTRO =================
-              ctrl.isPesquisar && ctrl.itensInterface.isEmpty ||
-                      ctrl.filtro.isNotEmpty && ctrl.itensInterface.isEmpty
-                  ? Expanded(
-                      flex: 34,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20.0, right: 20, top: 50),
-                        child: Text(
-                          ctrl.filtro.isNotEmpty
-                              ? "Não há itens ${ctrl.filtro}"
-                              : 'Não há "${pesquisarPorItem.text}" em ${ctrl.nomeLista}',
-                          textAlign: TextAlign.center,
-                          style: Estilos().corpoColor(context, tamanho: 'g'),
-                        ),
-                      ),
-                    )
-                  //#endregion =======================================================================================================
-
-                  //#region ====================================== LISTA DE ITENS =================================================
-                  : Expanded(
-                      flex: 34,
-                      child: Column(children: [
-                        Consumer<ItensController>(
-                            builder: (context, controle, _) {
-                          return controle.itensInterface.isEmpty &&
-                                  !controle.isPesquisar &&
-                                  controle.filtro.isEmpty
-                              ? const Expanded(
-                                  child: Center(
-                                    child: SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                      child: CircularProgressIndicator.adaptive(
-                                          strokeWidth: 5),
-                                    ),
-                                  ),
-                                )
-                              : Expanded(
-                                  child: Padding(
-                                    padding:  EdgeInsets.only(bottom: controle.isFormCompleto ? 340 : 135.0),
-                                    child: ListView.separated(
-                                      itemCount: controle.itensInterface.length,
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return const Divider(
-                                          height: 0,
-                                          thickness: 0.7,
-                                        );
-                                      },
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Slidable(
-                                            key: ValueKey(controle
-                                                .itensInterface[index].idItem
-                                                .toString()),
-                                            startActionPane: _actionPane(
-                                              context,
-                                              item:
-                                                  controle.itensInterface[index],
-                                              tipoActionPane: 'Deletar',
-                                            ),
-                                            endActionPane: _actionPane(
-                                              context,
-                                              item:
-                                                  controle.itensInterface[index],
-                                              tipoActionPane: 'Editar',
-                                            ),
-                                            child: NLayoutItem(
-                                                item: controle
-                                                    .itensInterface[index]));
-                                      },
-                                    ),
-                                  ),
-                                );
-                        }),
-                      ]),
+          : ctrl.itens.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      '📝\nAinda sem itens em " ${ctrl.nomeLista} " , cadastre algum no botão de adcionar no canto inferior direito',
+                      textAlign: TextAlign.center,
+                      style: Estilos().corpoColor(context, tamanho: 'g'),
                     ),
+                  ),
+                )
+              //#endregion =======================================================================================================
 
-              //#endregion ====================================================================================================
-            ]),
+              //#region ====================================== BODY CASO COM ITENS ============================================
+              : Column(children: [
+                  //#region ====================================== PAINEL CONTROLE ================================================
+                  const Expanded(
+                    flex: 2,
+                    child: PainelControle(itemOuLista: 'item'),
+                  ),
+                  //#endregion ====================================================================================================
+
+                  //#region ====================================== MENSSAGEM CASO SEM ITENS EM PESQUISA OU FILTRO =================
+                  ctrl.isPesquisar && ctrl.itensInterface.isEmpty ||
+                          ctrl.filtro.isNotEmpty && ctrl.itensInterface.isEmpty
+                      ? Expanded(
+                          flex: 34,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20.0, right: 20, top: 50),
+                            child: Text(
+                              ctrl.filtro.isNotEmpty
+                                  ? "Não há itens ${ctrl.filtro}"
+                                  : 'Não há "${pesquisarPorItem.text}" em ${ctrl.nomeLista}',
+                              textAlign: TextAlign.center,
+                              style:
+                                  Estilos().corpoColor(context, tamanho: 'g'),
+                            ),
+                          ),
+                        )
+                      //#endregion =======================================================================================================
+
+                      //#region ====================================== LISTA DE ITENS =================================================
+                      : Expanded(
+                          flex: 34,
+                          child: Column(children: [
+                            Consumer<ItensController>(
+                                builder: (context, controle, _) {
+                              return controle.itensInterface.isEmpty &&
+                                      !controle.isPesquisar &&
+                                      controle.filtro.isEmpty
+                                  ? const Expanded(
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircularProgressIndicator
+                                              .adaptive(strokeWidth: 5),
+                                        ),
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: controle.isFormCompleto
+                                                ? 340
+                                                : 135.0),
+                                        child: ListView.separated(
+                                          itemCount:
+                                              controle.itensInterface.length,
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                  int index) {
+                                            return const Divider(
+                                              height: 0,
+                                              thickness: 0.7,
+                                            );
+                                          },
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Slidable(
+                                              key: ValueKey(controle
+                                                  .itensInterface[index].idItem
+                                                  .toString()),
+                                              startActionPane: _actionPane(
+                                                context,
+                                                item: controle
+                                                    .itensInterface[index],
+                                                tipoActionPane: 'Deletar',
+                                              ),
+                                              endActionPane: _actionPane(
+                                                context,
+                                                item: controle
+                                                    .itensInterface[index],
+                                                tipoActionPane: 'Editar',
+                                              ),
+                                              child: NLayoutItem(
+                                                  item: controle
+                                                      .itensInterface[index]),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                            }),
+                          ]),
+                        ),
+
+                  //#endregion ====================================================================================================
+                ]),
 
       //#endregion ====================================================================================================
 
       //#region ====================================== PAINEL DE PRECO TOTAL ==========================================
-      bottomSheet:  const FormItemModal() ,
-      
-
+      bottomSheet: ctrlListas.listas.isEmpty ? null : const FormItemModal(),
     );
   }
 
   AppBar _appBarPadrao(context) {
     final controle = Provider.of<ItensController>(context, listen: true);
     return AppBar(
+      
       backgroundColor:
           Theme.of(context).colorScheme.brightness == Brightness.light
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.primaryContainer,
+      foregroundColor:
+          Theme.of(context).colorScheme.brightness == Brightness.light
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.onPrimaryContainer,
       actions: [
         IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
               controle.setIsPesquisar = !controle.isPesquisar;
-            })
+            }),
       ],
       title: Text(
         controle.nomeLista,
@@ -193,6 +234,10 @@ class _ItensPageState extends State<ItensPage> {
           Theme.of(context).colorScheme.brightness == Brightness.light
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.primaryContainer,
+      foregroundColor:
+          Theme.of(context).colorScheme.brightness == Brightness.light
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.onPrimaryContainer,
       automaticallyImplyLeading: false,
       leading: IconButton(
           icon: const Icon(Icons.clear),

@@ -46,11 +46,12 @@ class _FormularioListaState extends State<FormularioLista>
     return AlertDialog(
         title: Text(
           'Criar Lista',
-          style: Estilos().tituloColor(context, tamanho: 'g'),
+          style: Estilos().tituloColor(context, tamanho: 'm'),
           textAlign: TextAlign.center,
         ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         content: SizedBox(
-          width: MediaQuery.of(context).size.width,
+          //width: MediaQuery.of(context).size.width,
           child: Form(
             key: formKeyLista,
             autovalidateMode: autoValidar
@@ -64,25 +65,15 @@ class _FormularioListaState extends State<FormularioLista>
                 qtdLinha: 1,
                 valida: true,
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              cf.linha(
-                context,
-                controle: descricaoLista,
-                label: 'Descrição',
-                qtdLinha: 2,
-                valida: false,
-              ),
             ]),
           ),
         ),
-        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actionsAlignment: MainAxisAlignment.spaceAround,
         actions: [
           TextButton(
             child: Text(
               'Cancelar',
-              style: Estilos().corpoColor(context, tamanho: 'm'),
+              style: Estilos().corpoColor(context, tamanho: 'p'),
             ),
             onPressed: () {
               nomeLista.clear();
@@ -91,9 +82,10 @@ class _FormularioListaState extends State<FormularioLista>
             },
           ),
           TextButton(
+              
               child: Text(
                 'Salvar',
-                style: Estilos().corpoColor(context, tamanho: 'm'),
+                style: Estilos().corpoColor(context, tamanho: 'p'),
               ),
               onPressed: () {
                 setState(() {

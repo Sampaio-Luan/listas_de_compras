@@ -141,6 +141,8 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                 precoItem.text.isEmpty
                                                     ? 0
                                                     : _formatarPreco();
+                                            itemEditado.prioridade =
+                                                int.parse(prioridadeItem.text);
 
                                             itemC.atualizarItem(itemEditado);
                                           } else {
@@ -164,7 +166,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                   : _formatarPreco(),
                                               comprado: 0,
                                               indice: 0,
-                                              prioridade: 0,
+                                              prioridade: int.parse(prioridadeItem.text),
                                               idCategoria: 0,
                                             );
                                             listaC.qtdItensLista(

@@ -8,10 +8,12 @@ import 'package:provider/provider.dart';
 import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
+import '../models/prioridades.module.dart';
 import '../theme/estilos.dart';
 
 class NLayoutItem extends StatelessWidget {
   final ItemModel item;
+  final Prioridades prioridade = Prioridades();
 
   NLayoutItem({
     super.key,
@@ -33,8 +35,9 @@ class NLayoutItem extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: const Border(
-                left: BorderSide(color: Colors.amber, width: 10),
+            border: Border(
+                left: BorderSide(
+                    color: prioridade.corPrioridade(item.prioridade).withAlpha(130), width: 7),
                 right: BorderSide.none,
                 bottom: BorderSide.none,
                 top: BorderSide.none),
@@ -46,10 +49,8 @@ class NLayoutItem extends StatelessWidget {
                     ? null
                     : Theme.of(context).colorScheme.brightness ==
                             Brightness.light
-                        ? Theme.of(context)
-                            .colorScheme
-                            .primaryContainer
-                            .withAlpha(120)
+                        ? Colors.black
+                            .withAlpha(30)
                         : Theme.of(context)
                             .colorScheme
                             .primaryContainer
@@ -71,12 +72,16 @@ class NLayoutItem extends StatelessWidget {
                     )
                   : CircleAvatar(
                       radius: 15,
-                      backgroundColor: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withAlpha(100),
+                      backgroundColor: prioridade
+                          .corPrioridade(item.prioridade)
+                          .withAlpha(30),
+
+                      // Theme.of(context)
+                      //     .colorScheme
+                      //     .inversePrimary
+                      //     .withAlpha(100),
                       foregroundColor:
-                          Theme.of(context).colorScheme.onPrimaryContainer,
+                          Theme.of(context).colorScheme.onBackground,
                       child: Text(
                         item.nome[0].toUpperCase(),
                         style: const TextStyle(fontSize: 16),
@@ -86,9 +91,11 @@ class NLayoutItem extends StatelessWidget {
             Expanded(
               flex: 8,
               child: InkWell(
-                onTap: itemC.itensSelecionados.isNotEmpty ? null : () {
-                  itemC.habilitarformEdicao(item);
-                },
+                onTap: itemC.itensSelecionados.isNotEmpty
+                    ? null
+                    : () {
+                        itemC.habilitarformEdicao(item);
+                      },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Column(
@@ -142,7 +149,8 @@ class NLayoutItem extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 3.0),
                             child: Text(
                               '=',
                               style: Estilos().sutil(context, tamanho: 9),

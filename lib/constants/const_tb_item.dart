@@ -32,7 +32,6 @@ const String createItemTable = '''
       $itemColumnComprado INTEGER NOT NULL,
       $itemColumnIndice INTEGER,
       $itemColumnPrioridade INTEGER NOT NULL,
-
       FOREIGN KEY ($itemColumnListaId) REFERENCES $listaTableName($listaColumnId),
       FOREIGN KEY ($itemColumnCategoriaId) REFERENCES $categoriaTableName($categoriaColumnId)
     )
