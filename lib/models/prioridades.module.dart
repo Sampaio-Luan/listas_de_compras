@@ -18,4 +18,8 @@ class Prioridades{
   String nomePrioridade(int valor){
     return prioridades.keys.elementAt(prioridades.values.toList().indexOf(valor));
   }
+
+  Color corPrioridade(int valor){
+    return prioridadeColor[prioridades.values.toList().indexOf(valor)]!;
+  }
 }

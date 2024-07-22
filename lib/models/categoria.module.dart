@@ -27,14 +27,5 @@ class CategoriaModel {
     );
   }
 
-  final List<Map<String, int>> setores = [
-    {'Açougue': 0},
-    {'Básicos': 1},
-    {'Bebidas': 2},
-    {'Congelados': 3},
-    {'Feira': 4},
-    {'Frios': 5},
-    {'Higiene': 6},
-    {'Limpeza': 7},
-  ];
+
 }
