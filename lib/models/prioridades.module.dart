@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Prioridades{
+class Prioridades {
   final Map<String, int> prioridades = {
     'Alta': 0,
     'Média': 1,
@@ -15,11 +15,12 @@ class Prioridades{
     3: Colors.blue,
   };
 
-  String nomePrioridade(int valor){
-    return prioridades.keys.elementAt(prioridades.values.toList().indexOf(valor));
+  String nomePrioridade(int valor) {
+    return prioridades.keys
+        .elementAt(prioridades.values.toList().indexOf(valor));
   }
 
-  Color corPrioridade(int valor){
+  Color corPrioridade(int valor) {
     return prioridadeColor[prioridades.values.toList().indexOf(valor)]!;
   }
 }
