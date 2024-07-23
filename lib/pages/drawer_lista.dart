@@ -37,49 +37,47 @@ class _DrawerListasState extends State<DrawerListas> {
       elevation: 0,
 
       child: Column(children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            constraints: const BoxConstraints.expand(),
-            color: Theme.of(context).colorScheme.primaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12, bottom: 5),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Minhas Listas',
-                              style:
-                                  Estilos().tituloColor(context, tamanho: 'g')),
-                          Text('Versão 1.0.0',
-                              style: Estilos().sutil(context, tamanho: 12))
-                        ]),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primary.withAlpha(70),
-                        radius: 20,
-                        child: IconButton(
-                          onPressed: () {
-                            preferencias.mudarTema();
-                          },
-                          icon: Theme.of(context).brightness == Brightness.dark
-                              ? const Icon(PhosphorIconsFill.lamp, size: 24)
-                              : Icon(
-                                  PhosphorIconsFill.lampPendant,
-                                  size: 24,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                        ),
-                      ),
-                    )
-                  ]),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.15,
+          child: DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
             ),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Minhas Listas',
+                            style:
+                                Estilos().tituloColor(context, tamanho: 'g')),
+                        Text('Versão 1.0.0',
+                            style: Estilos().sutil(context, tamanho: 12))
+                      ]),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primary.withAlpha(70),
+                      radius: 20,
+                      child: IconButton(
+                        onPressed: () {
+                          preferencias.mudarTema();
+                        },
+                        icon: Theme.of(context).brightness == Brightness.dark
+                            ? const Icon(PhosphorIconsFill.lamp, size: 24)
+                            : Icon(
+                                PhosphorIconsFill.lampPendant,
+                                size: 24,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                      ),
+                    ),
+                  )
+                ]),
           ),
         ),
         Expanded(
@@ -125,7 +123,8 @@ class _DrawerListasState extends State<DrawerListas> {
         const Divider(
           height: 0,
           thickness: 0.5,
-        ), _botaoDrawer(
+        ),
+        _botaoDrawer(
           context,
           icone: PhosphorIconsDuotone.basket,
           titulo: 'Gerenciar itens',

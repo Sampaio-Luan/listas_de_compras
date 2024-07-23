@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:provider/provider.dart';
 
+import '../../repositories/categorias_repository.dart';
 
 class CategoriaDropMenu extends StatelessWidget {
-  const CategoriaDropMenu({super.key});
+  TextEditingController controle = TextEditingController();
+   CategoriaDropMenu({required this.controle,super.key});
+   final MultiSelectController _controller = MultiSelectController();
 
   @override
   Widget build(BuildContext context) {
+    final categoriaR = context.watch<CategoriasRepository>();
+    List<ValueItem> opcoes = [];
+    opcoes.add(const ValueItem(label: 'Todos', value: 0));
+    for (var element in categoriaR.getCategorias) {
+      opcoes.add(ValueItem(label: element.nome, value: element.id));
+    }
+   // _controller.value= opcoes[0].value;
     return MultiSelectDropDown(
-      searchEnabled: true,
-      searchLabel: 'Pesquisar',
+      //searchEnabled: true,
+      //searchLabel: 'Pesquisar',
+      selectedOptions: [opcoes[int.parse(controle.text)]],
+      controller: _controller,
       hintPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       fieldBackgroundColor: Colors.transparent,
@@ -21,19 +34,14 @@ class CategoriaDropMenu extends StatelessWidget {
       ),
       showChipInSingleSelectMode: true,
       dropdownMargin: 0,
-      
       clearIcon: null,
       onOptionSelected: (options) {
+        
         debugPrint(options.toString());
+        controle.text = options[0].value.toString();
+        debugPrint('controle: ${controle.text}');
       },
-      options: const <ValueItem>[
-        ValueItem(label: 'Option 1', value: '1'),
-        ValueItem(label: 'zef', value: '2'),
-        ValueItem(label: 'porra 3', value: '3'),
-        ValueItem(label: 'medo 4', value: '4'),
-        ValueItem(label: 'caceta 5', value: '5'),
-        ValueItem(label: 'dfe 6', value: '6'),
-      ],
+      options: opcoes,
       selectionType: SelectionType.single,
       dropdownHeight: 150,
       optionTextStyle: const TextStyle(fontSize: 14),

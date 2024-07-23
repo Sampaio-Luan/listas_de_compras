@@ -17,7 +17,7 @@ class _ItensPadraoPageState extends State<ItensPadraoPage> {
   @override
   Widget build(BuildContext context) {
     final itemP = context.watch<ItensPadraoRepository>();
-    // itemP.recuperarItensPadrao();
+  
     return Scaffold(
       appBar: AppBar(
         title: const Text('Itens Padrao'),

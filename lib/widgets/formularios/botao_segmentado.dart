@@ -15,15 +15,20 @@ class _BotaoSegmentadoState extends State<BotaoSegmentado> {
   final prioridades = Prioridades();
   int selecionada = 3;
   @override
+  void initState() {
+    super.initState();
+    if (widget.prioridadeForm.text.isNotEmpty) {
+      selecionada = int.parse(widget.prioridadeForm.text);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
-        
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
               'Prioridade:',
               style: Estilos().sutil(context, tamanho: 12),

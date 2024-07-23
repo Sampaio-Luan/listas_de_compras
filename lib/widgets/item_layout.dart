@@ -95,6 +95,8 @@ class NLayoutItem extends StatelessWidget {
                     ? null
                     : () {
                         itemC.habilitarformEdicao(item);
+                        itemC.setIsFormCompleto(false);
+                        itemC.setIsFormCompleto(true);
                       },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 import '../constants/const_tb_categorias.dart';
@@ -12,6 +13,11 @@ class CategoriasRepository extends ChangeNotifier {
 
   late Database db;
 
+  CategoriasRepository() {
+    if (_categorias.isEmpty) {
+      recuperarCategorias();
+    }
+  }
   Future<List<CategoriaModel>> recuperarCategorias() async {
     db = await Banco.instancia.database;
 
@@ -59,16 +65,22 @@ class CategoriasRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  editarCategorias(CategoriaModel categoria) async {
+  editarCategorias(List<CategoriaModel> categoria) async {
     db = await Banco.instancia.database;
 
-    await db.update(categoriaTableName, categoria.toMap(),
-        where: '$categoriaColumnId = ?', whereArgs: [categoria.id]);
+    for (int i = 0; i < categoria.length; i++) {
+      await db.update(categoriaTableName, categoria[i].toMap(),
+          where: '$categoriaColumnId = ?', whereArgs: [categoria[i].id]);
+    }
+
+    debugPrint("💁🏻🥈RPC editarCategorias()");
 
     for (int i = 0; i < _categorias.length; i++) {
-      if (_categorias[i].id == categoria.id) {
-        _categorias[i] = categoria;
-        break;
+      for (int j = 0; j < categoria.length; j++) {
+        if (_categorias[i].id == categoria[j].id) {
+          _categorias[i] = categoria[j];
+          break;
+        }
       }
     }
 

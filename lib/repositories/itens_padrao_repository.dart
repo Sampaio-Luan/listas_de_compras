@@ -12,6 +12,12 @@ class ItensPadraoRepository extends ChangeNotifier {
   List<ItemPadraoModel> get getItensPadrao => _itensPadrao;
 
   late Database db;
+
+  ItensPadraoRepository() {
+    if (_itensPadrao.isEmpty) {
+      recuperarItensPadrao();
+    }
+  }
   Future<List<ItemPadraoModel>> recuperarItensPadrao() async {
     _itensPadrao.clear();
     notifyListeners();

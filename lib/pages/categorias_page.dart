@@ -31,7 +31,7 @@ class _CategoriasPageState extends State<CategoriasPage> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriaR = context.read<CategoriasRepository>();
+    final categoriaR = context.watch<CategoriasRepository>();
     //categoriaR.recuperarCategorias();
     categorias = categoriaR.getCategorias;
     return Scaffold(
@@ -74,8 +74,13 @@ class _CategoriasPageState extends State<CategoriasPage> {
               for (int i = 0; i < categorias.length; i++)
                 ListTile(
                   key: ValueKey(categorias[i]),
-                  title: Text(categorias[i].nome,
-                      style: Estilos().tituloColor(context, tamanho: 'p')),
+                  title: Row(
+                    children: [
+                      Text(categorias[i].nome,
+                          style: Estilos().tituloColor(context, tamanho: 'p')),
+                          Text(' id: (${categorias[i].id}) grau: (${categorias[i].grau})',)
+                    ],
+                  ),
                   leading: CircleAvatar(
                     backgroundColor:
                         Theme.of(context).colorScheme.primary.withAlpha(20),
@@ -86,6 +91,14 @@ class _CategoriasPageState extends State<CategoriasPage> {
             ],
             onReorder: (oldIndex, newIndex) {
               _reordenarCategorias(oldIndex, newIndex);
+              debugPrint('oldIndex: $oldIndex newIndex: $newIndex');
+              List<CategoriaModel> editCategoria = [];
+              for(int j = 0; j < categorias.length; j++){
+               CategoriaModel editarCat = categorias[j];
+               editarCat.grau = j;
+               editCategoria.add(editarCat);
+              }
+              categoriaR.editarCategorias(editCategoria);
             },
           ),
         ),

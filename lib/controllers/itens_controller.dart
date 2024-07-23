@@ -60,13 +60,11 @@ class ItensController extends ChangeNotifier {
   bool _isFormCompleto = false;
   bool get isFormCompleto => _isFormCompleto;
 
-   bool _isFormEdicao = false;
+  bool _isFormEdicao = false;
   bool get isFormEdicao => _isFormEdicao;
 
   ItemModel? _itemParaEdicaoForm;
   ItemModel? get itemParaEdicaoForm => _itemParaEdicaoForm;
-
-
 
 //#endregion ================ * END ATRIBUTOS * ================================
 
@@ -78,8 +76,10 @@ class ItensController extends ChangeNotifier {
     if (idLista != _idLista) {
       _idLista = idLista;
       _nomeLista = nomeLista;
-      debugPrint('====== (${formatoData.format(DateTime.now())}) Nova Solicitação - $nomeLista =====================');
-      debugPrint('🤴🏻🧺CTi iniciarController(): _idLista $_idLista, _nomeLista $_nomeLista');
+      debugPrint(
+          '====== (${formatoData.format(DateTime.now())}) Nova Solicitação - $nomeLista =====================');
+      debugPrint(
+          '🤴🏻🧺CTi iniciarController(): _idLista $_idLista, _nomeLista $_nomeLista');
       _limparTudo();
       notifyListeners();
       _recuperarItens();
@@ -96,7 +96,8 @@ class ItensController extends ChangeNotifier {
     debugPrint("🤴🏻🧺CTi _recuperarItens() _itens: ${_itens.length}");
 
     _itensInterface.addAll(_itens);
-    debugPrint("🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
+    debugPrint(
+        "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
 
     notifyListeners();
     _calculaTotal();
@@ -108,12 +109,13 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * INSERIR * ======================================
 
-  adicionarItem(ItemModel item) async {
+  adicionarItem(ItemModel item, ListasController lista) async {
     int id = await ItensRepository().inserirItem(item);
     item.idItem = id;
     _itens.add(item);
     _itensInterface.add(item);
     debugPrint("🤴🏻🧺CTi adicionarItem() item: ${item.nome}");
+    lista.qtdItensLista(_idLista,_itens.length);
     _calculaTotal();
 
     _calculaPrecoTotalLista();
@@ -122,8 +124,6 @@ class ItensController extends ChangeNotifier {
 //#endregion ================ * END INSERIR * ==================================
 
 //#region =================== * ALTERAR * ======================================
-
-
 
   atualizarItem(ItemModel item) async {
     await ItensRepository().atualizarItem(item);
@@ -134,60 +134,55 @@ class ItensController extends ChangeNotifier {
     _calculaPrecoTotalLista();
   }
 
-   set setIsMarcadoTodosItens(value) {
+  set setIsMarcadoTodosItens(value) {
     _isMarcadoTodosItens = value;
   }
 
   marcarDesmarcarItem(ItemModel item, ListasController lista) async {
-
     final mOUd = await ItensRepository().editarUmAtributo(
-        campo: itemColumnComprado, valor: item.comprado, item: item,);
-      
-    if (mOUd) {
+      campo: itemColumnComprado,
+      valor: item.comprado,
+      item: item,
+    );
 
+    if (mOUd) {
       _itens[_itens.indexOf(item)] = item;
       _itensInterface[_itensInterface.indexOf(item)] = item;
-      
+
       int comprados = _calculaTotal();
       lista.qtdItensCompradosLista(_idLista, comprados);
-     
+
       //notifyListeners();
     }
     debugPrint('🤴🏻🧺 CTi marcarDesmarcarItem() item: ${item.nome}');
-    
   }
 
   marcarTodos(ListasController lista) async {
-
     _rebuildInterface();
 
     await Future.delayed(const Duration(milliseconds: 300), () {
       debugPrint('🤴🏻🧺CTi marcarTodos() delay');
     });
     if (_isMarcadoTodosItens) {
-
       for (int i = 0; i < _itens.length; i++) {
-
         _itens[i].comprado = 0;
-
       }
 
-      debugPrint('🤴🏻🧺CTi marcarTodos() marcar todos itens?: $_isMarcadoTodosItens');
+      debugPrint(
+          '🤴🏻🧺CTi marcarTodos() marcar todos itens?: $_isMarcadoTodosItens');
       _isMarcadoTodosItens = !_isMarcadoTodosItens;
-      
+
       ItensRepository().desmarcarTodosItens(idLista: _idLista);
       lista.qtdItensCompradosLista(_idLista, 0);
     } else {
-
       for (int i = 0; i < _itens.length; i++) {
-
         _itens[i].comprado = 1;
-
       }
 
-      debugPrint('🤴🏻🧺CTi marcarTodos() marcado todos? : $_isMarcadoTodosItens');
+      debugPrint(
+          '🤴🏻🧺CTi marcarTodos() marcado todos? : $_isMarcadoTodosItens');
       _isMarcadoTodosItens = !_isMarcadoTodosItens;
-      
+
       ItensRepository().marcarTodosItens(idLista: _idLista);
       lista.qtdItensCompradosLista(_idLista, _itens.length);
     }
@@ -209,6 +204,17 @@ class ItensController extends ChangeNotifier {
     debugPrint('🤴🏻🧺CTi removerItem() item: ${item.nome}');
     _calculaTotal();
     _calculaPrecoTotalLista();
+  }
+
+  removerComEndDrawer(String nome, ListasController lista) async {
+    for (int i = 0; i < _itens.length; i++) {
+      if (_itens[i].nome.toLowerCase() == nome.toLowerCase()) {
+        removerItem(_itens[i], lista);
+        debugPrint('🤴🏻🧺CTi removerComEndDrawer() item: ${_itens[i].nome}');
+
+        break;
+      }
+    }
   }
 
 //#endregion ================ * END DELETAR * ==================================
@@ -330,7 +336,7 @@ class ItensController extends ChangeNotifier {
     notifyListeners();
   }
 
-  excluirItensSelecionados() async {
+  excluirItensSelecionados(ListasController listaC) async {
     debugPrint(
         '🤴🏻🧺 CTi excluirItensSelecionados() qtd de itens antes: ${_itens.length}');
     for (var item in _itensSelecionados) {
@@ -341,7 +347,7 @@ class ItensController extends ChangeNotifier {
 
     debugPrint(
         '🤴🏻🧺 CTi excluirItensSelecionados() qtd de itens após: ${_itens.length}');
-
+listaC.qtdItensLista(_idLista, _itens.length);
     _calculaTotal();
     limparListaSelecionados();
   }
@@ -380,19 +386,14 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * CALCULAR * =====================================
   _calculaTotal() {
-
     double total = 0;
     _totalItensComprados = 0;
 
     for (var item in _itens) {
-
       if (item.comprado == 1) {
-
         total += item.preco * item.quantidade;
         _totalItensComprados += 1;
-
       }
-
     }
     _precoTotal = total;
 
@@ -411,7 +412,8 @@ class ItensController extends ChangeNotifier {
     }
     _precoTotalLista = total;
 
-    debugPrint('🤴🏻🧺CTi _calculaPrecoTotalLista() _precoTotalLista: $_precoTotalLista');
+    debugPrint(
+        '🤴🏻🧺CTi _calculaPrecoTotalLista() _precoTotalLista: $_precoTotalLista');
 
     notifyListeners();
   }
@@ -420,39 +422,39 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * NOME DA LISTA * ================================
 
-setNomeLista (String nome) {
+  setNomeLista(String nome) {
+    _nomeLista = nome;
+    debugPrint('🤴🏻🧺CTi setNomeLista() _nomeLista: $_nomeLista');
 
-  _nomeLista = nome;
-  debugPrint('🤴🏻🧺CTi setNomeLista() _nomeLista: $_nomeLista');
-
-  notifyListeners();
-}
+    notifyListeners();
+  }
 //#endregion ================ * END NOME DA LISTA * ============================
 
 //#region =================== * FORMULARIO * ===================================
 
-setIsFormCompleto(bool value) {
-  _isFormCompleto = value;
-  debugPrint('🤴🏻🧺CTi set isFormCompleto() _isFormCompleto: $_isFormCompleto');
-  notifyListeners();
-}
+  setIsFormCompleto(bool value) {
+    _isFormCompleto = value;
+    debugPrint(
+        '🤴🏻🧺CTi set isFormCompleto() _isFormCompleto: $_isFormCompleto');
+    notifyListeners();
+  }
 
-setIsFormEdicao(bool value) {
-  _isFormEdicao = value;
-  debugPrint('🤴🏻🧺CTi set setIsFormEdicao() _isFormEdicao: $_isFormEdicao');
-  notifyListeners();
-}
+  setIsFormEdicao(bool value) {
+    _isFormEdicao = value;
+    debugPrint('🤴🏻🧺CTi set setIsFormEdicao() _isFormEdicao: $_isFormEdicao');
+    notifyListeners();
+  }
 
-habilitarformEdicao(ItemModel item) {
-  _itemParaEdicaoForm = item;
-  _isFormCompleto = true;
-  _isFormEdicao = true;
-  
-  debugPrint('🤴🏻🧺CTi habilitarformEdicao() _formEdicao: item:${item.nome}, isFormCompleto: $_isFormCompleto, isFormEdicao $_isFormEdicao');
+  habilitarformEdicao(ItemModel item) {
+    _itemParaEdicaoForm = item;
+    _isFormCompleto = true;
+    _isFormEdicao = true;
 
-  notifyListeners();
-}
+    debugPrint(
+        '🤴🏻🧺CTi habilitarformEdicao() _formEdicao: item:${item.nome}, isFormCompleto: $_isFormCompleto, isFormEdicao $_isFormEdicao');
 
+    notifyListeners();
+  }
 
 //#endregion ================ * END FORMULARIO * ===============================
 

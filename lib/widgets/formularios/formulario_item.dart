@@ -222,7 +222,7 @@ class _FormularioItemState extends State<FormularioItem> with ValidacoesMixin {
                       idCategoria: 0,
                     );
                     listaC.qtdItensLista(widget.idLista!, itemC.itens.length + 1);
-                    itemC.adicionarItem(i);
+                    itemC.adicionarItem(i, listaC);
                     
                   } else {
                     widget.item!.nome = nomeItem.text;

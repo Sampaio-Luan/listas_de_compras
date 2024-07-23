@@ -30,6 +30,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
   TextEditingController precoItem = TextEditingController();
   TextEditingController tipoMedida = TextEditingController();
   TextEditingController prioridadeItem = TextEditingController();
+  TextEditingController categoriaItem = TextEditingController();
   final formKeyItem = GlobalKey<FormState>();
 
   final prioridade = Prioridades();
@@ -39,13 +40,15 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
   @override
   void initState() {
     prioridadeItem.text = '3';
+    categoriaItem.text = '0';
+    tipoMedida.text = 'uni';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final itemC = context.watch<ItensController>();
-    _resetTextController();
+    //_resetTextController();
 
     if (itemC.isFormEdicao) {
       String precoFormatado = formatter.format(itemC.itemParaEdicaoForm!.preco);
@@ -56,7 +59,8 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
           : itemC.itemParaEdicaoForm!.quantidade.toStringAsFixed(3);
       precoItem.text = precoFormatado;
       tipoMedida.text = itemC.itemParaEdicaoForm!.medida;
-      prioridadeItem.text = '3';
+      prioridadeItem.text = itemC.itemParaEdicaoForm!.prioridade.toString();
+      categoriaItem.text = itemC.itemParaEdicaoForm!.idCategoria.toString();
     }
     return BottomSheet(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -64,10 +68,11 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
         shape: BeveledRectangleBorder(
           borderRadius: BorderRadius.circular(0),
         ),
-        elevation: 1,
+        elevation: 0,
         onClosing: () {},
         builder: (context) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
+            itemC.isFormEdicao ? const Text('Modo de edição', style: TextStyle(color: Colors.green, fontSize: 20)) :const SizedBox(height: 0), 
             Form(
               key: formKeyItem,
               child: SingleChildScrollView(
@@ -119,6 +124,9 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   ),
                                   Positioned(
                                     child: IconButton.filled(
+                                      style: ButtonStyle(
+                                        backgroundColor: itemC.isFormEdicao? MaterialStateProperty.all(Colors.green) : MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
+                                      ),
                                       onPressed: () {
                                         debugPrint(
                                             'Prioridade no modal ${prioridadeItem.text}');
@@ -157,22 +165,22 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                       ? ''
                                                       : descricaoItem.text,
                                               quantidade:
-                                                  quantidadeItem.text == ''
+                                                  quantidadeItem.text.isEmpty
                                                       ? 1
                                                       : _formatarQuantidade(),
                                               medida: tipoMedida.text,
-                                              preco: precoItem.text == ''
+                                              preco: precoItem.text.isEmpty
                                                   ? 0
                                                   : _formatarPreco(),
                                               comprado: 0,
                                               indice: 0,
                                               prioridade: int.parse(prioridadeItem.text),
-                                              idCategoria: 0,
+                                              idCategoria: int.parse(categoriaItem.text),
                                             );
                                             listaC.qtdItensLista(
                                                 itemC.getIdLista,
                                                 itemC.itens.length + 1);
-                                            itemC.adicionarItem(i);
+                                            itemC.adicionarItem(i, listaC);
                                           }
                                           isValidado(
                                               context: context,
@@ -181,12 +189,12 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                   ? 'Editado com sucesso !!!'
                                                   : 'Cadastrado com sucesso !!!');
                                           _resetTextController();
-                                          itemC.setIsFormCompleto(false);
+                                          
                                           itemC.setIsFormEdicao(false);
                                         }
                                       },
-                                      icon: const Icon(
-                                        PhosphorIconsDuotone.paperPlane,
+                                      icon:  Icon(
+                                       itemC.isFormEdicao? PhosphorIconsBold.check: PhosphorIconsDuotone.paperPlane,
                                         size: 30,
                                       ),
                                     ),
@@ -201,9 +209,9 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   const EdgeInsets.symmetric(horizontal: 12.0),
                               child: Column(children: [
                                 Row(children: [
-                                  const Expanded(
+                                   Expanded(
                                     flex: 5,
-                                    child: CategoriaDropMenu(),
+                                    child: CategoriaDropMenu(controle: categoriaItem),
                                   ),
                                   const SizedBox(width: 5),
                                   Expanded(

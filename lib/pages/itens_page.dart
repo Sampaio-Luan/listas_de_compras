@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:path/path.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ import '../widgets/item_layout.dart';
 import '../widgets/painel_controle.dart';
 
 import 'drawer_lista.dart';
+import 'end_drawer_itens_padrao.dart';
 
 class ItensPage extends StatefulWidget {
   const ItensPage({super.key});
@@ -32,7 +34,7 @@ class _ItensPageState extends State<ItensPage> {
 
     return Scaffold(
       drawer: const DrawerListas(),
-      endDrawer: const Drawer(),
+      endDrawer:  EndDrawerItensPadrao(),
       //#region ====================================== APP BAR ========================================================
       appBar: ctrlListas.listas.isEmpty
           ? AppBar(
@@ -208,6 +210,12 @@ class _ItensPageState extends State<ItensPage> {
             onPressed: () {
               controle.setIsPesquisar = !controle.isPesquisar;
             }),
+             Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(PhosphorIconsRegular.basket),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
+          )
       ],
       title: Text(
         controle.nomeLista,
@@ -287,6 +295,7 @@ class _ItensPageState extends State<ItensPage> {
 
   AppBar _appBarSelecionados(context) {
     final ctrl = Provider.of<ItensController>(context, listen: true);
+    final lista = Provider.of<ListasController>(context, listen: true);
     return AppBar(
         foregroundColor: Colors.white,
         backgroundColor:
@@ -307,7 +316,7 @@ class _ItensPageState extends State<ItensPage> {
           IconButton(
               icon: const Icon(PhosphorIconsRegular.trash),
               onPressed: () {
-                ctrl.excluirItensSelecionados();
+                ctrl.excluirItensSelecionados(lista);
               })
         ]);
   }
