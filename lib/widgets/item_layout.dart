@@ -29,6 +29,8 @@ class NLayoutItem extends StatelessWidget {
       return InkWell(
         onLongPress: () {
           itemC.itensSelecionados.isEmpty ? itemC.selecionarItens(item) : null;
+          itemC.setIsFormEdicao(false);
+          itemC.setIsFormCompleto(false);
         },
         onTap: () {
           itemC.itensSelecionados.isEmpty ? null : itemC.selecionarItens(item);
@@ -37,7 +39,10 @@ class NLayoutItem extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(
                 left: BorderSide(
-                    color: prioridade.corPrioridade(item.prioridade).withAlpha(130), width: 7),
+                    color: prioridade
+                        .corPrioridade(item.prioridade)
+                        .withAlpha(130),
+                    width: 7),
                 right: BorderSide.none,
                 bottom: BorderSide.none,
                 top: BorderSide.none),
@@ -49,8 +54,7 @@ class NLayoutItem extends StatelessWidget {
                     ? null
                     : Theme.of(context).colorScheme.brightness ==
                             Brightness.light
-                        ? Colors.black
-                            .withAlpha(30)
+                        ? Colors.black.withAlpha(30)
                         : Theme.of(context)
                             .colorScheme
                             .primaryContainer
@@ -95,7 +99,7 @@ class NLayoutItem extends StatelessWidget {
                     ? null
                     : () {
                         itemC.habilitarformEdicao(item);
-                        itemC.setIsFormCompleto(false);
+                        itemC.setIsFormEdicao(true);
                         itemC.setIsFormCompleto(true);
                       },
                 child: Padding(

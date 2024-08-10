@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
       supportedLocales: const [Locale('pt', 'BR')],
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: preferencias.temaEscuro ? theme.dark() : theme.light(),
+      theme: preferencias.temaEscuro ? theme.verde() : theme.light(),
       initialRoute: 'itens_page',
       routes: {
         'itens_page': (context) => const PrePage(),

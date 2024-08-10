@@ -9,9 +9,11 @@ import '../../controllers/listas_controller.dart';
 import '../../mixins/validations_mixin.dart';
 import '../../models/item.module.dart';
 import '../../models/prioridades.module.dart';
+import '../../repositories/categorias_repository.dart';
 import '../../theme/estilos.dart';
 
 import 'botao_segmentado.dart';
+import 'botao_segmentado_medida.dart';
 import 'campos_formulario.dart';
 import 'categoria_dropmenu.dart';
 
@@ -36,6 +38,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
   final prioridade = Prioridades();
   CamposFormulario cf = CamposFormulario();
   bool autoValidar = false;
+  bool isDropdown = false;
 
   @override
   void initState() {
@@ -48,6 +51,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
   @override
   Widget build(BuildContext context) {
     final itemC = context.watch<ItensController>();
+    final categoriaR = context.watch<CategoriasRepository>();
     //_resetTextController();
 
     if (itemC.isFormEdicao) {
@@ -63,7 +67,9 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
       categoriaItem.text = itemC.itemParaEdicaoForm!.idCategoria.toString();
     }
     return BottomSheet(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: itemC.isFormEdicao
+            ? Theme.of(context).colorScheme.primaryContainer.withAlpha(70)
+            : Theme.of(context).colorScheme.primaryContainer.withAlpha(5),
         enableDrag: false,
         shape: BeveledRectangleBorder(
           borderRadius: BorderRadius.circular(0),
@@ -72,7 +78,10 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
         onClosing: () {},
         builder: (context) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
-            itemC.isFormEdicao ? const Text('Modo de edição', style: TextStyle(color: Colors.green, fontSize: 20)) :const SizedBox(height: 0), 
+            itemC.isFormEdicao
+                ? const Text('Modo de edição',
+                    style: TextStyle(color: Colors.green, fontSize: 20))
+                : const SizedBox(height: 0),
             Form(
               key: formKeyItem,
               child: SingleChildScrollView(
@@ -90,8 +99,13 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 itemC.setIsFormCompleto(!itemC.isFormCompleto);
+                                itemC.setIsDropDown();
                                 if (itemC.isFormEdicao) {
                                   itemC.setIsFormEdicao(false);
+                                  nomeItem.clear();
+                                  descricaoItem.clear();
+                                  quantidadeItem.clear();
+                                  precoItem.clear();
                                 }
                               },
                               icon: Icon(
@@ -125,7 +139,13 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   Positioned(
                                     child: IconButton.filled(
                                       style: ButtonStyle(
-                                        backgroundColor: itemC.isFormEdicao? MaterialStateProperty.all(Colors.green) : MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
+                                        backgroundColor: itemC.isFormEdicao
+                                            ? MaterialStateProperty.all(
+                                                Colors.green)
+                                            : MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
                                       ),
                                       onPressed: () {
                                         debugPrint(
@@ -153,6 +173,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                 int.parse(prioridadeItem.text);
 
                                             itemC.atualizarItem(itemEditado);
+                                            itemC.setIsDropDown();
                                           } else {
                                             final listaC = context
                                                 .read<ListasController>();
@@ -174,8 +195,10 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                   : _formatarPreco(),
                                               comprado: 0,
                                               indice: 0,
-                                              prioridade: int.parse(prioridadeItem.text),
-                                              idCategoria: int.parse(categoriaItem.text),
+                                              prioridade: int.parse(
+                                                  prioridadeItem.text),
+                                              idCategoria:
+                                                  int.parse(categoriaItem.text),
                                             );
                                             listaC.qtdItensLista(
                                                 itemC.getIdLista,
@@ -189,12 +212,15 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                   ? 'Editado com sucesso !!!'
                                                   : 'Cadastrado com sucesso !!!');
                                           _resetTextController();
-                                          
+
                                           itemC.setIsFormEdicao(false);
+                                          itemC.setIsDropDown();
                                         }
                                       },
-                                      icon:  Icon(
-                                       itemC.isFormEdicao? PhosphorIconsBold.check: PhosphorIconsDuotone.paperPlane,
+                                      icon: Icon(
+                                        itemC.isFormEdicao
+                                            ? PhosphorIconsBold.check
+                                            : PhosphorIconsDuotone.paperPlane,
                                         size: 30,
                                       ),
                                     ),
@@ -209,9 +235,48 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   const EdgeInsets.symmetric(horizontal: 12.0),
                               child: Column(children: [
                                 Row(children: [
-                                   Expanded(
+                                  Expanded(
                                     flex: 5,
-                                    child: CategoriaDropMenu(controle: categoriaItem),
+                                    child: itemC.isDropDown
+                                        ? Row(
+                                            children: [
+                                              const Text('Categoria:'),
+                                              const SizedBox(width: 10),
+                                              InputChip(
+                                                avatar: Icon(
+                                                  Icons.close,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary,
+                                                ),
+                                                labelStyle: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary),
+                                                showCheckmark: false,
+                                                selectedColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                selected: true,
+                                                onSelected: (value) {
+                                                  itemC.setIsDropDown();
+                                                },
+                                                label: Text(
+                                                  categoriaR.getCategorias
+                                                      .firstWhere((element) =>
+                                                          element.id ==
+                                                          itemC
+                                                              .itemParaEdicaoForm!
+                                                              .idCategoria)
+                                                      .nome, overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : CategoriaDropMenu(
+                                            controle: categoriaItem,
+                                            isItemPadrao: false,
+                                          ),
                                   ),
                                   const SizedBox(width: 5),
                                   Expanded(
@@ -250,7 +315,10 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   const SizedBox(width: 5),
                                   Expanded(
                                     flex: 2,
-                                    child: _tipoDeMedida(context),
+                                    child: BotaoSegmentadoMedidada(
+                                      medida: tipoMedida,
+                                      valor: quantidadeItem,
+                                    ),
                                   ),
                                   const SizedBox(width: 5),
                                   Expanded(
@@ -341,39 +409,40 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
     return double.parse(preco);
   }
 
-  _tipoDeMedida(context) {
-    return SegmentedButton<String>(
-      showSelectedIcon: false,
-      style: SegmentedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        selectedBackgroundColor: Theme.of(context).colorScheme.primary,
-        selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
-        padding: const EdgeInsets.all(0)
-      ),
-      segments: const <ButtonSegment<String>>[
-        ButtonSegment<String>(
-          value: 'uni',
-          label: Text('Uni'),
-        ),
-        ButtonSegment<String>(
-          value: 'kg',
-          label: Text('Kg'),
-        ),
-      ],
-      selected: <String>{tipoMedida.text.isEmpty ? 'uni' : tipoMedida.text},
-      onSelectionChanged: (Set<String> newSelection) {
-        setState(() {
-          tipoMedida.text = newSelection.first;
+  // _tipoDeMedida(context) {
+  //   return SegmentedButton<String>(
+  //     showSelectedIcon: false,
+  //     style: SegmentedButton.styleFrom(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+  //         selectedBackgroundColor: Theme.of(context).colorScheme.primary,
+  //         selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
+  //         padding: const EdgeInsets.all(0)),
+  //     segments: const <ButtonSegment<String>>[
+  //       ButtonSegment<String>(
+  //         value: 'uni',
+  //         label: Text('Uni'),
+  //       ),
+  //       ButtonSegment<String>(
+  //         value: 'kg',
+  //         label: Text('Kg'),
+  //       ),
+  //     ],
+  //     selected: <String>{tipoMedida.text.isEmpty ? 'uni' : tipoMedida.text},
+  //     onSelectionChanged: (Set<String> newSelection) {
+  //       setState(() {
+  //         tipoMedida.text = newSelection.first;
 
-          if (tipoMedida.text == 'uni') {
-            double quantidade = quantidadeItem.text.isEmpty ? 1 :
-                double.parse(quantidadeItem.text.replaceAll(',', '.'));
-            quantidadeItem.text = quantidade.toStringAsFixed(0);
-          } else {
-            quantidadeItem.text = '0,${quantidadeItem.text}';
-          }
-        });
-      },
-    );
-  }
+  //         if (tipoMedida.text == 'uni') {
+  //           double quantidade = quantidadeItem.text.isEmpty
+  //               ? 1
+  //               : double.parse(quantidadeItem.text.replaceAll(',', '.'));
+  //           quantidadeItem.text = quantidade.toStringAsFixed(0);
+  //         } else {
+  //           quantidadeItem.text = '0,${quantidadeItem.text}';
+  //         }
+  //       });
+  //     },
+  //   );
+  // }
 }

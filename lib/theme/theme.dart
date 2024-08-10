@@ -43,42 +43,42 @@ class MaterialTheme {
     return theme(lightScheme());
   }
 
-  static ColorScheme lightMediumContrastScheme() {
+  static ColorScheme verdinho() {
     return const ColorScheme(
+      brightness: Brightness.light,
       background: Colors.white,
       onBackground: Colors.black87,
-      brightness: Brightness.light,
-      primary: Color(0xff333f74),
-      surfaceTint: Color(0xff4f5b92),
+      primary: Color(0xff4c662b),
+      surfaceTint: Color(0xff4c662b),
       onPrimary: Color(0xffffffff),
-      primaryContainer: Color(0xff6572aa),
-      onPrimaryContainer: Color(0xffffffff),
-      secondary: Color(0xff333f74),
+      primaryContainer: Color(0xffcdeda3),
+      onPrimaryContainer: Color(0xff102000),
+      secondary: Color(0xff4b662c),
       onSecondary: Color(0xffffffff),
-      secondaryContainer: Color(0xff6572aa),
-      onSecondaryContainer: Color(0xffffffff),
-      tertiary: Color(0xff333f74),
+      secondaryContainer: Color(0xffcceda4),
+      onSecondaryContainer: Color(0xff0f2000),
+      tertiary: Color(0xff456731),
       onTertiary: Color(0xffffffff),
-      tertiaryContainer: Color(0xff6572aa),
-      onTertiaryContainer: Color(0xffffffff),
-      error: Color(0xff8c0009),
+      tertiaryContainer: Color(0xffc5efab),
+      onTertiaryContainer: Color(0xff082100),
+      error: Color(0xffba1a1a),
       onError: Color(0xffffffff),
-      errorContainer: Color(0xffda342e),
-      onErrorContainer: Color(0xffffffff),
-      surface: Color(0xfffbf8ff),
-      onSurface: Color(0xff1b1b21),
-      onSurfaceVariant: Color(0xff41424b),
-      outline: Color(0xff5e5e67),
-      outlineVariant: Color(0xff7a7a83),
+      errorContainer: Color(0xffffdad6),
+      onErrorContainer: Color(0xff410002),
+      surface: Color(0xfff5fafb),
+      onSurface: Color(0xff171d1e),
+      onSurfaceVariant: Color(0xff3f484a),
+      outline: Color(0xff6f797a),
+      outlineVariant: Color(0xffbfc8ca),
       shadow: Color(0xff000000),
       scrim: Color(0xff000000),
-      inverseSurface: Color(0xff2f3036),
-      inversePrimary: Color(0xffb8c4ff),
+      inverseSurface: Color(0xff2b3133),
+      inversePrimary: Color(0xffb2d18a),
     );
   }
 
-  ThemeData lightMediumContrast() {
-    return theme(lightMediumContrastScheme());
+  ThemeData verde() {
+    return theme(verdinho());
   }
 
   static ColorScheme lightHighContrastScheme() {
@@ -86,12 +86,12 @@ class MaterialTheme {
       background: Colors.white,
       onBackground: Colors.black87,
       brightness: Brightness.light,
-      primary: Color(0xff0f1d52),
+      primary: Color.fromARGB(255, 0, 255, 21),
       surfaceTint: Color(0xff4f5b92),
       onPrimary: Color(0xffffffff),
       primaryContainer: Color(0xff333f74),
       onPrimaryContainer: Color(0xffffffff),
-      secondary: Color(0xff0f1d52),
+      secondary: Color.fromARGB(255, 0, 178, 187),
       onSecondary: Color(0xffffffff),
       secondaryContainer: Color(0xff333f74),
       onSecondaryContainer: Color(0xffffffff),

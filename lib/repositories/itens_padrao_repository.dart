@@ -9,7 +9,9 @@ import '../models/item_padrao.module.dart';
 
 class ItensPadraoRepository extends ChangeNotifier {
   final List<ItemPadraoModel> _itensPadrao = [];
+  final List<ItemPadraoModel> _itensPadraoInterface = [];
   List<ItemPadraoModel> get getItensPadrao => _itensPadrao;
+  List<ItemPadraoModel> get getItensPadraoInterface => _itensPadraoInterface;
 
   late Database db;
 
@@ -32,9 +34,11 @@ class ItensPadraoRepository extends ChangeNotifier {
       _itensPadrao.add(ItemPadraoModel.fromMap(itensPadraoMap[i]));
     }
 
+    _itensPadraoInterface.addAll(_itensPadrao);
+
     notifyListeners();
 
-    debugPrint("💁🏻🥇RPI recuperarItensPadrao(): ${_itensPadrao.length}");
+    debugPrint("🐉🦆RPIP recuperarItensPadrao(): ${_itensPadrao.length}");
     return _itensPadrao;
   }
 
@@ -50,7 +54,7 @@ class ItensPadraoRepository extends ChangeNotifier {
     itemPadrao.idItemPadrao = id;
     _itensPadrao.add(itemPadrao);
 
-    debugPrint("💁🏻🥇RPI criarItemPadrao() id: $id");
+    debugPrint("🐉🦆RPIP criarItemPadrao() id: $id");
 
     notifyListeners();
   }
@@ -65,7 +69,7 @@ class ItensPadraoRepository extends ChangeNotifier {
     );
 
     _itensPadrao.remove(itemPadrao);
-    debugPrint("💁🏻🥇RPI excluirItemPadrao() id: ${itemPadrao.idItemPadrao}");
+    debugPrint("🐉🦆RPIP excluirItemPadrao() id: ${itemPadrao.idItemPadrao}");
 
     notifyListeners();
   }
@@ -87,7 +91,27 @@ class ItensPadraoRepository extends ChangeNotifier {
       }
     }
 
-    debugPrint("💁🏻🥇RPI editarItemPadrao() id: ${itemPadrao.idItemPadrao}");
+    debugPrint("🐉🦆RPIP editarItemPadrao() id: ${itemPadrao.idItemPadrao}");
+
+    notifyListeners();
+  }
+
+  filtrarItemPadrao(int idCategoria) async {
+    _itensPadraoInterface.clear();
+    notifyListeners();
+    debugPrint('🐉🦆RPIP id categoria $idCategoria');
+
+    if (idCategoria == 0) {
+      _itensPadraoInterface.addAll(_itensPadrao);
+    } else {
+      for (int i = 0; i < _itensPadrao.length; i++) {
+        if (_itensPadrao[i].idCategoria == idCategoria) {
+          _itensPadraoInterface.add(_itensPadrao[i]);
+        }
+      }
+    }
+
+    debugPrint("🐉🦆RPIP filtrarItemPadrao(): ${_itensPadraoInterface.length}");
 
     notifyListeners();
   }

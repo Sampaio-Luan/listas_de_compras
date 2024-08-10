@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../controllers/itens_controller.dart';
 import '../models/lista.module.dart';
 import '../preferencias_usuario.dart';
+import '../repositories/itens_padrao_repository.dart';
 import '../theme/estilos.dart';
 
 import 'opcoes_modificacao.dart';
@@ -22,11 +23,15 @@ class NLayoutLista extends StatelessWidget {
   Widget build(BuildContext context) {
     final itensController = context.read<ItensController>();
     final preferencias = context.read<PreferenciasUsuarioShared>();
+    final itemRP = context.read<ItensPadraoRepository>();
     return InkWell(
       onTap: () {
         itensController.iniciarController(
             idLista: lista.id, nomeLista: lista.nome);
         preferencias.setUltimaListaVisitada(lista.id);
+        itemRP.filtrarItemPadrao(0);
+        itensController.setIsFormEdicao(false);
+        itensController.setIsFormCompleto(false);
         Navigator.of(context).pop();
       },
       child: Padding(

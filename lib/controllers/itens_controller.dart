@@ -66,6 +66,9 @@ class ItensController extends ChangeNotifier {
   ItemModel? _itemParaEdicaoForm;
   ItemModel? get itemParaEdicaoForm => _itemParaEdicaoForm;
 
+  bool _isDropDown = false;
+  bool get isDropDown => _isDropDown;
+
 //#endregion ================ * END ATRIBUTOS * ================================
 
 //#region =================== * METODOS * ======================================
@@ -441,6 +444,7 @@ listaC.qtdItensLista(_idLista, _itens.length);
 
   setIsFormEdicao(bool value) {
     _isFormEdicao = value;
+    _isDropDown = true;
     debugPrint('🤴🏻🧺CTi set setIsFormEdicao() _isFormEdicao: $_isFormEdicao');
     notifyListeners();
   }
@@ -453,6 +457,11 @@ listaC.qtdItensLista(_idLista, _itens.length);
     debugPrint(
         '🤴🏻🧺CTi habilitarformEdicao() _formEdicao: item:${item.nome}, isFormCompleto: $_isFormCompleto, isFormEdicao $_isFormEdicao');
 
+    notifyListeners();
+  }
+
+  setIsDropDown(){
+    _isDropDown = false;
     notifyListeners();
   }
 
