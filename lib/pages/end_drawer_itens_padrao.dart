@@ -33,15 +33,15 @@ class EndDrawerItensPadrao extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20),
-          bottomRight: Radius.circular(0),
+          topLeft: Radius.circular(20),
+         
         ),
       ),
       width: MediaQuery.of(context).size.width * 0.6,
       elevation: 0,
       child: Column(children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.12,
+          height: MediaQuery.of(context).size.height * 0.13,
           width: MediaQuery.of(context).size.width * 0.6,
           child: DrawerHeader(
             decoration: BoxDecoration(

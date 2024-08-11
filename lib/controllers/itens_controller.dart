@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../constants/const_strings_globais.dart';
 import '../constants/const_tb_item.dart';
 import '../models/item.module.dart';
+import '../repositories/categorias_repository.dart';
 import '../repositories/itens_repository.dart';
 
 import 'listas_controller.dart';
@@ -69,6 +70,12 @@ class ItensController extends ChangeNotifier {
   bool _isDropDown = false;
   bool get isDropDown => _isDropDown;
 
+  bool _isLimparFormulario = false;
+  bool get isLimparFormulario => _isLimparFormulario;
+
+  bool _isUnidade = true;
+  bool get isUnidade => _isUnidade;
+
 //#endregion ================ * END ATRIBUTOS * ================================
 
 //#region =================== * METODOS * ======================================
@@ -118,7 +125,7 @@ class ItensController extends ChangeNotifier {
     _itens.add(item);
     _itensInterface.add(item);
     debugPrint("🤴🏻🧺CTi adicionarItem() item: ${item.nome}");
-    lista.qtdItensLista(_idLista,_itens.length);
+    lista.qtdItensLista(_idLista, _itens.length);
     _calculaTotal();
 
     _calculaPrecoTotalLista();
@@ -224,9 +231,41 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * FILTRAR * ======================================
 
-  filtrarItens(String filtro) async {
-    _filtro = filtro;
-    debugPrint('🤴🏻🧺CTi filtrarItens() _filto: $_filtro');
+  filtrarItens({required String tipoFiltro, required int valor, CategoriasRepository ? categoriaR}) async {
+    if (tipoFiltro == 'prioridade') {
+      switch (valor) {
+        case 0:
+          _filtro = 'Prioridade Alta';
+          break;
+        case 1:
+          _filtro = 'Prioridade Média';
+          break;
+        case 2:
+          _filtro = 'Prioridade Baixa';
+          break;
+        case 3:
+          _filtro = 'Prioridade Nula';
+          break;
+      }
+    } else if (tipoFiltro == 'check') {
+      switch (valor) {
+        case 0:
+          _filtro = 'Sem Check';
+
+          break;
+        case 1:
+          _filtro = 'Com Check';
+          break;
+      }
+    } else if (tipoFiltro == 'categoria') {
+
+      _filtro = categoriaR!.getCategorias.where((element) => element.id == valor).first.nome; 
+    }
+    else{
+      _filtro = '';
+    }
+
+    debugPrint('🤴🏻🧺CTi filtrarItens() _filtro: $_filtro');
 
     _rebuildInterface();
 
@@ -234,15 +273,22 @@ class ItensController extends ChangeNotifier {
       debugPrint('🤴🏻🧺CTi filtrarItens() delay'); // Prints after 1 second.
     });
 
-    if (filtro == 'Comprados') {
+    if (tipoFiltro == 'check') {
       for (int i = 0; i < _itens.length; i++) {
-        if (_itens[i].comprado == 1) {
+        if (_itens[i].comprado == valor) {
           _itensInterface.add(_itens[i]);
         }
       }
-    } else if (filtro == 'A comprar') {
+    } else if (tipoFiltro == 'prioridade') {
       for (int i = 0; i < _itens.length; i++) {
-        if (_itens[i].comprado == 0) {
+        if (_itens[i].prioridade == valor) {
+          _itensInterface.add(_itens[i]);
+        }
+      }
+    }
+    else if (tipoFiltro == 'categoria') {
+      for (int i = 0; i < _itens.length; i++) {
+        if (_itens[i].idCategoria == valor) {
           _itensInterface.add(_itens[i]);
         }
       }
@@ -270,24 +316,39 @@ class ItensController extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 300), () {
       debugPrint('🤴🏻🧺CTi ordenarItens() delay executado');
     });
-    if (ordem == kAz) {
-      _itens.sort((ItemModel a, ItemModel b) =>
-          a.nome.toLowerCase().compareTo(b.nome.toLowerCase()));
-    } else if (ordem == kZa) {
-      _itens.sort((ItemModel a, ItemModel b) =>
-          b.nome.toLowerCase().compareTo(a.nome.toLowerCase()));
-    } else if (ordem == kCaro) {
-      _itens.sort((ItemModel a, ItemModel b) => b.preco.compareTo(a.preco));
-    } else {
-      _itens.sort((ItemModel a, ItemModel b) => a.preco.compareTo(b.preco));
+    switch (ordem) {
+      case kAz:
+        _itens.sort((ItemModel a, ItemModel b) =>
+            a.nome.toLowerCase().compareTo(b.nome.toLowerCase()));
+        break;
+      case kZa:
+        _itens.sort((ItemModel a, ItemModel b) =>
+            b.nome.toLowerCase().compareTo(a.nome.toLowerCase()));
+        break;
+      case kCaro:
+        _itens.sort((ItemModel a, ItemModel b) => b.preco.compareTo(a.preco));
+        break;
+      case kBarato:
+        _itens.sort((ItemModel a, ItemModel b) => a.preco.compareTo(b.preco));
+        break;
+      case kPrioridade:
+        _itens.sort(
+            (ItemModel a, ItemModel b) => a.prioridade.compareTo(b.prioridade));
+        break;
+      case kPadrao:
+        _recuperarItens();
+        break;
     }
-    debugPrint('\n\n');
 
-    for (var i = 0; i < _itens.length; i++) {
-      _itensInterface.add(_itens[i]);
-      debugPrint(
-          '🤴🏻🧺CTi ordenarItens() _ordem ($_ordem):_itens nome${_itens[i].nome} --_itens preço${_itens[i].preco}');
+    debugPrint('\n\n');
+    if (_ordem != kPadrao) {
+      for (var i = 0; i < _itens.length; i++) {
+        _itensInterface.add(_itens[i]);
+        debugPrint(
+            '🤴🏻🧺CTi ordenarItens() _ordem ($_ordem):_itens nome${_itens[i].nome} --_itens preço${_itens[i].preco}');
+      }
     }
+
     debugPrint('\n\n');
 
     notifyListeners();
@@ -350,7 +411,7 @@ class ItensController extends ChangeNotifier {
 
     debugPrint(
         '🤴🏻🧺 CTi excluirItensSelecionados() qtd de itens após: ${_itens.length}');
-listaC.qtdItensLista(_idLista, _itens.length);
+    listaC.qtdItensLista(_idLista, _itens.length);
     _calculaTotal();
     limparListaSelecionados();
   }
@@ -460,8 +521,23 @@ listaC.qtdItensLista(_idLista, _itens.length);
     notifyListeners();
   }
 
-  setIsDropDown(){
+  setIsDropDown() {
     _isDropDown = false;
+    notifyListeners();
+  }
+
+  setIsLimparFormulario(bool value) {
+    _isLimparFormulario = value;
+    debugPrint(
+        '🤴🏻🧺CTi setIsLimparFormulario() _isLimparFormulario: $_isLimparFormulario');
+    notifyListeners();
+    _isLimparFormulario = false;
+    notifyListeners();
+  }
+
+  setIsUnidade(bool value) {
+    _isUnidade = value;
+    debugPrint('🤴🏻🧺CTi setISUnidade = $value');
     notifyListeners();
   }
 

@@ -37,7 +37,7 @@ class _PainelControleState extends State<PainelControle> {
                       avatar: const Icon(PhosphorIconsRegular.x),
                       label: Text(itemC.filtro),
                       onPressed: () {
-                        itemC.filtrarItens('');
+                        itemC.filtrarItens(tipoFiltro: '', valor: 1);
                       })
                   : OpcoesFiltros(itemOuLista: widget.itemOuLista),
             ),

@@ -75,6 +75,7 @@ class Banco {
     {categoriaColumnName: 'Frios', categoriaColumnGrau: 5},
     {categoriaColumnName: 'Higiene', categoriaColumnGrau: 6},
     {categoriaColumnName: 'Limpeza', categoriaColumnGrau: 7},
+    {categoriaColumnName: 'Sem Categoria', categoriaColumnGrau: 8},
   ];
 
   final List<Map<String, int>> itensPadrao = [
@@ -112,7 +113,6 @@ class Banco {
     {'Farofa': 2},
     {'Café': 2},
     {'Chá': 2},
-    {'Leite': 2},
     {'Bolacha': 2},
     {'Biscoito': 2},
 

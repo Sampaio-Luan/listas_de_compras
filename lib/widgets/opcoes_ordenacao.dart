@@ -17,7 +17,9 @@ class OpcoesOrdenacao extends StatelessWidget {
     final itemC = context.read<ItensController>();
     return PopupMenuButton<dynamic>(
         padding: const EdgeInsets.all(0),
-        icon: const Icon( PhosphorIconsRegular.arrowsDownUp,
+        
+        icon: const Icon(
+          PhosphorIconsRegular.arrowsDownUp,
         ),
         position: PopupMenuPosition.under,
         elevation: 1,
@@ -28,7 +30,7 @@ class OpcoesOrdenacao extends StatelessWidget {
                   if (itemOuLista == 'item') {
                     itemC.ordenarItens(kAz);
                   } else {
-                   // listaC.ordenarListas(kAz);
+                    // listaC.ordenarListas(kAz);
                   }
                 },
               ),
@@ -38,7 +40,7 @@ class OpcoesOrdenacao extends StatelessWidget {
                   if (itemOuLista == 'item') {
                     itemC.ordenarItens(kZa);
                   } else {
-                   // listaC.ordenarListas(kZa);
+                    // listaC.ordenarListas(kZa);
                   }
                 },
               ),
@@ -53,7 +55,19 @@ class OpcoesOrdenacao extends StatelessWidget {
                 onTap: () {
                   itemC.ordenarItens(kBarato);
                 },
-              )
+              ),
+              PopupMenuItem(
+                child: _label(context, label: kPrioridade),
+                onTap: () {
+                  itemC.ordenarItens(kPrioridade);
+                },
+              ),
+              PopupMenuItem(
+                child: _label(context, label: kPadrao),
+                onTap: () {
+                  itemC.ordenarItens(kPadrao);
+                },
+              ),
             ]);
   }
 
@@ -77,6 +91,16 @@ class OpcoesOrdenacao extends StatelessWidget {
       ),
       '+ Barato': Icon(
         PhosphorIconsRegular.coins,
+        color: Theme.of(context).colorScheme.primary,
+        size: tamanho,
+      ),
+      'Prioridade': Icon(
+        PhosphorIconsRegular.ranking,
+        color: Theme.of(context).colorScheme.primary,
+        size: tamanho,
+      ),
+      'Padrão': Icon(
+        PhosphorIconsRegular.calendarDots,
         color: Theme.of(context).colorScheme.primary,
         size: tamanho,
       ),

@@ -65,6 +65,14 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
       tipoMedida.text = itemC.itemParaEdicaoForm!.medida;
       prioridadeItem.text = itemC.itemParaEdicaoForm!.prioridade.toString();
       categoriaItem.text = itemC.itemParaEdicaoForm!.idCategoria.toString();
+
+    
+    }
+    if (itemC.isLimparFormulario) {
+      nomeItem.clear();
+      descricaoItem.clear();
+      quantidadeItem.clear();
+      precoItem.clear();
     }
     return BottomSheet(
         backgroundColor: itemC.isFormEdicao
@@ -268,7 +276,9 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                           itemC
                                                               .itemParaEdicaoForm!
                                                               .idCategoria)
-                                                      .nome, overflow: TextOverflow.ellipsis,
+                                                      .nome,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
@@ -291,7 +301,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   ),
                                 ]),
                                 Row(children: [
-                                  tipoMedida.text == 'uni'
+                                  itemC.isUnidade
                                       ? Expanded(
                                           flex: 3,
                                           child: cf.apenasNumeros(

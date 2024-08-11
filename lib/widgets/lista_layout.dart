@@ -32,6 +32,7 @@ class NLayoutLista extends StatelessWidget {
         itemRP.filtrarItemPadrao(0);
         itensController.setIsFormEdicao(false);
         itensController.setIsFormCompleto(false);
+        itensController.setIsLimparFormulario(true);
         Navigator.of(context).pop();
       },
       child: Padding(

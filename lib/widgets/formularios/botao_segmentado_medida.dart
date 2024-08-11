@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import '../../controllers/itens_controller.dart';
+
 class BotaoSegmentadoMedidada extends StatefulWidget {
   final TextEditingController medida;
   final TextEditingController valor;
-  const BotaoSegmentadoMedidada({super.key, required this.medida, required this.valor});
+  const BotaoSegmentadoMedidada(
+      {super.key, required this.medida, required this.valor});
 
   @override
   State<BotaoSegmentadoMedidada> createState() =>
@@ -21,6 +26,10 @@ class _BotaoSegmentadoMedidadaState extends State<BotaoSegmentadoMedidada> {
 
   @override
   Widget build(BuildContext context) {
+    final itensController = context.read<ItensController>();
+
+   
+
     return SegmentedButton<String>(
         showSelectedIcon: false,
         style: SegmentedButton.styleFrom(
@@ -41,19 +50,22 @@ class _BotaoSegmentadoMedidadaState extends State<BotaoSegmentadoMedidada> {
         ],
         selected: <String>{widget.medida.text},
         onSelectionChanged: (Set<String> newSelection) {
-          debugPrint('SegmentedButton unidade de medida: $newSelection');
-
           setState(() {
             widget.medida.text = newSelection.first;
-            if (widget.medida.text == 'uni') {
-              double quantidade = widget.valor.text.isEmpty
-                  ? 1
-                  : double.parse(widget.valor.text.replaceAll(',', '.'));
-              widget.valor.text = quantidade.toStringAsFixed(0);
-            } else {
-              widget.valor.text = '0,${widget.valor.text}';
-            }
-          });
+         
+
+          if (widget.medida.text == 'uni') {
+            double quantidade = widget.valor.text.isEmpty
+                ? 1
+                : double.parse(widget.valor.text.replaceAll(',', '.'));
+            widget.valor.text = quantidade.toStringAsFixed(0);
+            itensController.setIsUnidade(true);
+          } else {
+            widget.valor.text = '0,${widget.valor.text}';
+            itensController.setIsUnidade(false);
+          }
+          
+          debugPrint('SegmentedButton unidade de medida: ${widget.medida.text}'); });
         });
   }
 }

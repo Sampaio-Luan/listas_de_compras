@@ -9,7 +9,7 @@ import '../../repositories/itens_padrao_repository.dart';
 class CategoriaDropMenu extends StatelessWidget {
   final TextEditingController controle;
   final bool isItemPadrao;
-   CategoriaDropMenu(
+  CategoriaDropMenu(
       {required this.controle, required this.isItemPadrao, super.key});
 
   final MultiSelectController _controller = MultiSelectController();
@@ -18,23 +18,20 @@ class CategoriaDropMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoriaR = context.watch<CategoriasRepository>();
     final itemRP = context.read<ItensPadraoRepository>();
-    final ValueItem selecionado;
+
     List<ValueItem> opcoes = [];
+    
     if (isItemPadrao) {
       opcoes.add(const ValueItem(label: 'Todos', value: 0));
-    } else {
-      opcoes.add(const ValueItem(label: 'Sem Categoria', value: 0));
     }
 
     for (var element in categoriaR.getCategorias) {
       opcoes.add(ValueItem(label: element.nome, value: element.id));
     }
 
-    // if (widget.controle.text.isNotEmpty) {
-    //   int valor = int.parse(widget.controle.text);
-    //   selecionado = opcoes.firstWhere((element) => element.value == valor);
-    //   debugPrint('if selecionado $selecionado');
-    // }
+    if (controle.text.isEmpty) {
+      controle.text = '0';
+    }
 
     // _controller.value= opcoes[0].value;
     return MultiSelectDropDown(
@@ -58,7 +55,6 @@ class CategoriaDropMenu extends StatelessWidget {
           debugPrint(options.toString());
           controle.text = options[0].value.toString();
           debugPrint('controle: ${controle.text}');
-         
         }
 
         if (isItemPadrao) {

@@ -12,6 +12,7 @@ import '../theme/estilos.dart';
 import '../widgets/formularios/form_item_modal.dart';
 import '../widgets/formularios/formulario_item.dart';
 import '../widgets/item_layout.dart';
+import '../widgets/opcoes_finalizacao.dart';
 import '../widgets/painel_controle.dart';
 
 import 'drawer_lista.dart';
@@ -79,7 +80,7 @@ class _ItensPageState extends State<ItensPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
-                      '📝\nAinda sem itens em " ${ctrl.nomeLista} " , cadastre algum no botão de adcionar no canto inferior direito',
+                      '📝\nAinda sem itens em " ${ctrl.nomeLista} " , cadastre algum digitando o nome do item e apertando em enviar, ou use o menu de itens padrão para adicionar itens de forma rápida.',
                       textAlign: TextAlign.center,
                       style: Estilos().corpoColor(context, tamanho: 'g'),
                     ),
@@ -210,12 +211,14 @@ class _ItensPageState extends State<ItensPage> {
             onPressed: () {
               controle.setIsPesquisar = !controle.isPesquisar;
             }),
+            const OpcoesFinalizacao(),
              Builder(
             builder: (context) => IconButton(
               icon: const Icon(PhosphorIconsRegular.basket),
               onPressed: () => Scaffold.of(context).openEndDrawer(),
             ),
-          )
+          ),
+          
       ],
       title: Text(
         controle.nomeLista,
@@ -253,7 +256,7 @@ class _ItensPageState extends State<ItensPage> {
             controle.setIsPesquisar = !controle.isPesquisar;
 
             pesquisarPorItem.clear();
-            controle.filtrarItens('');
+            controle.filtrarItens(tipoFiltro: '', valor: 0);
           }),
       title: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18.0),

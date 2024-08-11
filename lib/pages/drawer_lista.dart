@@ -38,7 +38,7 @@ class _DrawerListasState extends State<DrawerListas> {
 
       child: Column(children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.15,
+          height: MediaQuery.of(context).size.height * 0.17,
           child: DrawerHeader(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primaryContainer,
@@ -57,24 +57,21 @@ class _DrawerListasState extends State<DrawerListas> {
                         Text('Versão 1.0.0',
                             style: Estilos().sutil(context, tamanho: 12))
                       ]),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primary.withAlpha(70),
-                      radius: 20,
-                      child: IconButton(
-                        onPressed: () {
-                          preferencias.mudarTema();
-                        },
-                        icon: Theme.of(context).brightness == Brightness.dark
-                            ? const Icon(PhosphorIconsFill.lamp, size: 24)
-                            : Icon(
-                                PhosphorIconsFill.lampPendant,
-                                size: 24,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                      ),
+                  CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary.withAlpha(70),
+                    radius: 20,
+                    child: IconButton(
+                      onPressed: () {
+                        preferencias.mudarTema();
+                      },
+                      icon: Theme.of(context).brightness == Brightness.dark
+                          ? const Icon(PhosphorIconsFill.lamp, size: 24)
+                          : Icon(
+                              PhosphorIconsFill.lampPendant,
+                              size: 24,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                     ),
                   )
                 ]),

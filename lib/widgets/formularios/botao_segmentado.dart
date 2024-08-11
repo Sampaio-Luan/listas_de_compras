@@ -38,7 +38,8 @@ class _BotaoSegmentadoState extends State<BotaoSegmentado> {
               prioridades.nomePrioridade(int.parse(widget.prioridadeForm.text)),
               textAlign: TextAlign.start,
               style: TextStyle(
-                color: prioridades.prioridadeColor[int.parse(widget.prioridadeForm.text)],
+                color: prioridades
+                    .prioridadeColor[int.parse(widget.prioridadeForm.text)],
                 fontSize: 12,
               ),
             ),
@@ -49,7 +50,8 @@ class _BotaoSegmentadoState extends State<BotaoSegmentado> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              selectedBackgroundColor: prioridades.prioridadeColor[int.parse( widget.prioridadeForm.text)],
+              selectedBackgroundColor: prioridades
+                  .prioridadeColor[int.parse(widget.prioridadeForm.text)],
               selectedForegroundColor: Theme.of(context).colorScheme.onPrimary,
             ),
             segments: const <ButtonSegment<int>>[
@@ -70,7 +72,7 @@ class _BotaoSegmentadoState extends State<BotaoSegmentado> {
                 label: Text('N'),
               ),
             ],
-            selected: <int>{int.parse( widget.prioridadeForm.text)},
+            selected: <int>{int.parse(widget.prioridadeForm.text)},
             onSelectionChanged: (newSelection) {
               setState(() {
                 widget.prioridadeForm.text = newSelection.first.toString();
