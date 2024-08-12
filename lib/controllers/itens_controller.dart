@@ -46,6 +46,9 @@ class ItensController extends ChangeNotifier {
   UnmodifiableListView<ItemModel> get itensPesquisados =>
       UnmodifiableListView(_itensPesquisados);
 
+  final Map<int, List<ItemModel>> _itemPorCategoria = {};
+  Map<int, List<ItemModel>> get itemPorCategoria => _itemPorCategoria;
+
   String _filtro = '';
   String get filtro => _filtro;
 
@@ -108,6 +111,7 @@ class ItensController extends ChangeNotifier {
     _itensInterface.addAll(_itens);
     debugPrint(
         "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
+       await agruparPorCategoria();
 
     notifyListeners();
     _calculaTotal();
@@ -231,7 +235,10 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * FILTRAR * ======================================
 
-  filtrarItens({required String tipoFiltro, required int valor, CategoriasRepository ? categoriaR}) async {
+  filtrarItens(
+      {required String tipoFiltro,
+      required int valor,
+      CategoriasRepository? categoriaR}) async {
     if (tipoFiltro == 'prioridade') {
       switch (valor) {
         case 0:
@@ -258,10 +265,11 @@ class ItensController extends ChangeNotifier {
           break;
       }
     } else if (tipoFiltro == 'categoria') {
-
-      _filtro = categoriaR!.getCategorias.where((element) => element.id == valor).first.nome; 
-    }
-    else{
+      _filtro = categoriaR!.getCategorias
+          .where((element) => element.id == valor)
+          .first
+          .nome;
+    } else {
       _filtro = '';
     }
 
@@ -285,8 +293,7 @@ class ItensController extends ChangeNotifier {
           _itensInterface.add(_itens[i]);
         }
       }
-    }
-    else if (tipoFiltro == 'categoria') {
+    } else if (tipoFiltro == 'categoria') {
       for (int i = 0; i < _itens.length; i++) {
         if (_itens[i].idCategoria == valor) {
           _itensInterface.add(_itens[i]);
@@ -542,6 +549,24 @@ class ItensController extends ChangeNotifier {
   }
 
 //#endregion ================ * END FORMULARIO * ===============================
+
+//#region =================== * TEM POR CATEGORIA * ============================
+  agruparPorCategoria() {
+
+    for (final element in _itens) {
+      if (!_itemPorCategoria.containsKey(element.idCategoria)) {
+        _itemPorCategoria[element.idCategoria] = [];
+      }
+      _itemPorCategoria[element.idCategoria]!.add(element);
+    }
+    debugPrint('🤴🏻🧺CTi agruparPorCategoria() ${_itemPorCategoria.length }');
+
+    notifyListeners();
+
+    return _itemPorCategoria;
+  }
+
+//#endregion ================ * END TEM POR CATEGORIA * ========================
 
 //#endregion ================ * END INTERFACE * ================================
 

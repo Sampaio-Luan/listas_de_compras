@@ -55,6 +55,7 @@ dependencies:
   percent_indicator: ^4.2.3
   dropdown_search: ^5.0.6
   multi_dropdown: ^2.1.4
+  grouped_list: ^6.0.0
 
 dev_dependencies:
   flutter_test:
