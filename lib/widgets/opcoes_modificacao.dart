@@ -4,22 +4,32 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/listas_controller.dart';
+import '../models/categoria.module.dart';
 import '../models/item.module.dart';
+import '../models/item_padrao.module.dart';
 import '../models/lista.module.dart';
+import '../repositories/categorias_repository.dart';
+import '../repositories/itens_padrao_repository.dart';
 import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
+import 'formularios/form_categoria.dart';
+import 'formularios/form_item_padrao.dart';
 import 'formularios/formulario_item.dart';
 import 'formularios/formulario_lista.dart';
 
 class OpcoesModificacao extends StatefulWidget {
   final ListaModel? lista;
   final ItemModel? item;
+  final CategoriaModel? categoria;
+  final ItemPadraoModel? itemPadrao;
 
   const OpcoesModificacao({
     super.key,
     this.lista,
     this.item,
+    this.categoria,
+    this.itemPadrao,
   });
 
   @override
@@ -29,13 +39,19 @@ class OpcoesModificacao extends StatefulWidget {
 class _OpcoesModificacaoState extends State<OpcoesModificacao> {
   late ListaModel lista;
   late ItemModel item;
+  late CategoriaModel categoria;
+  late ItemPadraoModel itemPadrao;
 
   @override
   void initState() {
     if (widget.item != null) {
       item = widget.item!;
-    } else {
+    } else if (widget.lista != null) {
       lista = widget.lista!;
+    } else if (widget.categoria != null) {
+      categoria = widget.categoria!;
+    } else {
+      itemPadrao = widget.itemPadrao!;
     }
     super.initState();
   }
@@ -44,11 +60,12 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
   Widget build(BuildContext context) {
     final listaController = context.watch<ListasController>();
     final itemR = context.watch<ItensRepository>();
+    final itemPadraoR = context.watch<ItensPadraoRepository>();
+    final categoriaR = context.watch<CategoriasRepository>();
     return PopupMenuButton<dynamic>(
       padding: const EdgeInsets.all(0),
       icon: Icon(
         PhosphorIconsRegular.pencil,
-
         color: Theme.of(context).colorScheme.primary,
       ),
       position: PopupMenuPosition.under,
@@ -60,18 +77,30 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return widget.item == null
-                      ? FormularioLista(lista: lista)
-                      : FormularioItem(item: item, idLista: null);
+                  if (widget.item != null) {
+                    return FormularioItem(item: item, idLista: null);
+                  } else if (widget.lista != null) {
+                    return FormularioLista(lista: lista);
+                  } else if (widget.categoria != null) {
+                    return FormularioCategoria(categoria: categoria);
+                  } else {
+                    return FormItemPadrao(itemPadrao: itemPadrao);
+                  }
                 });
           },
         ),
         PopupMenuItem(
           child: _label(context, label: 'Excluir'),
           onTap: () {
-            widget.item != null
-                ? itemR.excluirItem(item)
-                : listaController.excluirLista(lista);
+            if (widget.item != null) {
+              itemR.excluirItem(item);
+            } else if (widget.lista != null) {
+              listaController.excluirLista(lista);
+            } else if (widget.categoria != null) {
+              categoriaR.excluirCategorias(categoria);
+            } else {
+              itemPadraoR.excluirItemPadrao(itemPadrao);
+            }
           },
         ),
       ],

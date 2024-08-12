@@ -28,16 +28,19 @@ class CategoriaDropMenu extends StatelessWidget {
     for (var element in categoriaR.getCategorias) {
       opcoes.add(ValueItem(label: element.nome, value: element.id));
     }
+    
 
     if (controle.text.isEmpty) {
-      controle.text = '0';
+      controle.text = categoriaR.getCategorias.where((element) => element.id == 9).first.id.toString();
     }
 
     // _controller.value= opcoes[0].value;
+   int i = opcoes.indexWhere((element) => element.value == int.parse(controle.text));
+   debugPrint('valor do index: $i');
     return MultiSelectDropDown(
       //searchEnabled: true,
       //searchLabel: 'Pesquisar',
-      selectedOptions: [opcoes[int.parse(controle.text)]],
+      selectedOptions: [opcoes[i]],
       controller: _controller,
       hintPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),

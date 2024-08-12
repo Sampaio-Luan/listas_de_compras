@@ -68,7 +68,10 @@ class ItensPadraoRepository extends ChangeNotifier {
       whereArgs: [itemPadrao.idItemPadrao],
     );
 
-    _itensPadrao.remove(itemPadrao);
+    _itensPadraoInterface.remove(itemPadrao);
+    _itensPadrao.clear();
+    notifyListeners();
+    _itensPadrao.addAll(_itensPadraoInterface);
     debugPrint("🐉🦆RPIP excluirItemPadrao() id: ${itemPadrao.idItemPadrao}");
 
     notifyListeners();
