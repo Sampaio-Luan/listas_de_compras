@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../models/categoria.module.dart';
 import '../models/item.module.dart';
 import '../models/item_padrao.module.dart';
 import '../models/lista.module.dart';
+import '../preferencias_usuario.dart';
 import '../repositories/categorias_repository.dart';
 import '../repositories/itens_padrao_repository.dart';
 import '../repositories/itens_repository.dart';
@@ -60,8 +62,10 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
   Widget build(BuildContext context) {
     final listaController = context.watch<ListasController>();
     final itemR = context.watch<ItensRepository>();
+    final itensController = context.read<ItensController>();
     final itemPadraoR = context.watch<ItensPadraoRepository>();
     final categoriaR = context.watch<CategoriasRepository>();
+    final preferencias = context.watch<PreferenciasUsuarioShared>();
     return PopupMenuButton<dynamic>(
       padding: const EdgeInsets.all(0),
       icon: Icon(
@@ -69,6 +73,8 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
         color: Theme.of(context).colorScheme.primary,
       ),
       position: PopupMenuPosition.under,
+      constraints: BoxConstraints.tightFor(
+            width: MediaQuery.of(context).size.width * 0.3),
       elevation: 1,
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -95,6 +101,11 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
             if (widget.item != null) {
               itemR.excluirItem(item);
             } else if (widget.lista != null) {
+              int i = listaController.listas.indexOf(widget.lista!);
+              ListaModel l = listaController.listas[i];
+              itensController.iniciarController(
+                  idLista: l.id, nomeLista: l.nome);
+              preferencias.setUltimaListaVisitada(l.id);
               listaController.excluirLista(lista);
             } else if (widget.categoria != null) {
               categoriaR.excluirCategorias(categoria);

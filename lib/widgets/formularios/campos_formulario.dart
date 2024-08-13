@@ -27,7 +27,6 @@ class CamposFormulario with ValidacoesMixin {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      
       maxLines: qtdLinha,
       validator: valida
           ? (value) => preenchimentoObrigatorio(input: value, message: null)
@@ -35,29 +34,25 @@ class CamposFormulario with ValidacoesMixin {
     );
   }
 
-    linhaItem(
+  linhaItem(
     context, {
     required TextEditingController controle,
-
   }) {
     return TextFormField(
-      controller: controle,
-      
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-        hintText: 'Digite o nome do item' ,
-        hintStyle: Estilos().sutil(context, tamanho: 15),
-        labelText: 'Item',
-        labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
+        controller: controle,
+        decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+          hintText: 'Digite o nome do item',
+          hintStyle: Estilos().sutil(context, tamanho: 15),
+          labelText: 'Item',
+          labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
         ),
-      ),
-      
-      
-      validator: (value) => preenchimentoObrigatorio(input: value, message: null)
-         
-    );
+        validator: (value) =>
+            preenchimentoObrigatorio(input: value, message: null));
   }
 
   apenasNumeros(
@@ -68,7 +63,6 @@ class CamposFormulario with ValidacoesMixin {
     required bool valida,
   }) {
     return TextFormField(
-      
       controller: controle,
       decoration: InputDecoration(
         contentPadding: cPadding,
@@ -159,6 +153,48 @@ class CamposFormulario with ValidacoesMixin {
         debugPrint(controle.text);
       },
     );
+  }
+
+  data(
+    context, {
+    required TextEditingController controle,
+    required String label,
+    required bool valida,
+  }) {
+    return TextFormField(
+      controller: controle,
+      readOnly: true,
+      onTap: () => _selectDate(context, controle),
+      decoration: InputDecoration(
+        contentPadding: cPadding,
+        hintStyle: Estilos().sutil(context, tamanho: 15),
+        labelText: label,
+        labelStyle: Estilos().corpoColor(context, tamanho: 'p'),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      validator: valida
+          ? (value) => preenchimentoObrigatorio(input: value, message: null)
+          : null,
+    );
+  }
+
+  DateTime _startDate = DateTime.now();
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controle) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _startDate,
+      firstDate: DateTime.now().add(const Duration(days: 0)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (picked != null) {
+      _startDate = picked;
+
+      controle.text = DateFormat.yMd('pt_BR').format(picked).toString();
+    }
   }
 }
 
