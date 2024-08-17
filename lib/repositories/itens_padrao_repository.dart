@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../constants/const_tb_categorias.dart';
+import '../constants/const_tb_item.dart';
 import '../constants/const_tb_item_padrao.dart';
 import '../database/banco.dart';
 import '../models/item_padrao.module.dart';
@@ -118,4 +119,29 @@ class ItensPadraoRepository extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  int val = 8;
+  corrijarJ() async {
+    for (int i = 9; i > 0; i--) {
+      db = await Banco.instancia.database;
+
+      await db.update(
+        itemPadraoTableName,
+        {itemPadraoColumnCategoriaId: i},
+        where: '$itemPadraoColumnCategoriaId = ?',
+        whereArgs: [val],
+      );
+
+      await db.update(
+        itemTableName,
+        {itemColumnCategoriaId: i},
+        where: '$itemColumnCategoriaId = ?',
+        whereArgs: [val],
+      );
+    debugPrint('🐉🦆RPIP corrigirJ() val:$val i: $i');
+      val--;
+    }
+    
+  }
+  
 }

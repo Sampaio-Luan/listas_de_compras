@@ -267,7 +267,7 @@ class _ItensPageState extends State<ItensPage> {
             onPressed: () {
               controle.setIsPesquisar = !controle.isPesquisar;
             }),
-        const OpcoesFinalizacao(),
+         OpcoesFinalizacao(),
         Builder(
           builder: (context) => IconButton(
             icon: const Icon(PhosphorIconsRegular.basket),
@@ -429,7 +429,7 @@ class _ItensPageState extends State<ItensPage> {
         child: Text(
           categoriaR.getCategorias
               .where((element) => true)
-              .firstWhere((element) => element.id == value as int)
+              .firstWhere((element) => element.id  == value as int)
               .nome,
           textAlign: TextAlign.center,
           style: Estilos().tituloColor(context, tamanho: 'm'),

@@ -43,7 +43,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
   @override
   void initState() {
     prioridadeItem.text = '3';
-    categoriaItem.text = '0';
+    categoriaItem.text = '9';
     tipoMedida.text = 'uni';
     super.initState();
   }

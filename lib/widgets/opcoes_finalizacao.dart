@@ -5,17 +5,21 @@ import 'package:provider/provider.dart';
 
 import '../controllers/itens_controller.dart';
 import '../preferencias_usuario.dart';
+import '../repositories/itens_padrao_repository.dart';
 import '../theme/estilos.dart';
 
+import 'feedback/avisos.dart';
 import 'formularios/form_historico.dart';
 
 class OpcoesFinalizacao extends StatelessWidget {
-  const OpcoesFinalizacao({super.key});
+  final Avisos avisos = Avisos();
+   OpcoesFinalizacao({super.key});
 
   @override
   Widget build(BuildContext context) {
     final itemC = context.read<ItensController>();
     final preferenciaR = context.watch<PreferenciasUsuarioShared>();
+    //final j = context.watch<ItensPadraoRepository>();
 
     return PopupMenuButton<dynamic>(
         padding: const EdgeInsets.all(0),
@@ -33,6 +37,8 @@ class OpcoesFinalizacao extends StatelessWidget {
                     icone: 'Salvar',
                     preferenciaRp: preferenciaR),
                 onTap: () {
+                 // j.corrijarJ();
+                  //avisos.informativo(context, 'Salvar no historico');
                   showDialog(
                       context: context,
                       builder: (context) => const FormHistorico(
