@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/historico.module.dart';
 import '../models/item_historico.module.dart';
 import '../repositories/itens_historico_repository.dart';
+import '../theme/estilos.dart';
 
 class VisualizarItensHistorico extends StatefulWidget {
   final HistoricoModel historico;
@@ -13,22 +14,22 @@ class VisualizarItensHistorico extends StatefulWidget {
   const VisualizarItensHistorico({super.key, required this.historico});
 
   @override
-  State<VisualizarItensHistorico> createState() => _VisualizarItensHistoricoState();
+  State<VisualizarItensHistorico> createState() =>
+      _VisualizarItensHistoricoState();
 }
 
 class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
   final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
   final ItensHistoricoRepository itensHR = ItensHistoricoRepository();
   final itensHistorico = [];
+  //final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
-    
     super.initState();
     _preencher();
   }
 
   _preencher() async {
-    
     final itemH = await itensHR.recuperarItensHistoricos(widget.historico.id);
     setState(() {
       itensHistorico.clear();
@@ -40,48 +41,76 @@ class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
   Widget build(BuildContext context) {
     //final itensHR = context.read<ItensHistoricoRepository>();
     return Scaffold(
-      appBar: AppBar(title: Text(widget.historico.titulo), centerTitle: true),
-      body:  itensHistorico.isEmpty ? const Center(child: CircularProgressIndicator()) :
-      Column(mainAxisSize: MainAxisSize.min, children: [
+      appBar: AppBar(
+        title: Text(widget.historico.titulo),
+        centerTitle: true,
+       backgroundColor:
+              Theme.of(context).colorScheme.brightness == Brightness.light
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.primaryContainer,
+          foregroundColor:
+              Theme.of(context).colorScheme.brightness == Brightness.light
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
+      body: itensHistorico.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Column(mainAxisSize: MainAxisSize.min, children: [
               _cabecelho(context),
               Expanded(
-                child: ListView.separated(
-                  // itemCount: itemHR.getItensHistoricos.length,
-                  itemCount: itensHistorico.length,
-                  itemBuilder: (context, index) {
-                    return _item(context, itemH: itensHistorico[index]);
+                child: Scrollbar(
+                  // controller: _scrollController,
+                  thumbVisibility: true,
+                  thickness: 5,
+                  radius: const Radius.circular(20),
+                  //trackVisibility: true,
 
-                    //_item(context,itemH: itemHR.getItensHistoricos[index]);
-                  },
-                  separatorBuilder: (itemContext, index) => const Divider(
-                    height: 0,
+                  child: ListView.separated(
+                    // itemCount: itemHR.getItensHistoricos.length,
+                    itemCount: itensHistorico.length,
+                    itemBuilder: (context, index) {
+                      return _item(context, itemH: itensHistorico[index]);
+
+                      //_item(context,itemH: itemHR.getItensHistoricos[index]);
+                    },
+                    separatorBuilder: (itemContext, index) => const Divider(
+                      height: 0,
+                    ),
                   ),
                 ),
               ),
               _rodape(context),
-            ])
-      
+            ]),
     );
   }
 
   _texto(context, String texto) => Text(
         texto,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
+        style: Estilos().tituloColor(context, tamanho: 'p'),
+        textAlign: TextAlign.center,
       );
 
   _cabecelho(context) {
     return Container(
-      color: Theme.of(context).colorScheme.primary,
+      color: Theme.of(context).colorScheme.primaryContainer,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(children: [
-          Expanded(flex: 2, child: _texto(context, 'ITEM')),
-          Expanded(child: _texto(context, 'QTD')),
-          Expanded(child: _texto(context, 'UDM')),
-          Expanded(child: _texto(context, 'PREÇO')),
-          Expanded(child: _texto(context, 'TOTAL')),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+          _texto(context, 'ITEM'),
+          
+          _texto(context, 'QTD'),
+          _texto(context, 'R\$'),
+          _texto(context, 'TOTAL'),
+          // Expanded(
+          //   flex: 3,
+          //   child: Text(
+          //     'Total',
+          //     style: Estilos().tituloColor(context, tamanho: 'p'),
+          //     //textAlign: TextAlign.center,
+          //   ),
+          // ),
         ]),
       ),
     );
@@ -93,28 +122,31 @@ class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(children: [
-          Expanded(flex: 2, child: Text(itemH.nome)),
+          Expanded(flex: 4, child: Text(itemH.nome)),
           Expanded(
-            child: Text(
-              itemH.medida == 'uni'
-                  ? itemH.quantidade.toStringAsFixed(0)
-                  : itemH.quantidade.toStringAsFixed(3),
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                itemH.medida == 'uni'
+                    ? itemH.quantidade.toStringAsFixed(0)
+                    : itemH.quantidade.toStringAsFixed(3),
+              ),
             ),
           ),
           Expanded(
-            child: Text(
-              itemH.medida,
-            ),
-          ),
-          Expanded(
+            flex: 2,
             child: Text(
               itemH.preco.toString(),
             ),
           ),
           Expanded(
-            child: Text(
-              formatter.format(
-                itemH.preco * itemH.quantidade,
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 13.0),
+              child: Text(
+                itemH.total.toStringAsFixed(2),
+                //textAlign: TextAlign.end,
               ),
             ),
           ),
@@ -125,15 +157,22 @@ class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
 
   _rodape(context) {
     return Container(
-      color: Theme.of(context).colorScheme.primaryContainer.withAlpha(100),
-      child: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(children: [
-          Expanded(flex: 2, child: Text('ITEM')),
-          Expanded(child: Text('QTD')),
-          Expanded(child: Text('UDM')),
-          Expanded(child: Text('R\$')),
-          Expanded(child: Text('TOTAL')),
+      color: Theme.of(context).colorScheme.primaryContainer.withAlpha(150),
+      height: 50,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(
+            '${itensHistorico.length} itens',
+            style: Estilos().tituloColor(context, tamanho: 'p'),
+            textAlign: TextAlign.end,
+          ),
+          Text(
+            formatter.format(widget.historico.total),
+            style: Estilos().tituloColor(context, tamanho: 'p'),
+            textAlign: TextAlign.end,
+          ),
         ]),
       ),
     );

@@ -7,12 +7,13 @@ class HistoricoModel {
   String descricao;
   double total;
 
-  HistoricoModel(
-      {required this.id,
-      required this.data,
-      required this.titulo,
-      required this.descricao,
-      required this.total});
+  HistoricoModel({
+    required this.id,
+    required this.data,
+    required this.titulo,
+    required this.descricao,
+    required this.total,
+  });
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};

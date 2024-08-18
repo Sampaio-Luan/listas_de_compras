@@ -5,7 +5,8 @@ class MaterialTheme {
 
   const MaterialTheme(this.textTheme);
 
-  static ColorScheme lightScheme() {
+//#region =============== INDIGO ==============================================
+  static ColorScheme indigoClaro() {
     return const ColorScheme(
       background: Colors.white,
       onBackground: Colors.black87,
@@ -39,87 +40,11 @@ class MaterialTheme {
     );
   }
 
-  ThemeData light() {
-    return theme(lightScheme());
+  ThemeData lightIndigo() {
+    return theme(indigoClaro());
   }
 
-  static ColorScheme verdinho() {
-    return const ColorScheme(
-      brightness: Brightness.light,
-      background: Colors.white,
-      onBackground: Colors.black87,
-      primary: Color(0xff4c662b),
-      surfaceTint: Color(0xff4c662b),
-      onPrimary: Color(0xffffffff),
-      primaryContainer: Color(0xffcdeda3),
-      onPrimaryContainer: Color(0xff102000),
-      secondary: Color(0xff4b662c),
-      onSecondary: Color(0xffffffff),
-      secondaryContainer: Color(0xffcceda4),
-      onSecondaryContainer: Color(0xff0f2000),
-      tertiary: Color(0xff456731),
-      onTertiary: Color(0xffffffff),
-      tertiaryContainer: Color(0xffc5efab),
-      onTertiaryContainer: Color(0xff082100),
-      error: Color(0xffba1a1a),
-      onError: Color(0xffffffff),
-      errorContainer: Color(0xffffdad6),
-      onErrorContainer: Color(0xff410002),
-      surface: Color(0xfff5fafb),
-      onSurface: Color(0xff171d1e),
-      onSurfaceVariant: Color(0xff3f484a),
-      outline: Color(0xff6f797a),
-      outlineVariant: Color(0xffbfc8ca),
-      shadow: Color(0xff000000),
-      scrim: Color(0xff000000),
-      inverseSurface: Color(0xff2b3133),
-      inversePrimary: Color(0xffb2d18a),
-    );
-  }
-
-  ThemeData verde() {
-    return theme(verdinho());
-  }
-
-  static ColorScheme lightHighContrastScheme() {
-    return const ColorScheme(
-      background: Colors.white,
-      onBackground: Colors.black87,
-      brightness: Brightness.light,
-      primary: Color.fromARGB(255, 0, 255, 21),
-      surfaceTint: Color(0xff4f5b92),
-      onPrimary: Color(0xffffffff),
-      primaryContainer: Color(0xff333f74),
-      onPrimaryContainer: Color(0xffffffff),
-      secondary: Color.fromARGB(255, 0, 178, 187),
-      onSecondary: Color(0xffffffff),
-      secondaryContainer: Color(0xff333f74),
-      onSecondaryContainer: Color(0xffffffff),
-      tertiary: Color(0xff0f1d52),
-      onTertiary: Color(0xffffffff),
-      tertiaryContainer: Color(0xff333f74),
-      onTertiaryContainer: Color(0xffffffff),
-      error: Color(0xff4e0002),
-      onError: Color(0xffffffff),
-      errorContainer: Color(0xff8c0009),
-      onErrorContainer: Color(0xffffffff),
-      surface: Color(0xfffbf8ff),
-      onSurface: Color(0xff000000),
-      onSurfaceVariant: Color(0xff22232b),
-      outline: Color(0xff41424b),
-      outlineVariant: Color(0xff41424b),
-      shadow: Color(0xff000000),
-      scrim: Color(0xff000000),
-      inverseSurface: Color(0xff2f3036),
-      inversePrimary: Color(0xffe9ebff),
-    );
-  }
-
-  ThemeData lightHighContrast() {
-    return theme(lightHighContrastScheme());
-  }
-
-  static ColorScheme darkScheme() {
+  static ColorScheme indigoEscuro() {
     return const ColorScheme(
       background: Color.fromARGB(255, 26, 26, 26),
       onBackground: Colors.white70,
@@ -153,86 +78,248 @@ class MaterialTheme {
     );
   }
 
-  ThemeData dark() {
-    return theme(darkScheme());
+  ThemeData darkIndigo() {
+    return theme(indigoEscuro());
   }
 
-  static ColorScheme darkMediumContrastScheme() {
+//#endregion ============ END INDIGO ==========================================
+
+//#region =============== VERDE ===============================================
+  static ColorScheme verdeClaro() {
     return const ColorScheme(
-      background: Colors.black,
-      onBackground: Colors.white70,
-      brightness: Brightness.dark,
-      primary: Color(0xffbdc8ff),
-      surfaceTint: Color(0xffb8c4ff),
-      onPrimary: Color(0xff011046),
-      primaryContainer: Color(0xff818ec8),
-      onPrimaryContainer: Color(0xff000000),
-      secondary: Color(0xffbdc8ff),
-      onSecondary: Color(0xff011046),
-      secondaryContainer: Color(0xff818ec8),
-      onSecondaryContainer: Color(0xff000000),
-      tertiary: Color(0xffbdc8ff),
-      onTertiary: Color(0xff011046),
-      tertiaryContainer: Color(0xff818ec8),
-      onTertiaryContainer: Color(0xff000000),
-      error: Color(0xffffbab1),
-      onError: Color(0xff370001),
-      errorContainer: Color(0xffff5449),
-      onErrorContainer: Color(0xff000000),
-      surface: Color(0xff121318),
-      onSurface: Color(0xfffcfaff),
-      onSurfaceVariant: Color(0xffcacad4),
-      outline: Color(0xffa2a2ac),
-      outlineVariant: Color(0xff82828c),
+      brightness: Brightness.light,
+      background: Colors.white,
+      onBackground: Colors.black87,
+      primary: Color(0xff406835),
+      surfaceTint: Color(0xff406835),
+      onPrimary: Color(0xffffffff),
+      primaryContainer: Color(0xffc1efaf),
+      onPrimaryContainer: Color(0xff012200),
+      secondary: Color(0xff406835),
+      onSecondary: Color(0xffffffff),
+      secondaryContainer: Color(0xffc1efaf),
+      onSecondaryContainer: Color(0xff012200),
+      tertiary: Color(0xff406835),
+      onTertiary: Color(0xffffffff),
+      tertiaryContainer: Color(0xffc1efaf),
+      onTertiaryContainer: Color(0xff012200),
+      error: Color(0xffba1a1a),
+      onError: Color(0xffffffff),
+      errorContainer: Color(0xffffdad6),
+      onErrorContainer: Color(0xff410002),
+      surface: Color(0xfff5fafb),
+      onSurface: Color(0xff171d1e),
+      onSurfaceVariant: Color(0xff3f484a),
+      outline: Color(0xff6f797a),
+      outlineVariant: Color(0xffbfc8ca),
       shadow: Color(0xff000000),
       scrim: Color(0xff000000),
-      inverseSurface: Color(0xffe3e1e9),
-      inversePrimary: Color(0xff38457a),
+      inverseSurface: Color(0xff2b3133),
+      inversePrimary: Color(0xffa5d395),
     );
   }
 
-  ThemeData darkMediumContrast() {
-    return theme(darkMediumContrastScheme());
+  ThemeData lightVerde() {
+    return theme(verdeClaro());
   }
 
-  static ColorScheme darkHighContrastScheme() {
+  static ColorScheme verdeEscuro() {
     return const ColorScheme(
-      background: Colors.black87,
-      onBackground: Colors.white70,
       brightness: Brightness.dark,
-      primary: Color(0xfffcfaff),
-      surfaceTint: Color(0xffb8c4ff),
-      onPrimary: Color(0xff000000),
-      primaryContainer: Color(0xffbdc8ff),
-      onPrimaryContainer: Color(0xff000000),
-      secondary: Color(0xfffcfaff),
-      onSecondary: Color(0xff000000),
-      secondaryContainer: Color(0xffbdc8ff),
-      onSecondaryContainer: Color(0xff000000),
-      tertiary: Color(0xfffcfaff),
-      onTertiary: Color(0xff000000),
-      tertiaryContainer: Color(0xffbdc8ff),
-      onTertiaryContainer: Color(0xff000000),
-      error: Color(0xfffff9f9),
-      onError: Color(0xff000000),
-      errorContainer: Color(0xffffbab1),
-      onErrorContainer: Color(0xff000000),
-      surface: Color(0xff121318),
-      onSurface: Color(0xffffffff),
-      onSurfaceVariant: Color(0xfffcfaff),
-      outline: Color(0xffcacad4),
-      outlineVariant: Color(0xffcacad4),
+      background: Color.fromARGB(255, 26, 26, 26),
+      onBackground: Colors.white70,
+      primary: Color(0xffa5d395),
+      surfaceTint: Color(0xffa5d395),
+      onPrimary: Color(0xff11380b),
+      primaryContainer: Color(0xff295020),
+      onPrimaryContainer: Color(0xffc1efaf),
+      secondary: Color(0xffa5d395),
+      onSecondary: Color(0xff11380b),
+      secondaryContainer: Color(0xff295020),
+      onSecondaryContainer: Color(0xffc1efaf),
+      tertiary: Color(0xffa5d395),
+      onTertiary: Color(0xff11380b),
+      tertiaryContainer: Color(0xff295020),
+      onTertiaryContainer: Color(0xffc1efaf),
+      error: Color(0xffffb4ab),
+      onError: Color(0xff690005),
+      errorContainer: Color(0xff93000a),
+      onErrorContainer: Color(0xffffdad6),
+      surface: Color(0xff0e1415),
+      onSurface: Color(0xffdee3e5),
+      onSurfaceVariant: Color(0xffbfc8ca),
+      outline: Color(0xff899294),
+      outlineVariant: Color(0xff3f484a),
       shadow: Color(0xff000000),
       scrim: Color(0xff000000),
-      inverseSurface: Color(0xffe3e1e9),
-      inversePrimary: Color(0xff18265a),
+      inverseSurface: Color(0xffdee3e5),
+      inversePrimary: Color(0xff406835),
     );
   }
 
-  ThemeData darkHighContrast() {
-    return theme(darkHighContrastScheme());
+  ThemeData darkVerde() {
+    return theme(verdeEscuro());
+  }
+//#endregion ============ END VERDE ===========================================
+
+//#region =============== AMARELO ============================================
+
+  static ColorScheme amareloClaro() {
+    return const ColorScheme(
+      brightness: Brightness.light,
+      background: Colors.white,
+      onBackground: Colors.black87,
+      primary: Color.fromARGB(255, 209, 157, 0),
+      surfaceTint: Color(0xff735c0c),
+      onPrimary: Color(0xffffffff),
+      primaryContainer: Color(0xffffe08a),
+      onPrimaryContainer: Color(0xff241a00),
+      secondary: Color(0xff735c0c),
+      onSecondary: Color(0xffffffff),
+      secondaryContainer: Color(0xffffe08a),
+      onSecondaryContainer: Color(0xff241a00),
+      tertiary: Color(0xff735c0c),
+      onTertiary: Color(0xffffffff),
+      tertiaryContainer: Color(0xffffe08a),
+      onTertiaryContainer: Color(0xff241a00),
+      error: Color(0xffba1a1a),
+      onError: Color(0xffffffff),
+      errorContainer: Color(0xffffdad6),
+      onErrorContainer: Color(0xff410002),
+      surface: Color(0xfff5fafb),
+      onSurface: Color(0xff171d1e),
+      onSurfaceVariant: Color(0xff3f484a),
+      outline: Color(0xff6f797a),
+      outlineVariant: Color(0xffbfc8ca),
+      shadow: Color(0xff000000),
+      scrim: Color(0xff000000),
+      inverseSurface: Color(0xff2b3133),
+      inversePrimary: Color(0xffe3c46d),
+    );
   }
 
+  ThemeData lightAmarelo() {
+    return theme(amareloClaro());
+  }
+
+  static ColorScheme amareloEscuro() {
+    return const ColorScheme(
+      brightness: Brightness.dark,
+      background: Color.fromARGB(255, 26, 26, 26),
+      onBackground: Colors.white70,
+      primary: Color(0xffe3c46d),
+      surfaceTint: Color(0xffe3c46d),
+      onPrimary: Color(0xff3d2f00),
+      primaryContainer: Color(0xff584400),
+      onPrimaryContainer: Color(0xffffe08a),
+      secondary: Color(0xffe3c46d),
+      onSecondary: Color(0xff3d2f00),
+      secondaryContainer: Color(0xff584400),
+      onSecondaryContainer: Color(0xffffe08a),
+      tertiary: Color(0xffe3c46d),
+      onTertiary: Color(0xff3d2f00),
+      tertiaryContainer: Color(0xff584400),
+      onTertiaryContainer: Color(0xffffe08a),
+      error: Color(0xffffb4ab),
+      onError: Color(0xff690005),
+      errorContainer: Color(0xff93000a),
+      onErrorContainer: Color(0xffffdad6),
+      surface: Color(0xff0e1415),
+      onSurface: Color(0xffdee3e5),
+      onSurfaceVariant: Color(0xffbfc8ca),
+      outline: Color(0xff899294),
+      outlineVariant: Color(0xff3f484a),
+      shadow: Color(0xff000000),
+      scrim: Color(0xff000000),
+      inverseSurface: Color(0xffdee3e5),
+      inversePrimary: Color(0xff735c0c),
+    );
+  }
+
+  ThemeData darkAmarelo() {
+    return theme(amareloEscuro());
+  }
+
+//#endregion ============ END AMARELO ========================================
+
+//#region =============== ROSA =============================================
+  static ColorScheme rosaClaro() {
+    return const ColorScheme(
+      brightness: Brightness.light,
+      background: Colors.white,
+      onBackground: Colors.black87,
+      primary: Color.fromARGB(255, 166, 0, 91),
+      surfaceTint: Color(0xff874b6c),
+      onPrimary: Color(0xffffffff),
+      primaryContainer: Color(0xffffd8e9),
+      onPrimaryContainer: Color(0xff380726),
+      secondary: Color(0xff874b6c),
+      onSecondary: Color(0xffffffff),
+      secondaryContainer: Color(0xffffd8e9),
+      onSecondaryContainer: Color(0xff380726),
+      tertiary: Color(0xff874b6c),
+      onTertiary: Color(0xffffffff),
+      tertiaryContainer: Color(0xffffd8e9),
+      onTertiaryContainer: Color(0xff380726),
+      error: Color(0xffba1a1a),
+      onError: Color(0xffffffff),
+      errorContainer: Color(0xffffdad6),
+      onErrorContainer: Color(0xff410002),
+      surface: Color(0xfff5fafb),
+      onSurface: Color(0xff171d1e),
+      onSurfaceVariant: Color(0xff3f484a),
+      outline: Color(0xff6f797a),
+      outlineVariant: Color(0xffbfc8ca),
+      shadow: Color(0xff000000),
+      scrim: Color(0xff000000),
+      inverseSurface: Color(0xff2b3133),
+      inversePrimary: Color(0xfffcb0d6),
+    );
+  }
+
+  ThemeData lightRosa() {
+    return theme(rosaClaro());
+  }
+
+  static ColorScheme rosaEscuro() {
+    return const ColorScheme(
+      brightness: Brightness.dark,
+      background: Color.fromARGB(255, 26, 26, 26),
+      onBackground: Colors.white70,
+      primary: Color.fromARGB(255, 208, 0, 104),
+      surfaceTint: Color(0xfffcb0d6),
+      onPrimary: Color(0xff521d3c),
+      primaryContainer: Color.fromARGB(255, 92, 22, 61),
+      onPrimaryContainer: Color(0xffffd8e9),
+      secondary: Color(0xfffcb0d6),
+      onSecondary: Color(0xff521d3c),
+      secondaryContainer: Color(0xff6c3453),
+      onSecondaryContainer: Color(0xffffd8e9),
+      tertiary: Color(0xfffcb0d6),
+      onTertiary: Color(0xff521d3c),
+      tertiaryContainer: Color(0xff6c3453),
+      onTertiaryContainer: Color(0xffffd8e9),
+      error: Color(0xffffb4ab),
+      onError: Color(0xff690005),
+      errorContainer: Color(0xff93000a),
+      onErrorContainer: Color(0xffffdad6),
+      surface: Color(0xff0e1415),
+      onSurface: Color(0xffdee3e5),
+      onSurfaceVariant: Color(0xffbfc8ca),
+      outline: Color(0xff899294),
+      outlineVariant: Color(0xff3f484a),
+      shadow: Color(0xff000000),
+      scrim: Color(0xff000000),
+      inverseSurface: Color(0xffdee3e5),
+      inversePrimary: Color(0xff874b6c),
+    );
+  }
+
+  ThemeData darkRosa() {
+    return theme(rosaEscuro());
+  }
+
+//#endregion ============ END ROSA =========================================
   ThemeData theme(ColorScheme colorScheme) => ThemeData(
         useMaterial3: true,
         brightness: colorScheme.brightness,

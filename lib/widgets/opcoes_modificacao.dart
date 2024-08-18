@@ -6,32 +6,35 @@ import 'package:provider/provider.dart';
 import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../models/categoria.module.dart';
+import '../models/historico.module.dart';
 import '../models/item.module.dart';
 import '../models/item_padrao.module.dart';
 import '../models/lista.module.dart';
 import '../preferencias_usuario.dart';
 import '../repositories/categorias_repository.dart';
+import '../repositories/historico_repository.dart';
 import '../repositories/itens_padrao_repository.dart';
-import '../repositories/itens_repository.dart';
 import '../theme/estilos.dart';
 
 import 'formularios/form_categoria.dart';
+import 'formularios/form_historico.dart';
 import 'formularios/form_item_padrao.dart';
 import 'formularios/formulario_item.dart';
 import 'formularios/formulario_lista.dart';
 
 class OpcoesModificacao extends StatefulWidget {
   final ListaModel? lista;
-  final ItemModel? item;
+
   final CategoriaModel? categoria;
   final ItemPadraoModel? itemPadrao;
+  final HistoricoModel? historico;
 
   const OpcoesModificacao({
     super.key,
     this.lista,
-    this.item,
     this.categoria,
     this.itemPadrao,
+    this.historico,
   });
 
   @override
@@ -40,20 +43,20 @@ class OpcoesModificacao extends StatefulWidget {
 
 class _OpcoesModificacaoState extends State<OpcoesModificacao> {
   late ListaModel lista;
-  late ItemModel item;
   late CategoriaModel categoria;
   late ItemPadraoModel itemPadrao;
+  late HistoricoModel historico;
 
   @override
   void initState() {
-    if (widget.item != null) {
-      item = widget.item!;
-    } else if (widget.lista != null) {
+    if (widget.lista != null) {
       lista = widget.lista!;
     } else if (widget.categoria != null) {
       categoria = widget.categoria!;
-    } else {
+    } else if (widget.itemPadrao != null) {
       itemPadrao = widget.itemPadrao!;
+    } else {
+      historico = widget.historico!;
     }
     super.initState();
   }
@@ -61,11 +64,12 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
   @override
   Widget build(BuildContext context) {
     final listaController = context.watch<ListasController>();
-    final itemR = context.watch<ItensRepository>();
+
     final itensController = context.read<ItensController>();
     final itemPadraoR = context.watch<ItensPadraoRepository>();
     final categoriaR = context.watch<CategoriasRepository>();
     final preferencias = context.watch<PreferenciasUsuarioShared>();
+    final historicoR = context.watch<HistoricoRepository>();
     return PopupMenuButton<dynamic>(
       padding: const EdgeInsets.all(0),
       icon: Icon(
@@ -74,7 +78,7 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
       ),
       position: PopupMenuPosition.under,
       constraints: BoxConstraints.tightFor(
-            width: MediaQuery.of(context).size.width * 0.3),
+          width: MediaQuery.of(context).size.width * 0.3),
       elevation: 1,
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -83,14 +87,14 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  if (widget.item != null) {
-                    return FormularioItem(item: item, idLista: null);
-                  } else if (widget.lista != null) {
+                  if (widget.lista != null) {
                     return FormularioLista(lista: lista);
                   } else if (widget.categoria != null) {
                     return FormularioCategoria(categoria: categoria);
-                  } else {
+                  } else if (widget.itemPadrao != null) {
                     return FormItemPadrao(itemPadrao: itemPadrao);
+                  } else {
+                    return FormHistorico(historico: historico);
                   }
                 });
           },
@@ -98,8 +102,8 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
         PopupMenuItem(
           child: _label(context, label: 'Excluir'),
           onTap: () {
-            if (widget.item != null) {
-              itemR.excluirItem(item);
+            if (widget.historico != null) {
+              historicoR.excluirHistorico(historico);
             } else if (widget.lista != null) {
               int i = listaController.listas.indexOf(widget.lista!);
               ListaModel l = listaController.listas[i];
@@ -109,8 +113,10 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
               listaController.excluirLista(lista);
             } else if (widget.categoria != null) {
               categoriaR.excluirCategorias(categoria);
-            } else {
+            } else if (widget.itemPadrao != null) {
               itemPadraoR.excluirItemPadrao(itemPadrao);
+            } else {
+              historicoR.excluirHistorico(historico);
             }
           },
         ),

@@ -44,6 +44,8 @@ class PreferenciasUsuarioShared extends ChangeNotifier {
     _temaDeCores = index;
     _prefs.setInt('temaDeCores', _temaDeCores);
     debugPrint('📲😎Pref, setTemaDeCores(): $_temaDeCores');
+
+    notifyListeners();
   }
 
   setVerPorCategoria(bool value) async {

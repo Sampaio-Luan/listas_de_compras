@@ -24,6 +24,10 @@ class MainApp extends StatelessWidget {
     final preferencias = context.watch<PreferenciasUsuarioShared>();
 
     Intl.defaultLocale = 'pt_BR';
+    Map<int, List<ThemeData>>  tema ={
+      0: [theme.lightIndigo(), theme.lightVerde(), theme.lightAmarelo(), theme.lightRosa()],
+      1: [theme.darkIndigo(), theme.darkVerde(), theme.darkAmarelo(), theme.darkRosa()],
+    };
 
     return MaterialApp(
       localizationsDelegates: const [
@@ -34,7 +38,7 @@ class MainApp extends StatelessWidget {
       supportedLocales: const [Locale('pt', 'BR')],
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: preferencias.temaEscuro ? theme.verde() : theme.light(),
+      theme: tema[preferencias.temaEscuro == true ? 1 : 0]![preferencias.temaDeCores],
       initialRoute: 'itens_page',
       routes: {
         'itens_page': (context) => const PrePage(),

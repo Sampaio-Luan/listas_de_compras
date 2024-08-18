@@ -4,6 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'package:listas_de_compras/widgets/opcoes_modificacao.dart';
+
 import '../controllers/itens_controller.dart';
 import '../models/item.module.dart';
 import '../models/item_historico.module.dart';
@@ -36,71 +38,56 @@ class HistoricoPage extends StatelessWidget {
                 ? Theme.of(context).colorScheme.onPrimary
                 : Theme.of(context).colorScheme.onPrimaryContainer,
       ),
-      body: Consumer<HistoricoRepository>(builder: (context, historicoR, _) {
-        return historicoR.getHistoricos.isEmpty
-            ? const Center(
-                child: Text('Nenhum histórico encontrado'),
-              )
-            : GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
-                ),
-                itemCount: historicoR.getHistoricos.length,
-                itemBuilder: (context, index) {
-                  return _layoutHistorico(
-                      context, historicoR.getHistoricos[index]);
-
-                  // _layoutHistorico(
-                  //     context, historicoR.getHistoricos[index]);
-                });
-      }),
+      body: Consumer<HistoricoRepository>(
+        builder: (context, historicoR, _) {
+          return historicoR.getHistoricos.isEmpty
+              ? const Center(
+                  child: Text('Nenhum histórico encontrado'),
+                )
+              : ListView.builder(
+                  itemCount: historicoR.getHistoricos.length,
+                  itemBuilder: (context, index) {
+                    return _layoutHistorico(
+                        context, historicoR.getHistoricos[index]);
+                  },
+                );
+        },
+      ),
     );
   }
 
   _layoutHistorico(context, historico) {
-    List<IconData> icones = [
-      PhosphorIconsRegular.moneyWavy,
-      PhosphorIconsRegular.calendar,
-      PhosphorIconsRegular.heart,
-    ];
-    return InkWell(
-      onTap: () {
-        Navigator.push(
+    return Card.outlined(
+      elevation: 0,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+        leading: CircleAvatar(
+          radius: 27,
+          child: Icon(PhosphorIconsRegular.moneyWavy,
+              size: 30, color: Theme.of(context).colorScheme.primary),
+        ),
+        title: Text(
+          historico.titulo,
+          style: Estilos().tituloColor(context, tamanho: 'p'),
+        ),
+        subtitle:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          _linhaComIcone(context, formatter.format(historico.total), 1),
+          _linhaComIcone(context, historico.data, 0),
+        ]),
+        trailing: OpcoesModificacao(
+          historico: historico,
+        ),
+        onTap: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    VisualizarItensHistorico(historico: historico)));
-      },
-      child: Card(
-        child: Column(children: [
-          Expanded(
-            child: CircleAvatar(
-              radius: 70,
-              child: Icon(
-                PhosphorIconsRegular.moneyWavy,
-                size: 30,
-                color: Theme.of(context).colorScheme.primary,
+              builder: (context) => VisualizarItensHistorico(
+                historico: historico,
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Column(children: [
-              Text(
-                historico.titulo,
-                style: Estilos().tituloColor(
-                  context,
-                  tamanho: 'm',
-                ),
-              ),
-              _linhaComIcone(context, historico.data, 0),
-              _linhaComIcone(context, formatter.format(historico.total), 1),
-              _linhaComIcone(context, historico.id.toString(), 1),
-            ]),
-          ),
-        ]),
+          );
+        },
       ),
     );
   }
@@ -114,10 +101,17 @@ class HistoricoPage extends StatelessWidget {
     return Row(children: [
       Icon(
         icones[i],
-        size: 15,
+        size: 20,
         color: Theme.of(context).colorScheme.primary,
       ),
-      Text(label)
+      const SizedBox(width: 8),
+      Text(
+        label,
+        style: Estilos().sutil(
+          context,
+          tamanho: 14,
+        ),
+      ),
     ]);
   }
 }

@@ -54,7 +54,7 @@ class _ItensPadraoPageState extends State<ItensPadraoPage> {
             ? const Center(child: Text('Nenhum item encontrado'))
             : Expanded(
                 child: ListView.separated(
-                 // shrinkWrap: true,
+                 //shrinkWrap: true,
                   itemCount: itemP.getItensPadrao.length,
                   itemBuilder: (context, index) {
                     return ListTile(

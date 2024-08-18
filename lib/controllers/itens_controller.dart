@@ -595,7 +595,7 @@ class ItensController extends ChangeNotifier {
             quantidade: item.quantidade,
             medida: item.medida,
             preco: item.preco,
-            total: 0,
+            total: item.preco * item.quantidade,
             categoria: item.idCategoria,
           ),
         );
