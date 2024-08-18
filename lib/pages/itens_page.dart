@@ -424,6 +424,7 @@ class _ItensPageState extends State<ItensPage> {
       order: GroupedListOrder.ASC,
       separator: const Divider(height: 0, thickness: 0.7,),
       useStickyGroupSeparators: true,
+      
       groupSeparatorBuilder: (dynamic value) => Container(
         color: Theme.of(context).colorScheme.primaryContainer.withAlpha(170),
         child: Text(

@@ -117,9 +117,11 @@ class OpcoesFinalizacao extends StatelessWidget {
       ),
     };
     return ListTile(
-      leading: icone != 'Padrao'
+      leading: 
+      (icone != 'Padrao' && icone != 'Categoria')
           ? null
-          : Checkbox(
+          : 
+          Checkbox(
               value: icone == 'Categoria' && preferenciaRp!.verPorCategoria ||
                   icone == 'Padrao' && !preferenciaRp!.verPorCategoria,
               onChanged: (_) {

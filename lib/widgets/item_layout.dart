@@ -55,10 +55,11 @@ class NLayoutItem extends StatelessWidget {
                     : Theme.of(context).colorScheme.brightness ==
                             Brightness.light
                         ? Colors.black.withAlpha(30)
-                        : Theme.of(context)
-                            .colorScheme
-                            .primaryContainer
-                            .withAlpha(70),
+                        : Colors.white10
+                        //  Theme.of(context)
+                        //     .colorScheme
+                        //     .primaryContainer
+                        //     .withAlpha(50),
           ),
           padding: const EdgeInsets.only(right: 10),
           child: Row(children: [
@@ -193,7 +194,7 @@ class NLayoutItem extends StatelessWidget {
   }
 
   TextStyle itemComCheck(context) {
-    return TextStyle(
+    return  TextStyle(
       decoration: TextDecoration.lineThrough,
       decorationThickness: 1,
       fontSize: 18,
