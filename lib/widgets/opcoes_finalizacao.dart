@@ -5,20 +5,21 @@ import 'package:provider/provider.dart';
 
 import '../controllers/itens_controller.dart';
 import '../preferencias_usuario.dart';
-import '../repositories/itens_padrao_repository.dart';
 import '../theme/estilos.dart';
 
 import 'feedback/avisos.dart';
 import 'formularios/form_historico.dart';
+import 'opcoes_compartlhar_lista.dart';
 
 class OpcoesFinalizacao extends StatelessWidget {
   final Avisos avisos = Avisos();
-   OpcoesFinalizacao({super.key});
+  OpcoesFinalizacao({super.key});
 
   @override
   Widget build(BuildContext context) {
     final itemC = context.read<ItensController>();
     final preferenciaR = context.watch<PreferenciasUsuarioShared>();
+   
     //final j = context.watch<ItensPadraoRepository>();
 
     return PopupMenuButton<dynamic>(
@@ -33,11 +34,22 @@ class OpcoesFinalizacao extends StatelessWidget {
         itemBuilder: (context) => [
               PopupMenuItem(
                 child: _label(context,
+                    label: 'Compartilhar lista',
+                    icone: 'Compartilhar',
+                    preferenciaRp: preferenciaR),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => const OpcoesCompartilharLista());
+                },
+              ),
+              PopupMenuItem(
+                child: _label(context,
                     label: 'Salvar no histórico',
                     icone: 'Salvar',
                     preferenciaRp: preferenciaR),
                 onTap: () {
-                 // j.corrijarJ();
+                  // j.corrijarJ();
                   //avisos.informativo(context, 'Salvar no historico');
                   showDialog(
                       context: context,
@@ -98,15 +110,21 @@ class OpcoesFinalizacao extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
         size: tamanho,
       ),
+      'Compartilhar': Icon(
+        PhosphorIconsRegular.shareNetwork,
+        color: Theme.of(context).colorScheme.primary,
+        size: tamanho,
+      ),
     };
     return ListTile(
-      leading: icone == 'Salvar'
+      leading: icone != 'Padrao'
           ? null
           : Checkbox(
-              value: icone == 'Categoria' &&  preferenciaRp!.verPorCategoria || icone == 'Padrao' && !preferenciaRp!.verPorCategoria,
+              value: icone == 'Categoria' && preferenciaRp!.verPorCategoria ||
+                  icone == 'Padrao' && !preferenciaRp!.verPorCategoria,
               onChanged: (_) {
-                preferenciaRp
-                    !.setVerPorCategoria(!preferenciaRp.verPorCategoria );
+                preferenciaRp!
+                    .setVerPorCategoria(!preferenciaRp.verPorCategoria);
                 Navigator.of(context).pop();
               }),
       title: Padding(

@@ -23,6 +23,6 @@ const String createItemHistoricoTable = '''
     $itemHistoricoColumnMedida TEXT NOT NULL,
     $itemHistoricoColumnPreco REAL NOT NULL,
     $itemHistoricoColumnTotal REAL NOT NULL,
-    $itemHistoricoColumnCategoria TEXT NOT NULL,
+    $itemHistoricoColumnCategoria INTEGER NOT NULL,
     FOREIGN KEY ($itemHistoricoColumnHistoricoId) REFERENCES $historicoTableName($historicoColumnId)
   )''';

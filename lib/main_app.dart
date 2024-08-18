@@ -41,6 +41,7 @@ class MainApp extends StatelessWidget {
         'categorias_page': (context) => const CategoriasPage(),
         'historico_page': (context) =>  HistoricoPage(),
         'itens_padrao_page': (context) => const ItensPadraoPage(),
+        
       },
     );
   }

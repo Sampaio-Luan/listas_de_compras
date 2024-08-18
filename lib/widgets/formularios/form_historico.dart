@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../controllers/itens_controller.dart';
 import '../../mixins/validations_mixin.dart';
 import '../../models/historico.module.dart';
 import '../../repositories/historico_repository.dart';
+import '../../repositories/itens_historico_repository.dart';
 import '../../theme/estilos.dart';
 
 import 'campos_formulario.dart';
@@ -42,6 +44,8 @@ class _FormHistoricoState extends State<FormHistorico> with ValidacoesMixin {
   @override
   Widget build(BuildContext context) {
     final historicosR = context.read<HistoricoRepository>();
+    final itensHR = context.read<ItensHistoricoRepository>();
+    final itemC = context.read<ItensController>();
     return AlertDialog(
         title: Text(
           'Criar Histórico',
@@ -115,8 +119,10 @@ class _FormHistoricoState extends State<FormHistorico> with ValidacoesMixin {
                         id: 0,
                         data: dataHistorico.text,
                         titulo: tituloHistorico.text,
-                        descricao: descricaoHistorico.text);
-                    historicosR.criarHistorico(historico);
+                        descricao: descricaoHistorico.text,
+                        total: 0);
+                    itemC.salvarHistorico(
+                        historicosR, historico, itensHR, context);
                   } else {
                     widget.historico!.data = dataHistorico.text;
                     widget.historico!.titulo = tituloHistorico.text;

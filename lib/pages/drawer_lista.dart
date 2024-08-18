@@ -10,6 +10,7 @@ import '../preferencias_usuario.dart';
 import '../theme/estilos.dart';
 import '../widgets/formularios/formulario_lista.dart';
 import '../widgets/lista_layout.dart';
+import '../widgets/opcoes_tema_cores.dart';
 
 class DrawerListas extends StatefulWidget {
   const DrawerListas({super.key});
@@ -165,7 +166,13 @@ class _DrawerListasState extends State<DrawerListas> {
     return Expanded(
       child: InkWell(
         onTap: () {
-          Navigator.of(context).pushNamed(rota);
+          if (rota == 'tema-de-cores') {
+            showDialog(
+                context: context,
+                builder: (context) => const OpcoesTemaCores());
+          } else {
+            Navigator.of(context).pushNamed(rota);
+          }
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 15.0),

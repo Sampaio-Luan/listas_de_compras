@@ -9,7 +9,7 @@ class ItemHistoricoModel {
   String medida;
   double preco;
   double total;
-  String categoria;
+  int categoria;
 
   ItemHistoricoModel({
     required this.id,
@@ -45,7 +45,7 @@ class ItemHistoricoModel {
       medida: map[itemHistoricoColumnMedida] ?? '',
       preco: map[itemHistoricoColumnPreco] ?? 0.0,
       total: map[itemHistoricoColumnTotal] ?? 0.0,
-      categoria: map[itemHistoricoColumnCategoria] ?? '',
+      categoria: int.parse(map[itemHistoricoColumnCategoria] ?? '9'), 
     );
   }
   

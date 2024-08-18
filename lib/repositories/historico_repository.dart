@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 import '../constants/const_tb_historico.dart';
+
 import '../database/banco.dart';
 import '../models/historico.module.dart';
+import '../models/item_historico.module.dart';
 
 class HistoricoRepository extends ChangeNotifier {
   final List<HistoricoModel> _historicos = [];
   List<HistoricoModel> get getHistoricos => _historicos;
+ 
 
   late Database db;
 
+//#region===================== * Historico * ===============================================
   Future<List<HistoricoModel>> recuperarHistoricos() async {
     db = await Banco.instancia.database;
 
@@ -29,7 +34,7 @@ class HistoricoRepository extends ChangeNotifier {
     return _historicos;
   }
 
-  Future<void> criarHistorico(HistoricoModel historico) async {
+  criarHistorico(HistoricoModel historico) async {
     db = await Banco.instancia.database;
 
     final id = await db.insert(
@@ -44,6 +49,7 @@ class HistoricoRepository extends ChangeNotifier {
 
     _historicos.add(historico);
     notifyListeners();
+    return id;
   }
 
   Future<void> excluirHistorico(HistoricoModel historico) async {
@@ -75,4 +81,8 @@ class HistoricoRepository extends ChangeNotifier {
 
     notifyListeners();
   }
+
+//#endregion ================== * End Historico * ===============================================
+
+
 }

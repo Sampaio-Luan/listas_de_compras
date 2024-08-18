@@ -6,9 +6,14 @@ import 'package:intl/intl.dart';
 
 import '../constants/const_strings_globais.dart';
 import '../constants/const_tb_item.dart';
+import '../models/historico.module.dart';
 import '../models/item.module.dart';
+import '../models/item_historico.module.dart';
 import '../repositories/categorias_repository.dart';
+import '../repositories/historico_repository.dart';
+import '../repositories/itens_historico_repository.dart';
 import '../repositories/itens_repository.dart';
+import '../widgets/feedback/avisos.dart';
 
 import 'listas_controller.dart';
 
@@ -16,6 +21,7 @@ class ItensController extends ChangeNotifier {
 //#region =================== * ATRIBUTOS * ====================================
   final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
   final formatoData = DateFormat.jms('pt_BR');
+  final Avisos avisos = Avisos();
 
   double _precoTotal = 0;
   double _precoTotalLista = 0;
@@ -111,7 +117,7 @@ class ItensController extends ChangeNotifier {
     _itensInterface.addAll(_itens);
     debugPrint(
         "🤴🏻🧺CTi _recuperarItens() _itensInterface: ${_itensInterface.length}");
-       await agruparPorCategoria();
+    await agruparPorCategoria();
 
     notifyListeners();
     _calculaTotal();
@@ -552,14 +558,13 @@ class ItensController extends ChangeNotifier {
 
 //#region =================== * TEM POR CATEGORIA * ============================
   agruparPorCategoria() {
-
     for (final element in _itens) {
       if (!_itemPorCategoria.containsKey(element.idCategoria)) {
         _itemPorCategoria[element.idCategoria] = [];
       }
       _itemPorCategoria[element.idCategoria]!.add(element);
     }
-    debugPrint('🤴🏻🧺CTi agruparPorCategoria() ${_itemPorCategoria.length }');
+    debugPrint('🤴🏻🧺CTi agruparPorCategoria() ${_itemPorCategoria.length}');
 
     notifyListeners();
 
@@ -569,6 +574,39 @@ class ItensController extends ChangeNotifier {
 //#endregion ================ * END TEM POR CATEGORIA * ========================
 
 //#endregion ================ * END INTERFACE * ================================
+
+//#region =================== * FINALIZAÇÃO * ==================================
+  salvarHistorico(
+    HistoricoRepository historicoRepository,
+    HistoricoModel historicoModel,
+    ItensHistoricoRepository itensHistoricoRepository,
+    context,
+  ) async {
+    
+    final idHistorico = await historicoRepository.criarHistorico(historicoModel);
+    final List<ItemHistoricoModel> itemHistoricoModel = [];
+    for (var item in _itens) {
+      if (item.comprado == 1) {
+        itemHistoricoModel.add(
+          ItemHistoricoModel(
+            id: 0,
+            idHistorico: idHistorico,
+            nome: item.nome,
+            quantidade: item.quantidade,
+            medida: item.medida,
+            preco: item.preco,
+            total: 0,
+            categoria: item.idCategoria,
+          ),
+        );
+      }
+    }
+    await itensHistoricoRepository.salvarItemHistorico(itemHistoricoModel);
+    avisos.informativo(context, 'HISTÓRICO SALVO COM SUCESSO!');
+    debugPrint('💁🏻⏳RPH salvarHistorico() idHistorico: $idHistorico');
+  }
+
+//#endregion ================ * END FINALIZAÇÃO * ==============================
 
 //#endregion ================ * END METODOS * ==================================
 }

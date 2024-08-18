@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 import '../constants/const_tb_item_historico.dart';
@@ -6,45 +7,51 @@ import '../database/banco.dart';
 import '../models/item_historico.module.dart';
 
 class ItensHistoricoRepository extends ChangeNotifier {
-  final List<ItemHistoricoModel> _itensHistoricos = [];
+   final List<ItemHistoricoModel> _itensHistoricos = [];
   List<ItemHistoricoModel> get getItensHistoricos => _itensHistoricos;
 
   late Database db;
 
-  Future<List<ItemHistoricoModel>> recuperarItensHistoricos() async {
+ recuperarItensHistoricos(int idHistorico) async {
+   debugPrint("💁🏻🐉RPIH recuperarItensHistoricos() entrou");
     db = await Banco.instancia.database;
 
     _itensHistoricos.clear();
-    notifyListeners();
+    //notifyListeners();
 
-    final List<Map<String, dynamic>> itensHistoricosMap = await db.rawQuery(
+    final List<Map<String, dynamic>> itensHistoricosMap = await db.query(
       itemHistoricoTableName,
+      where: "$itemHistoricoColumnHistoricoId = ?",
+      whereArgs: [idHistorico],
     );
-
+    debugPrint("💁🏻🐉RPIH recuperarItensHistoricos() antes do for: $itensHistoricosMap");
+    debugPrint("💁🏻🐉RPIH recuperarItensHistoricos() antes do for: ${_itensHistoricos.length}");
+ 
     for (int i = 0; i < itensHistoricosMap.length; i++) {
+      
       _itensHistoricos.add(ItemHistoricoModel.fromMap(itensHistoricosMap[i]));
+      //debugPrint("💁🏻🐉RPIH recuperarItensHistoricos() dentro do for: ${_itensHistoricos[i]}");
     }
 
-    debugPrint("💁🏻🐉RPIH recuperarItensHistoricos() _itensHistoricos: ${_itensHistoricos.length}");
+    debugPrint("💁🏻🐉RPIH recuperarItensHistoricos() dps do for: ${_itensHistoricos.length}");
         notifyListeners();
 
     return _itensHistoricos;
   }
 
-  Future<void> criarItemHistorico(ItemHistoricoModel itemHistorico) async {
+  Future<void> salvarItemHistorico(List<ItemHistoricoModel> itemHistorico) async {
     db = await Banco.instancia.database;
 
-    final id = await db.insert(
-      itemHistoricoTableName,
-      itemHistorico.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    for (int i = 0; i < itemHistorico.length; i++) {
+      await db.insert(
+        itemHistoricoTableName,
+        itemHistorico[i].toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
 
-    itemHistorico.id = id;
-
-     debugPrint("💁🏻🐉RPIH  criarItemHistorico() id: $id");
-
-    _itensHistoricos.add(itemHistorico);
+    debugPrint("💁🏻🐉RPIH salvarItemHistorico() itemHistorico: ${itemHistorico.length}");
+    
     notifyListeners();
   }
 

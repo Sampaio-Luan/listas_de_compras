@@ -17,7 +17,7 @@ class Avisos {
             content: Text(mensagem, style: estilo.corpo(context, tamanho: 'p')),
             actions: <Widget>[
               TextButton(
-                child: const Text('Entendi'),
+                child: const Text('Confirmar'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
