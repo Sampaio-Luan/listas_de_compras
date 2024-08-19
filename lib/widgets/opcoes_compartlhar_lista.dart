@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:provider/provider.dart';
 
+import '../controllers/itens_controller.dart';
 import '../theme/estilos.dart';
 
 class OpcoesCompartilharLista extends StatefulWidget {
@@ -34,6 +36,7 @@ class _OpcoesCompartilharListaState extends State<OpcoesCompartilharLista> {
   };
   @override
   Widget build(BuildContext context) {
+    final itemC = context.watch<ItensController>();
     return AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 1,
@@ -159,6 +162,9 @@ class _OpcoesCompartilharListaState extends State<OpcoesCompartilharLista> {
               elevation: 1,
             ),
             onPressed: () {
+              itemC.compartilharSocial(
+                escolhas
+              );
               Navigator.pop(context);
             },
             child: Row(mainAxisSize: MainAxisSize.min, children: [

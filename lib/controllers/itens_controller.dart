@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
+import 'package:social_share/social_share.dart';
 
 import '../constants/const_strings_globais.dart';
 import '../constants/const_tb_item.dart';
@@ -582,8 +583,8 @@ class ItensController extends ChangeNotifier {
     ItensHistoricoRepository itensHistoricoRepository,
     context,
   ) async {
-    
-    final idHistorico = await historicoRepository.criarHistorico(historicoModel);
+    final idHistorico =
+        await historicoRepository.criarHistorico(historicoModel);
     final List<ItemHistoricoModel> itemHistoricoModel = [];
     for (var item in _itens) {
       if (item.comprado == 1) {
@@ -606,6 +607,65 @@ class ItensController extends ChangeNotifier {
     debugPrint('💁🏻⏳RPH salvarHistorico() idHistorico: $idHistorico');
   }
 
+  compartilharSocial(Map<String, List<String>> escolhas) async {
+    String mensagem = '$_nomeLista\n';
+
+    switch (escolhas['Quais Itens']) {
+      case ['Sem check']:
+        for (var i in _itens) {
+          if (i.comprado == 0) {
+            if (escolhas['Quais Itens']!.contains('Quantidade')) {
+              mensagem += '${i.quantidade.toStringAsFixed(3)} - ${i.nome}\n';
+            } else if (escolhas['Quais Itens']!.contains('Quantidade') &&
+                escolhas['Quais Itens']!.contains('Preço')) {
+              mensagem +=
+                  '${i.quantidade.toStringAsFixed(3)} - ${i.nome} ${formatter.format(i.preco)}\n';
+            } else {
+              mensagem += '- ${i.nome}\n';
+            }
+          }
+        }
+
+        break;
+
+      case ['Com check']:
+        for (var i in _itens) {
+          if (i.comprado == 1) {
+            if (escolhas['Quais Itens']!.contains('Quantidade')) {
+              mensagem += '${i.quantidade.toStringAsFixed(3)} - ${i.nome}\n';
+            } else if (escolhas['Quais Itens']!.contains('Quantidade') &&
+                escolhas['Quais Itens']!.contains('Preço')) {
+              mensagem +=
+                  '${i.quantidade.toStringAsFixed(3)} - ${i.nome} ${formatter.format(i.preco)}\n';
+            } else {
+              mensagem += '- ${i.nome}\n';
+            }
+          }
+        }
+        break;
+      default:
+        for (var i in _itens) {
+          if (escolhas['Quais Itens']!.contains('Quantidade')) {
+            mensagem += '${i.quantidade.toStringAsFixed(3)} - ${i.nome}\n';
+          } else if (escolhas['Quais Itens']!.contains('Quantidade') &&
+              escolhas['Quais Itens']!.contains('Preço')) {
+            mensagem +=
+                '${i.quantidade.toStringAsFixed(3)} - ${i.nome} ${formatter.format(i.preco)}\n';
+          } else {
+            mensagem += '- ${i.nome}\n';
+          }
+        }
+    }
+    mensagem +=
+        '\n\n\nUsei o APP Lista de Compras. Aproveite e veja como funciona. 🤗🤗🤗. https://play.google.com/store/apps/details?id=com.rosangela.listadeCompras';
+    SocialShare.shareOptions(
+      mensagem,
+    );
+    // SocialShare.shareOptions(
+    //   'Olá, estou usando o APP Lista de Compras. Aproveite e veja como funciona. 🤗🤗🤗. https://play.google.com/store/apps/details?id=com.rosangela.listadeCompras',
+    // );
+    debugPrint('🤴🏻🧺CTi compartilharSocial() ');
+  }
 //#endregion ================ * END FINALIZAÇÃO * ==============================
 
 //#endregion ================ * END METODOS * ==================================
