@@ -22,9 +22,9 @@ class _OpcoesCompartilharListaState extends State<OpcoesCompartilharLista> {
   ];
 
   List<IconData> iconesAtributos = [
-    PhosphorIconsRegular.checkSquare,
-    PhosphorIconsRegular.listNumbers,
+    PhosphorIconsRegular.basket,
     PhosphorIconsRegular.money,
+    PhosphorIconsRegular.listNumbers,
   ];
   List<String> titulos = ['Com check', 'Sem check', 'Todos'];
   List<String> atributos = ['Item', 'Preço', 'Quantidade'];
@@ -123,17 +123,20 @@ class _OpcoesCompartilharListaState extends State<OpcoesCompartilharLista> {
                               selected: escolhas['Quais Propriedades']!
                                   .contains(atributos[index]),
                               onSelected: (bool value) {
-                                setState(() {
-                                  if (escolhas['Quais Propriedades']!
-                                      .contains(atributos[index])) {
-                                    escolhas['Quais Propriedades']!
-                                        .remove(atributos[index]);
-                                  } else {
-                                    escolhas['Quais Propriedades']!
-                                        .add(atributos[index]);
-                                  }
-                                  debugPrint('Escolhidos $escolhas');
-                                });
+                                if (index == 0) {
+                                } else {
+                                  setState(() {
+                                    if (escolhas['Quais Propriedades']!
+                                        .contains(atributos[index])) {
+                                      escolhas['Quais Propriedades']!
+                                          .remove(atributos[index]);
+                                    } else {
+                                      escolhas['Quais Propriedades']!
+                                          .add(atributos[index]);
+                                    }
+                                  });
+                                }
+                                debugPrint('Escolhidos $escolhas');
                               },
                             );
                           }),
@@ -162,9 +165,7 @@ class _OpcoesCompartilharListaState extends State<OpcoesCompartilharLista> {
               elevation: 1,
             ),
             onPressed: () {
-              itemC.compartilharSocial(
-                escolhas
-              );
+              itemC.compartilharSocial(escolhas);
               Navigator.pop(context);
             },
             child: Row(mainAxisSize: MainAxisSize.min, children: [

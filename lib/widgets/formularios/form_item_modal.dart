@@ -65,8 +65,6 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
       tipoMedida.text = itemC.itemParaEdicaoForm!.medida;
       prioridadeItem.text = itemC.itemParaEdicaoForm!.prioridade.toString();
       categoriaItem.text = itemC.itemParaEdicaoForm!.idCategoria.toString();
-
-    
     }
     if (itemC.isLimparFormulario) {
       nomeItem.clear();
@@ -162,6 +160,7 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                           if (itemC.isFormEdicao) {
                                             ItemModel itemEditado =
                                                 itemC.itemParaEdicaoForm!;
+
                                             itemEditado.nome = nomeItem.text;
                                             itemEditado.descricao =
                                                 descricaoItem.text.isEmpty
@@ -179,6 +178,9 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                                     : _formatarPreco();
                                             itemEditado.prioridade =
                                                 int.parse(prioridadeItem.text);
+
+                                            itemEditado.idCategoria =
+                                                int.parse(categoriaItem.text);
 
                                             itemC.atualizarItem(itemEditado);
                                             itemC.setIsDropDown();
@@ -250,35 +252,37 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                             children: [
                                               const Text('Categoria:'),
                                               const SizedBox(width: 10),
-                                              InputChip(
-                                                avatar: Icon(
-                                                  Icons.close,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary,
-                                                ),
-                                                labelStyle: TextStyle(
+                                              Expanded(
+                                                child: InputChip(
+                                                  avatar: Icon(
+                                                    Icons.close,
                                                     color: Theme.of(context)
                                                         .colorScheme
-                                                        .onPrimary),
-                                                showCheckmark: false,
-                                                selectedColor: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                selected: true,
-                                                onSelected: (value) {
-                                                  itemC.setIsDropDown();
-                                                },
-                                                label: Text(
-                                                  categoriaR.getCategorias
-                                                      .firstWhere((element) =>
-                                                          element.id ==
-                                                          itemC
-                                                              .itemParaEdicaoForm!
-                                                              .idCategoria)
-                                                      .nome,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                        .onPrimary,
+                                                  ),
+                                                  labelStyle: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onPrimary),
+                                                  showCheckmark: false,
+                                                  selectedColor: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                  selected: true,
+                                                  onSelected: (value) {
+                                                    itemC.setIsDropDown();
+                                                  },
+                                                  label: Text(
+                                                    categoriaR.getCategorias
+                                                        .firstWhere((element) =>
+                                                            element.id ==
+                                                            itemC
+                                                                .itemParaEdicaoForm!
+                                                                .idCategoria)
+                                                        .nome,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ),
                                               ),
                                             ],

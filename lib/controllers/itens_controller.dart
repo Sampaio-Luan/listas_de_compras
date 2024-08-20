@@ -610,54 +610,29 @@ class ItensController extends ChangeNotifier {
   compartilharSocial(Map<String, List<String>> escolhas) async {
     String mensagem = '$_nomeLista\n';
 
-    switch (escolhas['Quais Itens']) {
-      case ['Sem check']:
-        for (var i in _itens) {
-          if (i.comprado == 0) {
-            if (escolhas['Quais Itens']!.contains('Quantidade')) {
-              mensagem += '${i.quantidade.toStringAsFixed(3)} - ${i.nome}\n';
-            } else if (escolhas['Quais Itens']!.contains('Quantidade') &&
-                escolhas['Quais Itens']!.contains('Preço')) {
-              mensagem +=
-                  '${i.quantidade.toStringAsFixed(3)} - ${i.nome} ${formatter.format(i.preco)}\n';
-            } else {
-              mensagem += '- ${i.nome}\n';
-            }
-          }
+    if (escolhas['Quais Itens']!.contains('Sem check')) {
+      for (var i in _itens) {
+        if (i.comprado == 0) {
+          mensagem +=
+              '${(escolhas['Quais Propriedades']!.contains('Quantidade')) ? i.medida == 'uni' ? i.quantidade.toStringAsFixed(0) : i.quantidade.toStringAsFixed(3) : ''} - ${i.nome} ${(escolhas['Quais Propriedades']!.contains('Preço')) ? formatter.format(i.preco) : ''}\n';
         }
-
-        break;
-
-      case ['Com check']:
-        for (var i in _itens) {
-          if (i.comprado == 1) {
-            if (escolhas['Quais Itens']!.contains('Quantidade')) {
-              mensagem += '${i.quantidade.toStringAsFixed(3)} - ${i.nome}\n';
-            } else if (escolhas['Quais Itens']!.contains('Quantidade') &&
-                escolhas['Quais Itens']!.contains('Preço')) {
-              mensagem +=
-                  '${i.quantidade.toStringAsFixed(3)} - ${i.nome} ${formatter.format(i.preco)}\n';
-            } else {
-              mensagem += '- ${i.nome}\n';
-            }
-          }
+      }
+    } else if (escolhas['Quais Itens']!.contains('Com check')) {
+      for (var i in _itens) {
+        if (i.comprado == 1) {
+          mensagem +=
+              '${(escolhas['Quais Propriedades']!.contains('Quantidade')) ? i.medida == 'uni' ? i.quantidade.toStringAsFixed(0) : i.quantidade.toStringAsFixed(3) : ''} - ${i.nome} ${(escolhas['Quais Propriedades']!.contains('Preço')) ? formatter.format(i.preco) : ''}\n';
         }
-        break;
-      default:
-        for (var i in _itens) {
-          if (escolhas['Quais Itens']!.contains('Quantidade')) {
-            mensagem += '${i.quantidade.toStringAsFixed(3)} - ${i.nome}\n';
-          } else if (escolhas['Quais Itens']!.contains('Quantidade') &&
-              escolhas['Quais Itens']!.contains('Preço')) {
-            mensagem +=
-                '${i.quantidade.toStringAsFixed(3)} - ${i.nome} ${formatter.format(i.preco)}\n';
-          } else {
-            mensagem += '- ${i.nome}\n';
-          }
-        }
+      }
+    } else {
+      for (var i in _itens) {
+        mensagem +=
+              '${(escolhas['Quais Propriedades']!.contains('Quantidade')) ? i.medida == 'uni' ? i.quantidade.toStringAsFixed(0) : i.quantidade.toStringAsFixed(3) : ''} - ${i.nome} ${(escolhas['Quais Propriedades']!.contains('Preço')) ? formatter.format(i.preco) : ''}\n';
+      }
     }
     mensagem +=
         '\n\n\nUsei o APP Lista de Compras. Aproveite e veja como funciona. 🤗🤗🤗. https://play.google.com/store/apps/details?id=com.rosangela.listadeCompras';
+    debugPrint(mensagem);
     SocialShare.shareOptions(
       mensagem,
     );
