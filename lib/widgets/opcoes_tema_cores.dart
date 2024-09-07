@@ -6,7 +6,6 @@ import '../theme/estilos.dart';
 import 'package:provider/provider.dart';
 
 import '../preferencias_usuario.dart';
-import '../theme/estilos.dart';
 
 class OpcoesTemaCores extends StatefulWidget {
   const OpcoesTemaCores({super.key});
@@ -30,7 +29,7 @@ class _OpcoesTemaCoresState extends State<OpcoesTemaCores> {
   Widget build(BuildContext context) {
     final preferencias = context.watch<PreferenciasUsuarioShared>();
     return AlertDialog(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 2,
       title: Text(
         'Tema de cores',

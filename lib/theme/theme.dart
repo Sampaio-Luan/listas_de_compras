@@ -8,8 +8,6 @@ class MaterialTheme {
 //#region =============== INDIGO ==============================================
   static ColorScheme indigoClaro() {
     return const ColorScheme(
-      background: Colors.white,
-      onBackground: Colors.black87,
       brightness: Brightness.light,
       primary: Color(0xff4f5b92),
       surfaceTint: Color(0xff4f5b92),
@@ -46,8 +44,6 @@ class MaterialTheme {
 
   static ColorScheme indigoEscuro() {
     return const ColorScheme(
-      background: Color.fromARGB(255, 0, 0, 0),
-      onBackground: Colors.white70,
       brightness: Brightness.dark,
       primary: Color(0xffb8c4ff),
       surfaceTint: Color(0xffb8c4ff),
@@ -88,8 +84,6 @@ class MaterialTheme {
   static ColorScheme verdeClaro() {
     return const ColorScheme(
       brightness: Brightness.light,
-      background: Colors.white,
-      onBackground: Colors.black87,
       primary: Color(0xff406835),
       surfaceTint: Color(0xff406835),
       onPrimary: Color(0xffffffff),
@@ -126,8 +120,6 @@ class MaterialTheme {
   static ColorScheme verdeEscuro() {
     return const ColorScheme(
       brightness: Brightness.dark,
-      background: Color.fromARGB(255, 0, 0, 0),
-      onBackground: Colors.white70,
       primary: Color(0xffa5d395),
       surfaceTint: Color(0xffa5d395),
       onPrimary: Color(0xff11380b),
@@ -167,8 +159,6 @@ class MaterialTheme {
   static ColorScheme amareloClaro() {
     return const ColorScheme(
       brightness: Brightness.light,
-      background: Colors.white,
-      onBackground: Colors.black87,
       primary: Color.fromARGB(255, 209, 157, 0),
       surfaceTint: Color(0xff735c0c),
       onPrimary: Color(0xffffffff),
@@ -205,8 +195,6 @@ class MaterialTheme {
   static ColorScheme amareloEscuro() {
     return const ColorScheme(
       brightness: Brightness.dark,
-      background: Color.fromARGB(255, 0, 0, 0),
-      onBackground: Colors.white70,
       primary: Color(0xffe3c46d),
       surfaceTint: Color(0xffe3c46d),
       onPrimary: Color(0xff3d2f00),
@@ -246,8 +234,6 @@ class MaterialTheme {
   static ColorScheme rosaClaro() {
     return const ColorScheme(
       brightness: Brightness.light,
-      background: Colors.white,
-      onBackground: Colors.black87,
       primary: Color.fromARGB(255, 166, 0, 91),
       surfaceTint: Color(0xff874b6c),
       onPrimary: Color(0xffffffff),
@@ -284,8 +270,6 @@ class MaterialTheme {
   static ColorScheme rosaEscuro() {
     return const ColorScheme(
       brightness: Brightness.dark,
-      background: Color.fromARGB(255, 0, 0, 0),
-      onBackground: Colors.white70,
       primary: Color.fromARGB(255, 208, 0, 104),
       surfaceTint: Color(0xfffcb0d6),
       onPrimary: Color(0xff521d3c),
@@ -328,7 +312,7 @@ class MaterialTheme {
           bodyColor: colorScheme.onSurface,
           displayColor: colorScheme.onSurface,
         ),
-        scaffoldBackgroundColor: colorScheme.background,
+        scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
       );
 

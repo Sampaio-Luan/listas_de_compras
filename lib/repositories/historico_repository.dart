@@ -5,7 +5,6 @@ import 'package:sqflite/sqflite.dart';
 import '../constants/const_tb_historico.dart';
 import '../database/banco.dart';
 import '../models/historico.module.dart';
-import '../models/item_historico.module.dart';
 
 class HistoricoRepository extends ChangeNotifier {
   final List<HistoricoModel> _historicos = [];

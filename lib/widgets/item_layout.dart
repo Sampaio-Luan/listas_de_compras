@@ -86,7 +86,7 @@ class NLayoutItem extends StatelessWidget {
                       //     .inversePrimary
                       //     .withAlpha(100),
                       foregroundColor:
-                          Theme.of(context).colorScheme.onBackground,
+                          Theme.of(context).colorScheme.onSurface,
                       child: Text(
                         item.nome[0].toUpperCase(),
                         style: const TextStyle(fontSize: 16),
@@ -198,7 +198,7 @@ class NLayoutItem extends StatelessWidget {
       decoration: TextDecoration.lineThrough,
       decorationThickness: 1,
       fontSize: 18,
-      color: Theme.of(context).colorScheme.onBackground.withAlpha(130),
+      color: Theme.of(context).colorScheme.onSurface.withAlpha(130),
       overflow: TextOverflow.ellipsis,
     );
   }

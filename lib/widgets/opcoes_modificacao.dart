@@ -7,7 +7,6 @@ import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../models/categoria.module.dart';
 import '../models/historico.module.dart';
-import '../models/item.module.dart';
 import '../models/item_padrao.module.dart';
 import '../models/lista.module.dart';
 import '../preferencias_usuario.dart';
@@ -19,7 +18,6 @@ import '../theme/estilos.dart';
 import 'formularios/form_categoria.dart';
 import 'formularios/form_historico.dart';
 import 'formularios/form_item_padrao.dart';
-import 'formularios/formulario_item.dart';
 import 'formularios/formulario_lista.dart';
 
 class OpcoesModificacao extends StatefulWidget {

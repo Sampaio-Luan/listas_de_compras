@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:listas_de_compras/widgets/opcoes_modificacao.dart';
 
 import '../controllers/itens_controller.dart';
-import '../models/item.module.dart';
-import '../models/item_historico.module.dart';
 import '../repositories/historico_repository.dart';
 import '../repositories/itens_historico_repository.dart';
 import '../theme/estilos.dart';

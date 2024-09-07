@@ -38,7 +38,7 @@ class _OpcoesCompartilharListaState extends State<OpcoesCompartilharLista> {
   Widget build(BuildContext context) {
     final itemC = context.watch<ItensController>();
     return AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 1,
         title: Text(
           'Compartilhar itens da lista',

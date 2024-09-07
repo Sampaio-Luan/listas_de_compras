@@ -146,9 +146,9 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                     child: IconButton.filled(
                                       style: ButtonStyle(
                                         backgroundColor: itemC.isFormEdicao
-                                            ? MaterialStateProperty.all(
+                                            ? WidgetStateProperty.all(
                                                 Colors.green)
-                                            : MaterialStateProperty.all(
+                                            : WidgetStateProperty.all(
                                                 Theme.of(context)
                                                     .colorScheme
                                                     .primary),

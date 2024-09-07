@@ -26,7 +26,7 @@ class _DrawerListasState extends State<DrawerListas> {
     final preferencias = context.read<PreferenciasUsuarioShared>();
 
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(20),

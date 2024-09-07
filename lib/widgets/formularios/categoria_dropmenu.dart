@@ -70,8 +70,8 @@ class CategoriaDropMenu extends StatelessWidget {
       optionTextStyle: const TextStyle(fontSize: 14),
       selectedOptionIcon: const Icon(Icons.check_circle),
       hint: 'Categoria',
-      dropdownBackgroundColor: Theme.of(context).colorScheme.background,
-      optionsBackgroundColor: Theme.of(context).colorScheme.background,
+      dropdownBackgroundColor: Theme.of(context).colorScheme.surface,
+      optionsBackgroundColor: Theme.of(context).colorScheme.surface,
     );
   }
 }

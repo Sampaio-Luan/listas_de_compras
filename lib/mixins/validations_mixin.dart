@@ -62,7 +62,7 @@ isValidado(
             fontSize: 16,
             color: Theme.of(context).colorScheme.brightness == Brightness.light
                 ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onBackground,
+                : Theme.of(context).colorScheme.onSurface,
           ),
         ),
         duration: const Duration(seconds: 3), // Defina o tempo desejado
