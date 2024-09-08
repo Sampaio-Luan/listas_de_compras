@@ -5,9 +5,11 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/const_strings_globais.dart';
 import '../controllers/itens_controller.dart';
 import '../controllers/listas_controller.dart';
 import '../models/item.module.dart';
+import '../preferencias_usuario.dart';
 import '../repositories/categorias_repository.dart';
 import '../theme/estilos.dart';
 import '../widgets/formularios/form_item_modal.dart';
@@ -33,6 +35,7 @@ class _ItensPageState extends State<ItensPage> {
   Widget build(BuildContext context) {
     final ctrl = context.watch<ItensController>();
     final ctrlListas = context.watch<ListasController>();
+    final preferencias = context.watch<PreferenciasUsuarioShared>();
 
     return Scaffold(
       drawer: const DrawerListas(),
@@ -139,102 +142,110 @@ class _ItensPageState extends State<ItensPage> {
                                     )
                                   : Expanded(
                                       child: Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: controle.isFormCompleto
-                                                  ? 340
-                                                  : 135.0),
-                                          child: _createGroupedListView(context)
-                                          // ListView.builder(
-                                          //     itemCount: controle
-                                          //         .itemPorCategoria.length,
-                                          //     itemBuilder: (context, i) {
-                                          //       return Column(children: [
-                                          //         Container(
-                                          //           height: 90,
-                                          //           color: Theme.of(context)
-                                          //               .colorScheme
-                                          //               .primary
-                                          //               .withAlpha(150),
-                                          //           child: Text(
-                                          //               '${controle.itemPorCategoria.keys.toList()[i]} '),
-                                          //         ),
-                                          //         Expanded(
-                                          //           child: ListView.separated(
-                                          //             itemCount: controle.itemPorCategoria.values.toList()[i]
-                                          //                 .length,
-                                          //             itemBuilder:
-                                          //                 (context, index) {
-                                          //               return
-                                          //               Slidable(
-                                          //                 key: ValueKey(controle.itemPorCategoria.values.toList()[i][index]
-                                          //                     .idItem
-                                          //                     .toString()),
-                                          //                 startActionPane:
-                                          //                     _actionPane(
-                                          //                   context,
-                                          //                   item: controle.itemPorCategoria.values.toList()[i][index],
-                                          //                   tipoActionPane:
-                                          //                       'Deletar',
-                                          //                 ),
-                                          //                 endActionPane:
-                                          //                     _actionPane(
-                                          //                   context,
-                                          //                   item: controle.itemPorCategoria.values.toList()[i][index],
-                                          //                   tipoActionPane:
-                                          //                       'Editar',
-                                          //                 ),
-                                          //                 child: NLayoutItem(
-                                          //                     item: controle.itemPorCategoria.values.toList()[i][index]),
-                                          //               );
-                                          //             },
-                                          //             separatorBuilder:
-                                          //                 (context, index) {
-                                          //               return const Divider(
-                                          //                 height: 0,
-                                          //                 thickness: 0.7,
-                                          //               );
-                                          //             },
-                                          //           ),
-                                          //         )
-                                          //       ]);
-                                          //     }),
+                                        padding: EdgeInsets.only(
+                                            bottom: controle.isFormCompleto
+                                                ? 340
+                                                : 135.0),
+                                        child: preferencias.verPorCategoria
+                                            ? _createGroupedListView(context)
+                                            :
+                                            // ListView.builder(
+                                            //     itemCount: controle
+                                            //         .itemPorCategoria.length,
+                                            //     itemBuilder: (context, i) {
+                                            //       return Column(children: [
+                                            //         Container(
+                                            //           height: 90,
+                                            //           color: Theme.of(context)
+                                            //               .colorScheme
+                                            //               .primary
+                                            //               .withAlpha(150),
+                                            //           child: Text(
+                                            //               '${controle.itemPorCategoria.keys.toList()[i]} '),
+                                            //         ),
+                                            //         Expanded(
+                                            //           child: ListView.separated(
+                                            //             itemCount: controle.itemPorCategoria.values.toList()[i]
+                                            //                 .length,
+                                            //             itemBuilder:
+                                            //                 (context, index) {
+                                            //               return
+                                            //               Slidable(
+                                            //                 key: ValueKey(controle.itemPorCategoria.values.toList()[i][index]
+                                            //                     .idItem
+                                            //                     .toString()),
+                                            //                 startActionPane:
+                                            //                     _actionPane(
+                                            //                   context,
+                                            //                   item: controle.itemPorCategoria.values.toList()[i][index],
+                                            //                   tipoActionPane:
+                                            //                       'Deletar',
+                                            //                 ),
+                                            //                 endActionPane:
+                                            //                     _actionPane(
+                                            //                   context,
+                                            //                   item: controle.itemPorCategoria.values.toList()[i][index],
+                                            //                   tipoActionPane:
+                                            //                       'Editar',
+                                            //                 ),
+                                            //                 child: NLayoutItem(
+                                            //                     item: controle.itemPorCategoria.values.toList()[i][index]),
+                                            //               );
+                                            //             },
+                                            //             separatorBuilder:
+                                            //                 (context, index) {
+                                            //               return const Divider(
+                                            //                 height: 0,
+                                            //                 thickness: 0.7,
+                                            //               );
+                                            //             },
+                                            //           ),
+                                            //         )
+                                            //       ]);
+                                            //     }),
 
-                                          // ListView.separated(
-                                          //   itemCount:
-                                          //       controle.itensInterface.length,
-                                          //   separatorBuilder:
-                                          //       (BuildContext context,
-                                          //           int index) {
-                                          //     return const Divider(
-                                          //       height: 0,
-                                          //       thickness: 0.7,
-                                          //     );
-                                          //   },
-                                          //   itemBuilder: (BuildContext context,
-                                          //       int index) {
-                                          //     return Slidable(
-                                          //       key: ValueKey(controle
-                                          //           .itensInterface[index].idItem
-                                          //           .toString()),
-                                          //       startActionPane: _actionPane(
-                                          //         context,
-                                          //         item: controle
-                                          //             .itensInterface[index],
-                                          //         tipoActionPane: 'Deletar',
-                                          //       ),
-                                          //       endActionPane: _actionPane(
-                                          //         context,
-                                          //         item: controle
-                                          //             .itensInterface[index],
-                                          //         tipoActionPane: 'Editar',
-                                          //       ),
-                                          //       child: NLayoutItem(
-                                          //           item: controle
-                                          //               .itensInterface[index]),
-                                          //     );
-                                          //   },
-                                          // ),
-                                          ),
+                                            ListView.separated(
+                                                itemCount: controle
+                                                    .itensInterface.length,
+                                                separatorBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return const Divider(
+                                                    height: 0,
+                                                    thickness: 0.7,
+                                                  );
+                                                },
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Slidable(
+                                                    key: ValueKey(controle
+                                                        .itensInterface[index]
+                                                        .idItem
+                                                        .toString()),
+                                                    startActionPane:
+                                                        _actionPane(
+                                                      context,
+                                                      item: controle
+                                                              .itensInterface[
+                                                          index],
+                                                      tipoActionPane: 'Deletar',
+                                                    ),
+                                                    endActionPane: _actionPane(
+                                                      context,
+                                                      item: controle
+                                                              .itensInterface[
+                                                          index],
+                                                      tipoActionPane: 'Editar',
+                                                    ),
+                                                    child: NLayoutItem(
+                                                        item: controle
+                                                                .itensInterface[
+                                                            index]),
+                                                  );
+                                                },
+                                              ),
+                                      ),
                                     );
                             }),
                           ]),
@@ -267,7 +278,7 @@ class _ItensPageState extends State<ItensPage> {
             onPressed: () {
               controle.setIsPesquisar = !controle.isPesquisar;
             }),
-         OpcoesFinalizacao(),
+        OpcoesFinalizacao(),
         Builder(
           builder: (context) => IconButton(
             icon: const Icon(PhosphorIconsRegular.basket),
@@ -277,10 +288,8 @@ class _ItensPageState extends State<ItensPage> {
       ],
       title: Text(
         controle.nomeLista,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.brightness == Brightness.light
-              ? Theme.of(context).colorScheme.onPrimary.withAlpha(200)
-              : Theme.of(context).colorScheme.onPrimaryContainer,
+        style: const TextStyle(
+          color: Colors.white,
         ),
         overflow: TextOverflow.ellipsis,
       ),
@@ -318,13 +327,15 @@ class _ItensPageState extends State<ItensPage> {
         child: TextField(
           controller: pesquisarPorItem,
           style: TextStyle(
-              color:
-                  Theme.of(context).colorScheme.brightness == Brightness.light
-                      ? Theme.of(context).colorScheme.onPrimary.withAlpha(200)
-                      : Theme.of(context).colorScheme.onPrimaryContainer,
-              fontSize: 18),
+            color: Theme.of(context).colorScheme.brightness == Brightness.light
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onPrimaryContainer,
+            fontSize: 18,
+          ),
           onChanged: (value) {
-            controle.pesquisar(pesquisarPor: pesquisarPorItem.text);
+            controle.pesquisar(
+              pesquisarPor: pesquisarPorItem.text,
+            );
           },
           autofocus: true,
           decoration: InputDecoration(
@@ -348,6 +359,7 @@ class _ItensPageState extends State<ItensPage> {
             ? Theme.of(context).colorScheme.onPrimary
             : Theme.of(context).colorScheme.onPrimaryContainer,
       ),
+     
     );
   }
 
@@ -420,17 +432,32 @@ class _ItensPageState extends State<ItensPage> {
       elements: ctrl.itensInterface,
       groupBy: (element) => element.idCategoria,
       groupComparator: (value1, value2) => value2.compareTo(value1),
-      itemComparator: null, //(item1, item2) => item1.idItem.compareTo(item2.idItem),
+      itemComparator: ctrl.ordem == kPrioridade
+          ? (item1, item2) => item1.prioridade.compareTo(item2.prioridade)
+          : ctrl.ordem == kCaro
+              ? (item1, item2) => item2.preco.compareTo(item1.preco)
+              : ctrl.ordem == kBarato
+                  ? (item1, item2) => item1.preco.compareTo(item2.preco)
+                  : ctrl.ordem == kPadrao || ctrl.ordem.isEmpty
+                      ? null
+                      : ctrl.ordem == kAz
+                          ? (item1, item2) => item1.nome.compareTo(item2.nome)
+                          : ctrl.ordem == kZa
+                              ? (item1, item2) =>
+                                  item2.nome.compareTo(item1.nome)
+                              : null,
       order: GroupedListOrder.ASC,
-      separator: const Divider(height: 0, thickness: 0.7,),
+      separator: const Divider(
+        height: 0,
+        thickness: 0.7,
+      ),
       useStickyGroupSeparators: true,
-      
       groupSeparatorBuilder: (dynamic value) => Container(
         color: Theme.of(context).colorScheme.primaryContainer.withAlpha(170),
         child: Text(
           categoriaR.getCategorias
               .where((element) => true)
-              .firstWhere((element) => element.id  == value as int)
+              .firstWhere((element) => element.id == value as int)
               .nome,
           textAlign: TextAlign.center,
           style: Estilos().tituloColor(context, tamanho: 'm'),

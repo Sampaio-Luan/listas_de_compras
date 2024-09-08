@@ -6,6 +6,8 @@ import '../constants/const_tb_historico.dart';
 import '../database/banco.dart';
 import '../models/historico.module.dart';
 
+import 'itens_historico_repository.dart';
+
 class HistoricoRepository extends ChangeNotifier {
   final List<HistoricoModel> _historicos = [];
   List<HistoricoModel> get getHistoricos => _historicos;
@@ -54,16 +56,18 @@ class HistoricoRepository extends ChangeNotifier {
     return id;
   }
 
-  Future<void> excluirHistorico(HistoricoModel historico) async {
+  Future<void> excluirHistorico(HistoricoModel historico, ItensHistoricoRepository itemHistoricoRepository) async {
     db = await Banco.instancia.database;
 
     await db.delete(historicoTableName,
         where: '$historicoColumnId = ?', whereArgs: [historico.id]);
 
+    await itemHistoricoRepository.excluirItemHistorico(historico.id);
+
     debugPrint("💁🏻⏳RPH excluirHistorico() id: ${historico.id}");
 
-    _historicos.remove(historico);
-    notifyListeners();
+    _historicos.clear();
+    recuperarHistoricos();
   }
 
   editarHistorico(HistoricoModel historico) async {

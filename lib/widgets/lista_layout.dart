@@ -46,6 +46,7 @@ class NLayoutLista extends StatelessWidget {
                 : null,
             child: Row(children: [
               Expanded(
+                flex: 2,
                 child: indicadorDeItensCoprados(
                   context,
                   qtdComprado: lista.totalComprados,
@@ -54,7 +55,7 @@ class NLayoutLista extends StatelessWidget {
               ),
               const SizedBox(width: 15),
               Expanded(
-                flex: 6,
+                flex: 7,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

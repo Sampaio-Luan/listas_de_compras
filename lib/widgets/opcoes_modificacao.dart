@@ -12,9 +12,11 @@ import '../models/lista.module.dart';
 import '../preferencias_usuario.dart';
 import '../repositories/categorias_repository.dart';
 import '../repositories/historico_repository.dart';
+import '../repositories/itens_historico_repository.dart';
 import '../repositories/itens_padrao_repository.dart';
 import '../theme/estilos.dart';
 
+import 'feedback/avisos.dart';
 import 'formularios/form_categoria.dart';
 import 'formularios/form_historico.dart';
 import 'formularios/form_item_padrao.dart';
@@ -44,6 +46,7 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
   late CategoriaModel categoria;
   late ItemPadraoModel itemPadrao;
   late HistoricoModel historico;
+  final Avisos aviso = Avisos();
 
   @override
   void initState() {
@@ -68,6 +71,7 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
     final categoriaR = context.watch<CategoriasRepository>();
     final preferencias = context.watch<PreferenciasUsuarioShared>();
     final historicoR = context.watch<HistoricoRepository>();
+    final itemHR = context.watch<ItensHistoricoRepository>();
     return PopupMenuButton<dynamic>(
       padding: const EdgeInsets.all(0),
       icon: Icon(
@@ -99,22 +103,29 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
         ),
         PopupMenuItem(
           child: _label(context, label: 'Excluir'),
-          onTap: () {
-            if (widget.historico != null) {
-              historicoR.excluirHistorico(historico);
-            } else if (widget.lista != null) {
-              int i = listaController.listas.indexOf(widget.lista!);
-              ListaModel l = listaController.listas[i];
-              itensController.iniciarController(
-                  idLista: l.id, nomeLista: l.nome);
-              preferencias.setUltimaListaVisitada(l.id);
-              listaController.excluirLista(lista);
-            } else if (widget.categoria != null) {
-              categoriaR.excluirCategorias(categoria);
-            } else if (widget.itemPadrao != null) {
-              itemPadraoR.excluirItemPadrao(itemPadrao);
-            } else {
-              historicoR.excluirHistorico(historico);
+          onTap: () async {
+            final confirmacao = await aviso.informativo(
+              context,
+              'Tem certeza que deseja realizar a exclusão? Essa ação não pode ser desfeita.',
+            );
+
+            if (confirmacao) {
+              if (widget.historico != null) {
+                historicoR.excluirHistorico(historico, itemHR);
+              } else if (widget.lista != null) {
+                int i = listaController.listas.indexOf(widget.lista!);
+                ListaModel l = listaController.listas[i];
+                itensController.iniciarController(
+                    idLista: l.id, nomeLista: l.nome);
+                preferencias.setUltimaListaVisitada(l.id);
+                listaController.excluirLista(lista);
+              } else if (widget.categoria != null) {
+                categoriaR.excluirCategorias(categoria);
+              } else if (widget.itemPadrao != null) {
+                itemPadraoR.excluirItemPadrao(itemPadrao);
+              } else {
+                historicoR.excluirHistorico(historico, itemHR);
+              }
             }
           },
         ),

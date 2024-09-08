@@ -4,26 +4,61 @@ import '../../theme/estilos.dart';
 
 class Avisos {
   Estilos estilo = Estilos();
-  informativo(BuildContext context, String mensagem) {
-    showDialog(
+  informativo(BuildContext context, String mensagem) async {
+    final resposta = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Atenção !!!',
+            style: estilo.tituloColor(context, tamanho: 'g'),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(mensagem, style: estilo.corpo(context, tamanho: 'p')),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            TextButton(
+              child: const Text('Estou ciente'),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            )
+          ],
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+        );
+      },
+    );
+
+    return resposta;
+  }
+
+  observacao(BuildContext context, String mensagem) async {
+    final resposta = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
             title: Text(
-              'Atenção !!!',
+              'Observação !!!',
               style: estilo.tituloColor(context, tamanho: 'g'),
               textAlign: TextAlign.center,
             ),
             content: Text(mensagem, style: estilo.corpo(context, tamanho: 'p')),
             actions: <Widget>[
               TextButton(
-                child: const Text('Confirmar'),
+                child: const Text('Entendido'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context, true);
                 },
               ),
             ]);
       },
     );
+
+    return resposta;
   }
 }

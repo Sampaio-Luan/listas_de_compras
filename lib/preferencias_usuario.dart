@@ -52,6 +52,8 @@ class PreferenciasUsuarioShared extends ChangeNotifier {
     _isVerPorCategoria = value;
     _prefs.setBool('verPorCategoria', _isVerPorCategoria);
     debugPrint('📲😎Pref, setVerPorCategoria(): $_isVerPorCategoria');
+
+    notifyListeners();
   }
 
   mudarTema() async {

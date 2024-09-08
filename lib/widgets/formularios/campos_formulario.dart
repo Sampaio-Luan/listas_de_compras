@@ -186,7 +186,7 @@ class CamposFormulario with ValidacoesMixin {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _startDate,
-      firstDate: DateTime.now().add(const Duration(days: 0)),
+      firstDate: DateTime.now().add(const Duration(days: -365)),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 

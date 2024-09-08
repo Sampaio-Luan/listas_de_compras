@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import '../../controllers/itens_controller.dart';
 import '../../models/prioridades.module.dart';
 import '../../theme/estilos.dart';
 
@@ -13,17 +16,18 @@ class BotaoSegmentado extends StatefulWidget {
 
 class _BotaoSegmentadoState extends State<BotaoSegmentado> {
   final prioridades = Prioridades();
-  int selecionada = 3;
-  @override
-  void initState() {
-    super.initState();
-    if (widget.prioridadeForm.text.isNotEmpty) {
-      selecionada = int.parse(widget.prioridadeForm.text);
-    }
-  }
+  // int selecionada = 3;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (widget.prioridadeForm.text.isNotEmpty) {
+  //     selecionada = int.parse(widget.prioridadeForm.text);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final itensController = context.read<ItensController>();
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,8 +80,12 @@ class _BotaoSegmentadoState extends State<BotaoSegmentado> {
             onSelectionChanged: (newSelection) {
               setState(() {
                 widget.prioridadeForm.text = newSelection.first.toString();
-                selecionada = newSelection.first;
-                debugPrint('Prioridade selecionada: $selecionada');
+                if (itensController.itemParaEdicaoForm != null) {
+                  itensController.itemParaEdicaoForm!.prioridade =
+                      int.parse(widget.prioridadeForm.text);
+                }
+                // selecionada = newSelection.first;
+                // debugPrint('Prioridade selecionada: $selecionada');
               });
             },
           ),

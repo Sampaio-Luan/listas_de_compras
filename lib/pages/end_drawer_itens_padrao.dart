@@ -26,7 +26,7 @@ class EndDrawerItensPadrao extends StatelessWidget {
     final itemCControle = context.watch<ItensController>();
     final listaC = context.watch<ListasController>();
     List<String> nomes =
-        itemCControle.itens.map((e) => e.nome.toLowerCase()).toList();
+        itemCControle.itens.map((e) => e.nome.toLowerCase() + e.idCategoria.toString()).toList();
 
         
     return Drawer(
@@ -93,12 +93,12 @@ class EndDrawerItensPadrao extends StatelessWidget {
                               ]),
                         ),
                         nomes.contains(
-                                itemPR.getItensPadraoInterface[index].nome.toLowerCase())
+                                (itemPR.getItensPadraoInterface[index].nome.toLowerCase() + itemPR.getItensPadraoInterface[index].idCategoria.toString()))
                             ? IconButton(
                                 color: Colors.red,
                                 onPressed: () {
                                   itemCControle.removerComEndDrawer(
-                                      itemPR.getItensPadraoInterface[index].nome,
+                                     (itemPR.getItensPadraoInterface[index].nome.toLowerCase() + itemPR.getItensPadraoInterface[index].idCategoria.toString()),
                                       listaC);
                                 },
                                 icon: const Icon(

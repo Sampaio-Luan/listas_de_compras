@@ -17,18 +17,8 @@ class BotaoSegmentadoMedidada extends StatefulWidget {
 
 class _BotaoSegmentadoMedidadaState extends State<BotaoSegmentadoMedidada> {
   @override
-  void initState() {
-    super.initState();
-    if (widget.medida.text.isEmpty) {
-      widget.medida.text = 'uni';
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final itensController = context.read<ItensController>();
-
-   
 
     return SegmentedButton<String>(
         showSelectedIcon: false,
@@ -51,21 +41,28 @@ class _BotaoSegmentadoMedidadaState extends State<BotaoSegmentadoMedidada> {
         selected: <String>{widget.medida.text},
         onSelectionChanged: (Set<String> newSelection) {
           setState(() {
-            widget.medida.text = newSelection.first;
-         
+            widget.medida.text = newSelection.first.toString();
 
-          if (widget.medida.text == 'uni') {
-            double quantidade = widget.valor.text.isEmpty
-                ? 1
-                : double.parse(widget.valor.text.replaceAll(',', '.'));
-            widget.valor.text = quantidade.toStringAsFixed(0);
-            itensController.setIsUnidade(true);
-          } else {
-            widget.valor.text = '0,${widget.valor.text}';
-            itensController.setIsUnidade(false);
-          }
-          
-          debugPrint('SegmentedButton unidade de medida: ${widget.medida.text}'); });
+            if (widget.medida.text == 'uni') {
+              double quantidade = widget.valor.text.isEmpty
+                  ? 1
+                  : double.parse(widget.valor.text.replaceAll(',', '.'));
+              widget.valor.text = quantidade.toStringAsFixed(0);
+              if (itensController.itemParaEdicaoForm != null) {
+              itensController.itemParaEdicaoForm!.medida = widget.medida.text;
+              }
+              itensController.setIsUnidade(true);
+            } else {
+              widget.valor.text = '0,${widget.valor.text}';
+               if (itensController.itemParaEdicaoForm != null) {
+              itensController.itemParaEdicaoForm!.medida = widget.medida.text;
+              }
+              itensController.setIsUnidade(false);
+            }
+
+            debugPrint(
+                'SegmentedButton unidade de medida: ${widget.medida.text}');
+          });
         });
   }
 }

@@ -56,15 +56,15 @@ class ItensHistoricoRepository extends ChangeNotifier {
   }
 
 
-  Future<void> excluirItemHistorico(ItemHistoricoModel itemHistorico) async {
+  Future<void> excluirItemHistorico(int idHistorico) async {
     db = await Banco.instancia.database;
 
     await db.delete(itemHistoricoTableName,
-        where: '$itemHistoricoColumnItemId = ?', whereArgs: [itemHistorico.id]);
+        where: '$itemHistoricoColumnHistoricoId = ?', whereArgs: [idHistorico]);
 
-     debugPrint("💁🏻🐉RPIH  excluirItemHistorico() id: ${itemHistorico.id}");
+     debugPrint("💁🏻🐉RPIH  excluirItemHistorico() idHisotrico: $idHistorico");
 
-    _itensHistoricos.remove(itemHistorico);
+    
     notifyListeners();
   }
 

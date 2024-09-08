@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/itens_controller.dart';
@@ -31,6 +32,8 @@ class _FormHistoricoState extends State<FormHistorico> with ValidacoesMixin {
 
   CamposFormulario cf = CamposFormulario();
 
+  final dateFormatter = DateFormat('dd/MM/yyyy');
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,8 @@ class _FormHistoricoState extends State<FormHistorico> with ValidacoesMixin {
       tituloHistorico.text = widget.historico!.titulo;
       dataHistorico.text = widget.historico!.data;
       descricaoHistorico.text = widget.historico!.descricao;
+    }else {
+      dataHistorico.text = dateFormatter.format(DateTime.now());
     }
   }
 

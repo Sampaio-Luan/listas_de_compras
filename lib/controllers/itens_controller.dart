@@ -58,6 +58,9 @@ class ItensController extends ChangeNotifier {
 
   String _filtro = '';
   String get filtro => _filtro;
+  String _tipoDeFiltro = '';
+  int _valorFiltro = 0;
+  int get valorFiltro => _valorFiltro;
 
   String _ordem = '';
   String get ordem => _ordem;
@@ -151,6 +154,10 @@ class ItensController extends ChangeNotifier {
     _itens[_itens.indexOf(item)] = item;
     _itensInterface[_itensInterface.indexOf(item)] = item;
     debugPrint('🤴🏻🧺CTi atualizarItem() item: ${item.nome}');
+    if (_filtro.isNotEmpty) {
+        filtrarItens(tipoFiltro: _tipoDeFiltro, valor: _valorFiltro);
+        //debugPrint( '🤴🏻🧺 CTi marcarDesmarcarItem() entrou na if chamou a funcao: filtro: $_filtro , valor: $_valorFiltro');
+      }
     _calculaTotal();
     _calculaPrecoTotalLista();
   }
@@ -172,7 +179,10 @@ class ItensController extends ChangeNotifier {
 
       int comprados = _calculaTotal();
       lista.qtdItensCompradosLista(_idLista, comprados);
-
+      if (_filtro.isNotEmpty) {
+        filtrarItens(tipoFiltro: _tipoDeFiltro, valor: _valorFiltro);
+        //debugPrint(            '🤴🏻🧺 CTi marcarDesmarcarItem() entrou na if chamou a funcao: filtro: $_filtro , valor: $_valorFiltro');
+      }
       //notifyListeners();
     }
     debugPrint('🤴🏻🧺 CTi marcarDesmarcarItem() item: ${item.nome}');
@@ -209,6 +219,11 @@ class ItensController extends ChangeNotifier {
     }
 
     _itensInterface.addAll(_itens);
+    if (_filtro.isNotEmpty) {
+      filtrarItens(tipoFiltro: _tipoDeFiltro, valor: _valorFiltro);
+      debugPrint(
+          '🤴🏻🧺 CTi marcarDesmarcarItem() entrou na if chamou a funcao: filtro: $_filtro , valor: $_valorFiltro');
+    }
 
     _calculaTotal();
   }
@@ -229,7 +244,8 @@ class ItensController extends ChangeNotifier {
 
   removerComEndDrawer(String nome, ListasController lista) async {
     for (int i = 0; i < _itens.length; i++) {
-      if (_itens[i].nome.toLowerCase() == nome.toLowerCase()) {
+      if ((_itens[i].nome.toLowerCase() + _itens[i].idCategoria.toString()) ==
+          nome.toLowerCase()) {
         removerItem(_itens[i], lista);
         debugPrint('🤴🏻🧺CTi removerComEndDrawer() item: ${_itens[i].nome}');
 
@@ -246,6 +262,10 @@ class ItensController extends ChangeNotifier {
       {required String tipoFiltro,
       required int valor,
       CategoriasRepository? categoriaR}) async {
+    debugPrint(
+        '🤴🏻🧺CTi filtrarItens() tipoFiltro: $tipoFiltro valor: $valor');
+    _valorFiltro = valor;
+    _tipoDeFiltro = tipoFiltro;
     if (tipoFiltro == 'prioridade') {
       switch (valor) {
         case 0:
@@ -309,12 +329,12 @@ class ItensController extends ChangeNotifier {
     } else {
       _itensInterface.addAll(_itens);
     }
-    debugPrint('\n\n');
-    for (var element in _itensInterface) {
-      debugPrint(
-          "🤴🏻🧺CTi filtrarItens() _filtro($_filtro) _itensIterface.nome: ${element.nome}");
-    }
-    debugPrint('\n\n');
+    // debugPrint('\n\n');
+    // for (var element in _itensInterface) {
+    //   debugPrint(
+    //       "🤴🏻🧺CTi filtrarItens() _filtro($_filtro) _itensIterface.nome: ${element.nome}");
+    // }
+    // debugPrint('\n\n');
 
     notifyListeners();
   }
@@ -388,6 +408,7 @@ class ItensController extends ChangeNotifier {
             element.nome.toLowerCase().contains(pesquisarPor.toLowerCase()))
         .toList();
     _itensInterface.addAll(_itensPesquisados);
+
     notifyListeners();
   }
 
@@ -444,6 +465,8 @@ class ItensController extends ChangeNotifier {
     _precoTotal = 0;
     _precoTotalLista = 0;
     _filtro = '';
+    _valorFiltro = 0;
+    _tipoDeFiltro = '';
     _ordem = '';
     _isMarcadoTodosItens = false;
     _isPesquisar = false;
@@ -586,6 +609,7 @@ class ItensController extends ChangeNotifier {
     final idHistorico =
         await historicoRepository.criarHistorico(historicoModel);
     final List<ItemHistoricoModel> itemHistoricoModel = [];
+    double precos = 0;
     for (var item in _itens) {
       if (item.comprado == 1) {
         itemHistoricoModel.add(
@@ -600,8 +624,15 @@ class ItensController extends ChangeNotifier {
             categoria: item.idCategoria,
           ),
         );
+
+        precos += item.preco * item.quantidade;
       }
     }
+
+    historicoModel.total = precos;
+
+    await historicoRepository.editarHistorico(historicoModel);
+
     await itensHistoricoRepository.salvarItemHistorico(itemHistoricoModel);
     avisos.informativo(context, 'HISTÓRICO SALVO COM SUCESSO!');
     debugPrint('💁🏻⏳RPH salvarHistorico() idHistorico: $idHistorico');
@@ -627,7 +658,7 @@ class ItensController extends ChangeNotifier {
     } else {
       for (var i in _itens) {
         mensagem +=
-              '${(escolhas['Quais Propriedades']!.contains('Quantidade')) ? i.medida == 'uni' ? i.quantidade.toStringAsFixed(0) : i.quantidade.toStringAsFixed(3) : ''} - ${i.nome} ${(escolhas['Quais Propriedades']!.contains('Preço')) ? formatter.format(i.preco) : ''}\n';
+            '${(escolhas['Quais Propriedades']!.contains('Quantidade')) ? i.medida == 'uni' ? i.quantidade.toStringAsFixed(0) : i.quantidade.toStringAsFixed(3) : ''} - ${i.nome} ${(escolhas['Quais Propriedades']!.contains('Preço')) ? formatter.format(i.preco) : ''}\n';
       }
     }
     mensagem +=

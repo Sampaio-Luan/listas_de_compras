@@ -19,7 +19,7 @@ class OpcoesFinalizacao extends StatelessWidget {
   Widget build(BuildContext context) {
     final itemC = context.read<ItensController>();
     final preferenciaR = context.watch<PreferenciasUsuarioShared>();
-   
+
     //final j = context.watch<ItensPadraoRepository>();
 
     return PopupMenuButton<dynamic>(
@@ -49,13 +49,16 @@ class OpcoesFinalizacao extends StatelessWidget {
                     icone: 'Salvar',
                     preferenciaRp: preferenciaR),
                 onTap: () {
-                  // j.corrijarJ();
-                  //avisos.informativo(context, 'Salvar no historico');
-                  showDialog(
+                  if (itemC.totalItensComprados == 0) {
+                    avisos.observacao(context, 'Para salvar histórico de compras ao menos 1 item da lista deve estar com check(✅).',);
+                  } else {
+                    showDialog(
                       context: context,
                       builder: (context) => const FormHistorico(
-                            historico: null,
-                          ));
+                        historico: null,
+                      ),
+                    );
+                  }
                 },
               ),
               PopupMenuItem(
@@ -117,11 +120,9 @@ class OpcoesFinalizacao extends StatelessWidget {
       ),
     };
     return ListTile(
-      leading: 
-      (icone != 'Padrao' && icone != 'Categoria')
+      leading: (icone != 'Padrao' && icone != 'Categoria')
           ? null
-          : 
-          Checkbox(
+          : Checkbox(
               value: icone == 'Categoria' && preferenciaRp!.verPorCategoria ||
                   icone == 'Padrao' && !preferenciaRp!.verPorCategoria,
               onChanged: (_) {
