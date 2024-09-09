@@ -48,23 +48,23 @@ class _CategoriasPageState extends State<CategoriasPage> {
           foregroundColor:
               Theme.of(context).colorScheme.brightness == Brightness.light
                   ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onPrimaryContainer,
-          actions: [
-            IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => FormularioCategoria(categoria: null));
-              },
-              icon: Icon(
-                PhosphorIconsDuotone.listPlus,
-                color:
-                    Theme.of(context).colorScheme.brightness == Brightness.light
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-          ]),
+                  : Theme.of(context).colorScheme.onPrimaryContainer,),
+          // actions: [
+          //   IconButton(
+          //     onPressed: () {
+          //       showDialog(
+          //           context: context,
+          //           builder: (context) => FormularioCategoria(categoria: null));
+          //     },
+          //     icon: Icon(
+          //       PhosphorIconsDuotone.listPlus,
+          //       color:
+          //           Theme.of(context).colorScheme.brightness == Brightness.light
+          //               ? Theme.of(context).colorScheme.onPrimary
+          //               : Theme.of(context).colorScheme.onPrimaryContainer,
+          //     ),
+          //   ),
+          // ]),
       body: Column(children: [
         categorias.isEmpty
             ? const Center(
@@ -92,9 +92,9 @@ class _CategoriasPageState extends State<CategoriasPage> {
                   key: ValueKey(categorias[i].id),
                   title: Text(categorias[i].nome,
                       style: Estilos().tituloColor(context, tamanho: 'p')),
-                  subtitle: Text(
-                    ' id: (${categorias[i].id}) grau: (${categorias[i].grau})',
-                  ),
+                  // subtitle: Text(
+                  //   ' id: (${categorias[i].id}) grau: (${categorias[i].grau})',
+                  // ),
                   leading: Row(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.menu,
                         color: Theme.of(context).colorScheme.primary, size: 20),
@@ -124,6 +124,20 @@ class _CategoriasPageState extends State<CategoriasPage> {
             },
           ),
         ),
+        ListTile(
+          tileColor: Theme.of(context).colorScheme.primary.withAlpha(200),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 2),
+          title: const Text(
+            'Adicionar categoria',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) => FormularioCategoria(categoria: null));
+          },
+        )
       ]),
     );
   }

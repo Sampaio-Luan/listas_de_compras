@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../models/lista.module.dart';
+import '../preferencias_usuario.dart';
 import '../repositories/listas_repository.dart';
 
 import 'itens_controller.dart';
@@ -35,13 +36,14 @@ class ListasController extends ChangeNotifier {
 
 //#region =================== * INCLUIR * ====================================
 
-  inserirLista(ListaModel lista, ItensController itemC) async {
+  inserirLista(ListaModel lista, ItensController itemC, PreferenciasUsuarioShared preferencias) async {
     int id = await ListasRepository().inserirLista(lista);
     debugPrint('🤹📝CTL inserirLista(): id recuperado $id');
     lista.id = id;
     _listas.add(lista);
    
     itemC.iniciarController(idLista: id, nomeLista: lista.nome);
+    preferencias.setUltimaListaVisitada(id);
 
     debugPrint('🤹📝CTL inserirLista(): ${lista.nome}');
 

@@ -57,7 +57,7 @@ class ListasRepository extends ChangeNotifier {
 
     debugPrint("💁🏻📝RPL atualizarLista() id: ${lista.nome}");
 
-    recuperarListas();
+  
   }
 
   excluirLista(ListaModel lista) async {
@@ -78,6 +78,6 @@ class ListasRepository extends ChangeNotifier {
 
     debugPrint("💁🏻📝RPL excluirLista() excluiu itens");
 
-    recuperarListas();
+  
   }
 }

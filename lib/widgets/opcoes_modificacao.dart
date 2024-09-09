@@ -106,21 +106,29 @@ class _OpcoesModificacaoState extends State<OpcoesModificacao> {
           onTap: () async {
             final confirmacao = await aviso.informativo(
               context,
-              'Tem certeza que deseja realizar a exclusão? Essa ação não pode ser desfeita.',
+              widget.categoria != null
+                  ? 'Certeza que deseja excluir esse categoria? Todos os itens das listas e itens padrão que pertençam a ela serão movidos para "Sem Categorias", esse ação não poderá ser desfeita.'
+                  : 'Certeza que deseja excluir? Essa ação não pode ser desfeita.',
             );
 
             if (confirmacao) {
               if (widget.historico != null) {
                 historicoR.excluirHistorico(historico, itemHR);
               } else if (widget.lista != null) {
-                int i = listaController.listas.indexOf(widget.lista!);
-                ListaModel l = listaController.listas[i];
+                await listaController.excluirLista(widget.lista!);
+                int i = listaController.listas.last.id;
+
                 itensController.iniciarController(
-                    idLista: l.id, nomeLista: l.nome);
-                preferencias.setUltimaListaVisitada(l.id);
-                listaController.excluirLista(lista);
+                  idLista: listaController.listas.last.id,
+                  nomeLista: listaController.listas.last.nome,
+                );
+                preferencias.setUltimaListaVisitada(i);
               } else if (widget.categoria != null) {
-                categoriaR.excluirCategorias(categoria);
+                categoriaR.excluirCategorias(
+                  categoria,
+                  itensController,
+                  itemPadraoR,
+                );
               } else if (widget.itemPadrao != null) {
                 itemPadraoR.excluirItemPadrao(itemPadrao);
               } else {

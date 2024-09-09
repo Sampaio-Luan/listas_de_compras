@@ -317,11 +317,22 @@ class _FormItemModalState extends State<FormItemModal> with ValidacoesMixin {
                                   idCategoria: i.idCategoria,
                                   nome: i.nome,
                                   categoria: categoriaR.getCategorias
-              .where((element) => true)
-              .firstWhere((element) => element.id == i.idCategoria)
-              .nome,
+                                      .where((element) => true)
+                                      .firstWhere((element) =>
+                                          element.id == i.idCategoria)
+                                      .nome,
                                 );
-                                itemPR.criarItemPadrao(ipm);
+                                List<String> nomesIP = itemPR.getItensPadrao
+                                    .map((element) =>
+                                        element.nome.toLowerCase() +
+                                        element.idCategoria.toString())
+                                    .toList();
+
+                                if (!nomesIP.contains((ipm.nome.toLowerCase() +
+                                    ipm.idCategoria.toString()))) {
+                                  itemPR.criarItemPadrao(ipm);
+                                }
+
                                 listaC.qtdItensLista(
                                     itemC.getIdLista, itemC.itens.length + 1);
                                 itemC.adicionarItem(i, listaC);

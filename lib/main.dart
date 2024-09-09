@@ -40,7 +40,10 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (context) => ItensPadraoRepository()),
         ChangeNotifierProvider(create: (context) => HistoricoRepository()),
-        ChangeNotifierProvider(create: (context) => CategoriasRepository()),
+        ChangeNotifierProvider(
+          create: (context) => CategoriasRepository(),
+          lazy: false,
+        ),
         ChangeNotifierProvider(create: (context) => ItensHistoricoRepository()),
       ],
       child: const MainApp(),

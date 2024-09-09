@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../constants/const_tb_categorias.dart';
+import '../constants/const_tb_item.dart';
+import '../constants/const_tb_item_padrao.dart';
+import '../controllers/itens_controller.dart';
 import '../database/banco.dart';
 import '../models/categoria.module.dart';
+import 'itens_padrao_repository.dart';
 
 class CategoriasRepository extends ChangeNotifier {
   final List<CategoriaModel> _categorias = [];
@@ -53,7 +57,7 @@ class CategoriasRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> excluirCategorias(CategoriaModel categoria) async {
+  Future<void> excluirCategorias(CategoriaModel categoria, ItensController itemC, ItensPadraoRepository itemPR) async {
     db = await Banco.instancia.database;
 
     await db.delete(categoriaTableName,
@@ -62,6 +66,24 @@ class CategoriasRepository extends ChangeNotifier {
     debugPrint("💁🏻🥈RPC excluirCategorias() id: ${categoria.id}");
 
     _categorias.remove(categoria);
+    await db.update(
+      itemTableName,
+      {itemColumnCategoriaId: 9},
+      where: '$itemColumnCategoriaId  = ?',
+      whereArgs: [categoria.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    await db.update(
+      itemPadraoTableName,
+      {itemPadraoColumnId: 9},
+      where: '$itemPadraoColumnId  = ?',
+      whereArgs: [categoria.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    await itemC.iniciarController(idLista: itemC.getIdLista,nomeLista: itemC.nomeLista);
+    await itemPR.recuperarItensPadrao();
+    
     notifyListeners();
   }
 

@@ -39,7 +39,7 @@ class _ItensPageState extends State<ItensPage> {
 
     return Scaffold(
       drawer: const DrawerListas(),
-      endDrawer: EndDrawerItensPadrao(),
+      endDrawer: ctrlListas.listas.isEmpty || ctrl.isPesquisar ? null :  EndDrawerItensPadrao(),
       //#region ====================================== APP BAR ========================================================
       appBar: ctrlListas.listas.isEmpty
           ? AppBar(
@@ -326,10 +326,8 @@ class _ItensPageState extends State<ItensPage> {
         padding: const EdgeInsets.symmetric(vertical: 18.0),
         child: TextField(
           controller: pesquisarPorItem,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.brightness == Brightness.light
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onPrimaryContainer,
+          style: const TextStyle(
+            color: Colors.white,
             fontSize: 18,
           ),
           onChanged: (value) {
@@ -338,19 +336,26 @@ class _ItensPageState extends State<ItensPage> {
             );
           },
           autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Pesquisar por item',
+          cursorColor: Colors.white,
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.all(7),
+            filled: true,
+            fillColor: Colors.white12,
+            // suffixIcon: Icon(
+            //   PhosphorIconsRegular.magnifyingGlass,
+            //   color: Colors.white38,
+            // ),
+            
+            hintText: 'Digite para pesquisar',
             hintStyle: TextStyle(
-              color:
-                  Theme.of(context).colorScheme.brightness == Brightness.light
-                      ? Theme.of(context).colorScheme.onPrimary.withAlpha(170)
-                      : Theme.of(context)
-                          .colorScheme
-                          .onPrimaryContainer
-                          .withAlpha(170),
+              color:Colors.white38,
             ),
             isDense: true,
-            border: InputBorder.none,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(14)),
+              gapPadding: 0,
+              
+            ),
           ),
         ),
       ),

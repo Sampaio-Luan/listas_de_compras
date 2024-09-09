@@ -7,6 +7,7 @@ import 'package:listas_de_compras/models/lista.module.dart';
 import '../../controllers/itens_controller.dart';
 import '../../controllers/listas_controller.dart';
 import '../../mixins/validations_mixin.dart';
+import '../../preferencias_usuario.dart';
 import '../../theme/estilos.dart';
 
 import 'campos_formulario.dart';
@@ -43,6 +44,7 @@ class _FormularioListaState extends State<FormularioLista>
   @override
   Widget build(BuildContext context) {
     final listasR = context.read<ListasController>();
+    final preferencias = context.watch<PreferenciasUsuarioShared>();
     return AlertDialog(
         title: Text(
           'Criar Lista',
@@ -82,7 +84,6 @@ class _FormularioListaState extends State<FormularioLista>
             },
           ),
           TextButton(
-              
               child: Text(
                 'Salvar',
                 style: Estilos().corpoColor(context, tamanho: 'p'),
@@ -109,7 +110,7 @@ class _FormularioListaState extends State<FormularioLista>
                         totalItens: 0,
                         totalComprados: 0);
 
-                    listasR.inserirLista(lista, itemC);
+                    listasR.inserirLista(lista, itemC, preferencias);
                   } else {
                     widget.lista!.nome = nomeLista.text;
 

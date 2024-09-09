@@ -14,7 +14,14 @@ class Avisos {
             style: estilo.tituloColor(context, tamanho: 'g'),
             textAlign: TextAlign.center,
           ),
-          content: Text(mensagem, style: estilo.corpo(context, tamanho: 'p')),
+          content: Text(
+            mensagem,
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 16,
+            ),
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancelar'),
@@ -47,7 +54,14 @@ class Avisos {
               style: estilo.tituloColor(context, tamanho: 'g'),
               textAlign: TextAlign.center,
             ),
-            content: Text(mensagem, style: estilo.corpo(context, tamanho: 'p')),
+            content: Text(
+              mensagem,
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 16,
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 child: const Text('Entendido'),
