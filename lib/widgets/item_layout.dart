@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:expandable_text/expandable_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
@@ -37,43 +38,41 @@ class NLayoutItem extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: Border(
-                left: BorderSide(
-                    color: prioridade
-                        .corPrioridade(item.prioridade)
-                        .withAlpha(130),
-                    width: 7),
-                right: BorderSide.none,
-                bottom: BorderSide.none,
-                top: BorderSide.none),
-            color: itemC.itensSelecionados.contains(item)
-                ? Theme.of(context).colorScheme.brightness == Brightness.light
-                    ? Theme.of(context).colorScheme.errorContainer
-                    : Theme.of(context).colorScheme.onError
-                : item.comprado == 0
-                    ? null
-                    : Theme.of(context).colorScheme.brightness ==
-                            Brightness.light
-                        ? Colors.black.withAlpha(30)
-                        : Colors.white10
-                        //  Theme.of(context)
-                        //     .colorScheme
-                        //     .primaryContainer
-                        //     .withAlpha(50),
-          ),
+              border: Border(
+                  left: BorderSide(
+                      color: prioridade
+                          .corPrioridade(item.prioridade)
+                          .withAlpha(130),
+                      width: 7),
+                  right: BorderSide.none,
+                  bottom: BorderSide.none,
+                  top: BorderSide.none),
+              color: itemC.itensSelecionados.contains(item)
+                  ? Theme.of(context).colorScheme.error.withAlpha(70)
+                  : item.comprado == 0
+                      ? null
+                      : Theme.of(context).colorScheme.brightness ==
+                              Brightness.light
+                          ? Colors.black.withAlpha(30)
+                          : Colors.white10
+              //  Theme.of(context)
+              //     .colorScheme
+              //     .primaryContainer
+              //     .withAlpha(50),
+              ),
           padding: const EdgeInsets.only(right: 10),
           child: Row(children: [
             Expanded(
               child: itemC.itensSelecionados.contains(item)
                   ? CircleAvatar(
-                      //radius: 30,
+                      radius: 17,
                       backgroundColor:
-                          Theme.of(context).colorScheme.brightness ==
-                                  Brightness.light
-                              ? Theme.of(context).colorScheme.error
-                              : Colors.red,
-                      child: const Icon(PhosphorIconsRegular.fileX,
-                          color: Colors.white, size: 30),
+                          Theme.of(context).colorScheme.error.withAlpha(190),
+                      child: const Icon(
+                        PhosphorIconsRegular.fileX,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     )
                   : CircleAvatar(
                       radius: 15,
@@ -85,8 +84,7 @@ class NLayoutItem extends StatelessWidget {
                       //     .colorScheme
                       //     .inversePrimary
                       //     .withAlpha(100),
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onSurface,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       child: Text(
                         item.nome[0].toUpperCase(),
                         style: const TextStyle(fontSize: 16),
@@ -113,7 +111,15 @@ class NLayoutItem extends StatelessWidget {
                           item.nome,
                           style: item.comprado == 1
                               ? itemComCheck(context)
-                              : Estilos().tituloColor(context, tamanho: 'p'),
+                              : TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withAlpha(170),
+                                  fontSize: 18,
+                                  fontFamily:
+                                      GoogleFonts.getFont('Pridi').fontFamily,
+                                ),
                         ),
                         item.descricao.isEmpty
                             ? const SizedBox()
@@ -194,7 +200,7 @@ class NLayoutItem extends StatelessWidget {
   }
 
   TextStyle itemComCheck(context) {
-    return  TextStyle(
+    return TextStyle(
       decoration: TextDecoration.lineThrough,
       decorationThickness: 1,
       fontSize: 18,

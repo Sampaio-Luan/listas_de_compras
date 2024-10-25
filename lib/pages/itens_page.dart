@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
@@ -39,21 +40,16 @@ class _ItensPageState extends State<ItensPage> {
 
     return Scaffold(
       drawer: const DrawerListas(),
-      endDrawer: ctrlListas.listas.isEmpty || ctrl.isPesquisar ? null :  EndDrawerItensPadrao(),
+      endDrawer: ctrlListas.listas.isEmpty || ctrl.isPesquisar
+          ? null
+          : EndDrawerItensPadrao(),
       //#region ====================================== APP BAR ========================================================
       appBar: ctrlListas.listas.isEmpty
           ? AppBar(
               title: const Text('Não há listas'),
               centerTitle: true,
-              backgroundColor:
-                  Theme.of(context).colorScheme.brightness == Brightness.light
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.primaryContainer,
-              foregroundColor:
-                  Theme.of(context).colorScheme.brightness == Brightness.light
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.onPrimaryContainer,
-            )
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer)
           : ctrl.itensSelecionados.isNotEmpty
               ? _appBarSelecionados(context)
               : ctrl.isPesquisar
@@ -264,14 +260,9 @@ class _ItensPageState extends State<ItensPage> {
   AppBar _appBarPadrao(context) {
     final controle = Provider.of<ItensController>(context, listen: true);
     return AppBar(
-      backgroundColor:
-          Theme.of(context).colorScheme.brightness == Brightness.light
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.primaryContainer,
-      foregroundColor:
-          Theme.of(context).colorScheme.brightness == Brightness.light
-              ? Theme.of(context).colorScheme.onPrimary
-              : Theme.of(context).colorScheme.onPrimaryContainer,
+      backgroundColor:Theme.of(context).colorScheme.primary,
+      foregroundColor:Theme.of(context).colorScheme.inversePrimary,
+              
       actions: [
         IconButton(
             icon: const Icon(Icons.search),
@@ -288,16 +279,14 @@ class _ItensPageState extends State<ItensPage> {
       ],
       title: Text(
         controle.nomeLista,
-        style: const TextStyle(
-          color: Colors.white,
+        style:  TextStyle(
+          color: Theme.of(context).colorScheme.inversePrimary,
         ),
         overflow: TextOverflow.ellipsis,
       ),
       centerTitle: true,
       iconTheme: IconThemeData(
-        color: Theme.of(context).colorScheme.brightness == Brightness.light
-            ? Theme.of(context).colorScheme.onPrimary
-            : Theme.of(context).colorScheme.onPrimaryContainer,
+        color: Theme.of(context).colorScheme.inversePrimary,
       ),
     );
   }
@@ -345,16 +334,15 @@ class _ItensPageState extends State<ItensPage> {
             //   PhosphorIconsRegular.magnifyingGlass,
             //   color: Colors.white38,
             // ),
-            
+
             hintText: 'Digite para pesquisar',
             hintStyle: TextStyle(
-              color:Colors.white38,
+              color: Colors.white38,
             ),
             isDense: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(14)),
               gapPadding: 0,
-              
             ),
           ),
         ),
@@ -364,7 +352,6 @@ class _ItensPageState extends State<ItensPage> {
             ? Theme.of(context).colorScheme.onPrimary
             : Theme.of(context).colorScheme.onPrimaryContainer,
       ),
-     
     );
   }
 
@@ -458,14 +445,18 @@ class _ItensPageState extends State<ItensPage> {
       ),
       useStickyGroupSeparators: true,
       groupSeparatorBuilder: (dynamic value) => Container(
-        color: Theme.of(context).colorScheme.primaryContainer.withAlpha(170),
+        color: Theme.of(context).colorScheme.primary,
         child: Text(
           categoriaR.getCategorias
               .where((element) => true)
               .firstWhere((element) => element.id == value as int)
               .nome,
           textAlign: TextAlign.center,
-          style: Estilos().tituloColor(context, tamanho: 'm'),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onInverseSurface.withAlpha(230),
+            fontSize: 21,
+            fontFamily: GoogleFonts.getFont('Pridi').fontFamily,
+          ),
         ),
       ),
       itemBuilder: (c, element) {

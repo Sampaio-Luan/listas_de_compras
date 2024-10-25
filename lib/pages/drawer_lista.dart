@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ class _DrawerListasState extends State<DrawerListas> {
           height: MediaQuery.of(context).size.height * 0.17,
           child: DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,8 +53,14 @@ class _DrawerListasState extends State<DrawerListas> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Minhas Listas',
-                            style:
-                                Estilos().tituloColor(context, tamanho: 'g')),
+                            style:TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimary.withAlpha(220),
+                                  fontSize: 30,
+                                  fontFamily:
+                                      GoogleFonts.getFont('Pridi').fontFamily,
+                                ),),
                         Text('Versão 1.0.0',
                             style: Estilos().sutil(context, tamanho: 12))
                       ]),
@@ -70,7 +77,7 @@ class _DrawerListasState extends State<DrawerListas> {
                           : Icon(
                               PhosphorIconsFill.lampPendant,
                               size: 24,
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                     ),
                   )
