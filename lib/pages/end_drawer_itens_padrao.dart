@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -45,11 +46,14 @@ class EndDrawerItensPadrao extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.6,
           child: DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Text(
-              'Itens Padrao',
-              style: Estilos().tituloColor(context, tamanho: 'g'),
+              'Itens Padrão',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontFamily:  GoogleFonts.getFont('Pridi').fontFamily,
+                fontSize: 30,),
             ),
           ),
         ),

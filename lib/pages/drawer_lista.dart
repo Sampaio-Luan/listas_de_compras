@@ -52,15 +52,17 @@ class _DrawerListasState extends State<DrawerListas> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Minhas Listas',
-                            style:TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary.withAlpha(220),
-                                  fontSize: 30,
-                                  fontFamily:
-                                      GoogleFonts.getFont('Pridi').fontFamily,
-                                ),),
+                        Text(
+                          'Minhas Listas',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimary
+                                .withAlpha(220),
+                            fontSize: 30,
+                            fontFamily: GoogleFonts.getFont('Pridi').fontFamily,
+                          ),
+                        ),
                         Text('Versão 1.0.0',
                             style: Estilos().sutil(context, tamanho: 12))
                       ]),

@@ -23,30 +23,22 @@ class HistoricoPage extends StatelessWidget {
     final itemC = context.watch<ItensController>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Históricos',
-        ),
+        title: const Text('Históricos'),
         centerTitle: true,
-        backgroundColor:
-            Theme.of(context).colorScheme.brightness == Brightness.light
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.primaryContainer,
-        foregroundColor:
-            Theme.of(context).colorScheme.brightness == Brightness.light
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onPrimaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Consumer<HistoricoRepository>(
         builder: (context, historicoR, _) {
           return historicoR.getHistoricos.isEmpty
-              ? const Center(
-                  child: Text('Nenhum histórico encontrado'),
-                )
+              ? const Center(child: Text('Nenhum histórico encontrado'))
               : ListView.builder(
                   itemCount: historicoR.getHistoricos.length,
                   itemBuilder: (context, index) {
                     return _layoutHistorico(
-                        context, historicoR.getHistoricos[index]);
+                      context,
+                      historicoR.getHistoricos[index],
+                    );
                   },
                 );
         },
@@ -60,13 +52,18 @@ class HistoricoPage extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         leading: CircleAvatar(
-          radius: 27,
-          child: Icon(PhosphorIconsRegular.moneyWavy,
-              size: 30, color: Theme.of(context).colorScheme.primary),
+          backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(200),
+          radius: 25,
+          child: Icon(
+            PhosphorIconsRegular.moneyWavy,
+            size: 27,
+            color: Theme.of(context).colorScheme.onPrimary.withAlpha(220),
+          ),
         ),
         title: Text(
           historico.titulo,
           style: Estilos().tituloColor(context, tamanho: 'p'),
+          overflow: TextOverflow.ellipsis,
         ),
         subtitle:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

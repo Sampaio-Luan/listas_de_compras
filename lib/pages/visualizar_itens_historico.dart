@@ -43,19 +43,25 @@ class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
       appBar: AppBar(
         title: Text(widget.historico.titulo),
         centerTitle: true,
-       backgroundColor:
-              Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.primaryContainer,
-          foregroundColor:
-              Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onPrimaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: itensHistorico.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : Column(mainAxisSize: MainAxisSize.min, children: [
-              _cabecelho(context),
+          : Column(children: [
+              ExpansionTile(
+                  dense: true,
+                  title: Text('Descrição',
+                      style: Estilos().tituloColor(context, tamanho: 'p')),
+                  children: <Widget>[
+                    Text(
+                      widget.historico.descricao.isEmpty
+                          ? 'Sem descrição'
+                          : widget.historico.descricao,
+                          textAlign: TextAlign.justify,
+                          
+                    ),
+                  ]),
               Expanded(
                 child: Scrollbar(
                   // controller: _scrollController,
@@ -64,17 +70,25 @@ class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
                   radius: const Radius.circular(20),
                   //trackVisibility: true,
 
-                  child: ListView.separated(
-                    // itemCount: itemHR.getItensHistoricos.length,
-                    itemCount: itensHistorico.length,
-                    itemBuilder: (context, index) {
-                      return _item(context, itemH: itensHistorico[index]);
+                  child: Column(
+                    children: [
+                      _cabecelho(context),
+                      Expanded(
+                        child: ListView.separated(
+                          // itemCount: itemHR.getItensHistoricos.length,
+                          itemCount: itensHistorico.length,
+                          itemBuilder: (context, index) {
+                            return _item(context, itemH: itensHistorico[index]);
 
-                      //_item(context,itemH: itemHR.getItensHistoricos[index]);
-                    },
-                    separatorBuilder: (itemContext, index) => const Divider(
-                      height: 0,
-                    ),
+                            //_item(context,itemH: itemHR.getItensHistoricos[index]);
+                          },
+                          separatorBuilder: (itemContext, index) =>
+                              const Divider(
+                            height: 0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -94,11 +108,9 @@ class _VisualizarItensHistoricoState extends State<VisualizarItensHistorico> {
       color: Theme.of(context).colorScheme.primaryContainer,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           _texto(context, 'ITEM'),
-          
+
           _texto(context, 'QTD'),
           _texto(context, 'R\$'),
           _texto(context, 'TOTAL'),

@@ -22,43 +22,23 @@ class _ItensPadraoPageState extends State<ItensPadraoPage> {
 
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Itens Padrao'),
-          centerTitle: true,
-          backgroundColor:
-              Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.primaryContainer,
-          foregroundColor:
-              Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onPrimaryContainer,
-          actions: [
-            IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) =>
-                        const FormItemPadrao(itemPadrao: null));
-              },
-              icon: Icon(
-                PhosphorIconsDuotone.listPlus,
-                color:
-                    Theme.of(context).colorScheme.brightness == Brightness.light
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-          ]),
+        title: const Text('Itens Padrao'),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      ),
       body: Column(children: [
         itemP.getItensPadrao.isEmpty
             ? const Center(child: Text('Nenhum item encontrado'))
             : Expanded(
+                flex: 14,
                 child: ListView.separated(
-                 //shrinkWrap: true,
+                  //shrinkWrap: true,
                   itemCount: itemP.getItensPadrao.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 0),
                       leading: CircleAvatar(
                         backgroundColor:
                             Theme.of(context).colorScheme.primary.withAlpha(40),
@@ -71,9 +51,9 @@ class _ItensPadraoPageState extends State<ItensPadraoPage> {
                       subtitle: Text(
                         '# ${itemP.getItensPadrao[index].categoria}',
                         style: Estilos().sutil(context, tamanho: 14),
-                        
                       ),
-                      trailing: OpcoesModificacao(itemPadrao: itemP.getItensPadrao[index]),
+                      trailing: OpcoesModificacao(
+                          itemPadrao: itemP.getItensPadrao[index]),
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) {
@@ -83,9 +63,37 @@ class _ItensPadraoPageState extends State<ItensPadraoPage> {
                     ); // Adiciona uma linha separadora entre os itens
                   },
                 ),
-              )
+              ),
+        Expanded(
+            child: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => const FormItemPadrao(
+                itemPadrao: null,
+              ),
+            );
+          },
+          child: Container(
+            color: Theme.of(context).colorScheme.primary,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  PhosphorIconsDuotone.basket,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                SizedBox(width: 20),
+                Text(
+                  'Adicionar Item Padrão',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ],
+            ),
+          ),
+        )),
       ]),
-      
     );
   }
 }

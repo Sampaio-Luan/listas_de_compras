@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -39,32 +40,11 @@ class _CategoriasPageState extends State<CategoriasPage> {
     categorias = categoriaR.getCategorias;
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Categorias'),
-          centerTitle: true,
-          backgroundColor:
-              Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.primaryContainer,
-          foregroundColor:
-              Theme.of(context).colorScheme.brightness == Brightness.light
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onPrimaryContainer,),
-          // actions: [
-          //   IconButton(
-          //     onPressed: () {
-          //       showDialog(
-          //           context: context,
-          //           builder: (context) => FormularioCategoria(categoria: null));
-          //     },
-          //     icon: Icon(
-          //       PhosphorIconsDuotone.listPlus,
-          //       color:
-          //           Theme.of(context).colorScheme.brightness == Brightness.light
-          //               ? Theme.of(context).colorScheme.onPrimary
-          //               : Theme.of(context).colorScheme.onPrimaryContainer,
-          //     ),
-          //   ),
-          // ]),
+        title: const Text('Categorias'),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      ),
       body: Column(children: [
         categorias.isEmpty
             ? const Center(
@@ -76,13 +56,15 @@ class _CategoriasPageState extends State<CategoriasPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 17.0, vertical: 5),
                   child: Text(
-                      'Ordene os títulos pressionando e arrastando para definir a ordem de exibição dos itens por categoria.',
-                      style: Estilos().sutil(context, tamanho: 14),
-                      textAlign: TextAlign.justify),
+                    'Ordene os títulos pressionando e arrastando para definir a ordem de exibição dos itens por categoria.',
+                    style: Estilos().sutil(context, tamanho: 14),
+                    textAlign: TextAlign.justify,
+                  ),
                 ),
               ),
         const Divider(height: 3, thickness: 0.5),
         Expanded(
+          flex: 11,
           child: ReorderableListView(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
@@ -124,19 +106,40 @@ class _CategoriasPageState extends State<CategoriasPage> {
             },
           ),
         ),
-        ListTile(
-          tileColor: Theme.of(context).colorScheme.primary.withAlpha(200),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 2),
-          title: const Text(
-            'Adicionar categoria',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          onTap: () {
-            showDialog(
+        Expanded(
+          child: InkWell(
+            child: Container(
+              color: Theme.of(context).colorScheme.primary,
+              padding: const EdgeInsets.all(10),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                const Icon(
+                  PhosphorIconsRegular.ranking,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Adicionar categoria',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                    fontFamily: GoogleFonts.getFont('Pridi').fontFamily,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ]),
+            ),
+            onTap: () {
+              showDialog(
                 context: context,
-                builder: (context) => FormularioCategoria(categoria: null));
-          },
+                builder: (context) => FormularioCategoria(
+                  categoria: null,
+                ),
+              );
+            },
+          ),
         )
       ]),
     );

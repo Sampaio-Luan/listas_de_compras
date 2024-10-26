@@ -8,6 +8,7 @@ import '../constants/const_tb_item_padrao.dart';
 import '../controllers/itens_controller.dart';
 import '../database/banco.dart';
 import '../models/categoria.module.dart';
+
 import 'itens_padrao_repository.dart';
 
 class CategoriasRepository extends ChangeNotifier {
@@ -81,7 +82,7 @@ class CategoriasRepository extends ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    await itemC.iniciarController(idLista: itemC.getIdLista,nomeLista: itemC.nomeLista);
+    await itemC.iniciarController(idLista: itemC.getIdLista, nomeLista: itemC.nomeLista);
     await itemPR.recuperarItensPadrao();
     
     notifyListeners();

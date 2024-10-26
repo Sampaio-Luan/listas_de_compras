@@ -13,6 +13,7 @@ import '../models/item.module.dart';
 import '../preferencias_usuario.dart';
 import '../repositories/categorias_repository.dart';
 import '../theme/estilos.dart';
+import '../widgets/feedback/avisos.dart';
 import '../widgets/formularios/form_item_modal.dart';
 import '../widgets/formularios/formulario_item.dart';
 import '../widgets/item_layout.dart';
@@ -260,9 +261,8 @@ class _ItensPageState extends State<ItensPage> {
   AppBar _appBarPadrao(context) {
     final controle = Provider.of<ItensController>(context, listen: true);
     return AppBar(
-      backgroundColor:Theme.of(context).colorScheme.primary,
-      foregroundColor:Theme.of(context).colorScheme.inversePrimary,
-              
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      foregroundColor: Theme.of(context).colorScheme.inversePrimary,
       actions: [
         IconButton(
             icon: const Icon(Icons.search),
@@ -279,14 +279,14 @@ class _ItensPageState extends State<ItensPage> {
       ],
       title: Text(
         controle.nomeLista,
-        style:  TextStyle(
-          color: Theme.of(context).colorScheme.inversePrimary,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
         overflow: TextOverflow.ellipsis,
       ),
       centerTitle: true,
       iconTheme: IconThemeData(
-        color: Theme.of(context).colorScheme.inversePrimary,
+        color: Theme.of(context).colorScheme.onPrimary,
       ),
     );
   }
@@ -358,6 +358,7 @@ class _ItensPageState extends State<ItensPage> {
   AppBar _appBarSelecionados(context) {
     final ctrl = Provider.of<ItensController>(context, listen: true);
     final lista = Provider.of<ListasController>(context, listen: true);
+    final avisos = Avisos();
     return AppBar(
         foregroundColor: Colors.white,
         backgroundColor:
@@ -377,8 +378,16 @@ class _ItensPageState extends State<ItensPage> {
         actions: [
           IconButton(
               icon: const Icon(PhosphorIconsRegular.trash),
-              onPressed: () {
+              onPressed: () async {
+                bool resposta = await avisos.informativo(
+                  context,
+                  ctrl.itensSelecionados.length == 1
+                      ? 'Tem certeza que deseja excluir o item selecionado? Essa ação não poderá ser desfeita.'
+                      : 'Tem certeza que deseja excluir os itens selecionados? Essa ação não poderá ser desfeita.',
+                );
+                if (resposta) {
                 ctrl.excluirItensSelecionados(lista);
+                }
               })
         ]);
   }
@@ -445,7 +454,18 @@ class _ItensPageState extends State<ItensPage> {
       ),
       useStickyGroupSeparators: true,
       groupSeparatorBuilder: (dynamic value) => Container(
-        color: Theme.of(context).colorScheme.primary,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              ),
+              top: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              )),
+        ),
         child: Text(
           categoriaR.getCategorias
               .where((element) => true)
@@ -453,7 +473,7 @@ class _ItensPageState extends State<ItensPage> {
               .nome,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onInverseSurface.withAlpha(230),
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 21,
             fontFamily: GoogleFonts.getFont('Pridi').fontFamily,
           ),
